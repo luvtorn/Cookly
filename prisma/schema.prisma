@@ -1,0 +1,439 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+enum RecipeStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum VerificationStatus {
+  NONE
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum ReportTargetType {
+  RECIPE
+  COMMENT
+}
+
+enum ReportReason {
+  SPAM
+  HARASSMENT
+  INAPPROPRIATE_CONTENT
+  COPYRIGHT
+  UNSAFE_OR_MISLEADING
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  IN_REVIEW
+  RESOLVED
+  DISMISSED
+}
+
+enum ModerationActionType {
+  VERIFY_RECIPE
+  REJECT_VERIFICATION
+  HIDE_RECIPE
+  RESTORE_RECIPE
+  HIDE_COMMENT
+  RESTORE_COMMENT
+  RESOLVE_REPORT
+  DISMISS_REPORT
+  SUSPEND_USER
+  RESTORE_USER
+  BAN_USER
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  role          UserRole   @default(USER)
+  status        UserStatus @default(ACTIVE)
+  image         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  profile Profile?
+
+  accounts Account[]
+  sessions Session[]
+
+  recipes     Recipe[]
+  comments    Comment[]
+  likes       RecipeLike[]
+  favorites   Favorite[]
+  pantryItems PantryItem[]
+
+  following Follow[] @relation("UserFollowing")
+  followers Follow[] @relation("UserFollowers")
+
+  reportsSubmitted Report[] @relation("ReportsSubmitted")
+  reportsAssigned  Report[] @relation("ReportsAssigned")
+
+  verificationRequests RecipeVerificationRequest[] @relation("VerificationRequester")
+  verificationReviews  RecipeVerificationRequest[] @relation("VerificationReviewer")
+
+  moderationActions ModerationAction[] @relation("ModerationActor")
+
+  @@index([role])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  username    String   @unique
+  displayName String
+  bio         String?  @db.VarChar(500)
+  location    String?  @db.VarChar(120)
+  avatarUrl   String?
+  avatarKey   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([displayName])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  tokenType         String?
+  scope             String?
+  idToken           String?
+  sessionState      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expires])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Recipe {
+  id                 String             @id @default(cuid())
+  authorId           String
+  slug               String             @unique
+  title              String             @db.VarChar(140)
+  description        String             @db.VarChar(600)
+  coverImageUrl      String
+  coverImageKey      String?
+  servings           Int
+  prepMinutes        Int
+  cookMinutes        Int
+  difficulty         Difficulty
+  status             RecipeStatus       @default(DRAFT)
+  verificationStatus VerificationStatus @default(NONE)
+  isHidden           Boolean            @default(false)
+  publishedAt        DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  cuisineId  String?
+  cuisine    Cuisine? @relation(fields: [cuisineId], references: [id], onDelete: SetNull)
+
+  ingredients RecipeIngredient[]
+  steps       RecipeStep[]
+  tags        RecipeTag[]
+  likes       RecipeLike[]
+  favorites   Favorite[]
+  comments    Comment[]
+  reports     Report[]
+
+  verificationRequests RecipeVerificationRequest[]
+  moderationActions    ModerationAction[]
+
+  @@index([authorId, status, createdAt])
+  @@index([status, isHidden, publishedAt])
+  @@index([verificationStatus, updatedAt])
+  @@index([categoryId, status])
+  @@index([cuisineId, status])
+  @@index([createdAt])
+  @@index([publishedAt])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipes Recipe[]
+}
+
+model Cuisine {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipes Recipe[]
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  recipes RecipeTag[]
+}
+
+model RecipeTag {
+  recipeId String
+  tagId    String
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([recipeId, tagId])
+  @@index([tagId, recipeId])
+}
+
+model Ingredient {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  normalizedName String   @unique
+  slug           String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  recipeIngredients RecipeIngredient[]
+  pantryItems       PantryItem[]
+
+  @@index([name])
+  @@index([normalizedName])
+}
+
+model RecipeIngredient {
+  id           String   @id @default(cuid())
+  recipeId     String
+  ingredientId String
+  amount       Decimal? @db.Decimal(10, 2)
+  unit         String?  @db.VarChar(32)
+  note         String?  @db.VarChar(160)
+  isOptional   Boolean  @default(false)
+  position     Int
+
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
+
+  @@unique([recipeId, position])
+  @@index([recipeId, ingredientId])
+  @@index([ingredientId, recipeId])
+}
+
+model RecipeStep {
+  id          String @id @default(cuid())
+  recipeId    String
+  position    Int
+  instruction String @db.Text
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, position])
+  @@index([recipeId])
+}
+
+model RecipeLike {
+  userId    String
+  recipeId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, recipeId])
+  @@index([recipeId, createdAt])
+}
+
+model Favorite {
+  userId    String
+  recipeId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, recipeId])
+  @@index([recipeId])
+  @@index([userId, createdAt])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  recipeId  String
+  body      String   @db.VarChar(1500)
+  isHidden  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe            Recipe             @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  reports           Report[]
+  moderationActions ModerationAction[]
+
+  @@index([recipeId, createdAt])
+  @@index([userId, createdAt])
+  @@index([isHidden])
+}
+
+model Follow {
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+  @@index([followingId, createdAt])
+  @@index([followerId, createdAt])
+}
+
+model PantryItem {
+  userId       String
+  ingredientId String
+  createdAt    DateTime @default(now())
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@id([userId, ingredientId])
+  @@index([ingredientId])
+}
+
+model RecipeVerificationRequest {
+  id            String             @id @default(cuid())
+  recipeId      String
+  requestedById String
+  reviewedById  String?
+  status        VerificationStatus @default(PENDING)
+  creatorNote   String?            @db.VarChar(500)
+  reviewerNote  String?            @db.VarChar(1000)
+  createdAt     DateTime           @default(now())
+  reviewedAt    DateTime?
+
+  recipe      Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  requestedBy User   @relation("VerificationRequester", fields: [requestedById], references: [id], onDelete: Cascade)
+  reviewedBy  User?  @relation("VerificationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([recipeId, createdAt])
+  @@index([requestedById, createdAt])
+}
+
+model Report {
+  id           String           @id @default(cuid())
+  reporterId   String
+  assignedToId String?
+  targetType   ReportTargetType
+  reason       ReportReason
+  status       ReportStatus     @default(OPEN)
+  details      String?          @db.VarChar(1000)
+  recipeId     String?
+  commentId    String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  resolvedAt   DateTime?
+
+  reporter   User     @relation("ReportsSubmitted", fields: [reporterId], references: [id], onDelete: Cascade)
+  assignedTo User?    @relation("ReportsAssigned", fields: [assignedToId], references: [id], onDelete: SetNull)
+  recipe     Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  comment    Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  moderationActions ModerationAction[]
+
+  @@index([status, createdAt])
+  @@index([targetType, status])
+  @@index([recipeId])
+  @@index([commentId])
+  @@index([reporterId, createdAt])
+  @@index([assignedToId, status])
+}
+
+model ModerationAction {
+  id        String               @id @default(cuid())
+  actorId   String
+  action    ModerationActionType
+  note      String?              @db.VarChar(1000)
+  recipeId  String?
+  commentId String?
+  reportId  String?
+  createdAt DateTime             @default(now())
+
+  actor   User     @relation("ModerationActor", fields: [actorId], references: [id], onDelete: Restrict)
+  recipe  Recipe?  @relation(fields: [recipeId], references: [id], onDelete: SetNull)
+  comment Comment? @relation(fields: [commentId], references: [id], onDelete: SetNull)
+  report  Report?  @relation(fields: [reportId], references: [id], onDelete: SetNull)
+
+  @@index([actorId, createdAt])
+  @@index([recipeId, createdAt])
+  @@index([commentId, createdAt])
+  @@index([reportId, createdAt])
+  @@index([action, createdAt])
+}
