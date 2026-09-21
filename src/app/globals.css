@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "./cookly.css";
+@import "./auth.css";
+@import "./liquid-glass.css";
+@import "./recipes.css";
 
 @theme inline {
   --color-background: var(--background);

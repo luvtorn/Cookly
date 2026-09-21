@@ -4,16 +4,21 @@ import { describe, expect, it } from "vitest";
 import Home from "@/app/(public)/page";
 
 describe("Home", () => {
-  it("shows the discovery-first preview and four sample recipe cards", async () => {
+  it("shows an honest empty catalog without demo content or photographs", async () => {
     render(await Home({ searchParams: Promise.resolve({}) }));
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Cook better, together." }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("searchbox", { name: "Search sample recipes" }),
+      screen.getByRole("searchbox", { name: "Search recipes" }),
     ).toBeVisible();
-    expect(screen.getAllByRole("article")).toHaveLength(5);
+    expect(screen.queryAllByRole("article")).toHaveLength(0);
+    expect(screen.queryAllByRole("img")).toHaveLength(0);
+    expect(
+      screen.queryByText(/Emma Chen|Miso Glazed Salmon|sample recipes/i),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("No recipes on the table yet")).toBeVisible();
     expect(
       screen.queryByRole("button", { name: /create recipe/i }),
     ).not.toBeInTheDocument();

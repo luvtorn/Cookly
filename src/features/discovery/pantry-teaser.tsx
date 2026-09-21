@@ -30,14 +30,7 @@ export function PantryTeaser() {
             Explore Pantry <ArrowRight size={16} aria-hidden="true" />
           </PreviewNotice>
         </div>
-        <div
-          className="pantry-ingredients"
-          aria-label="Example pantry ingredients"
-        >
-          <span>eggs</span>
-          <span>spinach</span>
-          <span>tomato</span>
-          <span>cheese</span>
+        <div className="pantry-ingredients" aria-label="Pantry availability">
           <small>
             <Leaf size={13} aria-hidden="true" />
             Coming soon

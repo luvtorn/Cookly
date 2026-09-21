@@ -1,11 +1,15 @@
-import Link from "next/link";
-import { ArrowRight, Clock3, Search } from "lucide-react";
+import { ArrowRight, Search, Utensils } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import type { RecipePreview } from "./recipe-preview";
 
-import { PreviewNotice } from "@/components/shared/preview-notice";
-import { featuredRecipe } from "@/features/discovery/demo-recipes";
-
-export function HomeHero({ query }: { query: string }) {
+export function HomeHero({
+  query,
+  featured,
+}: {
+  query: string;
+  featured?: RecipePreview;
+}) {
   return (
     <section className="home-hero" aria-labelledby="home-title">
       <div className="hero-copy">
@@ -20,7 +24,7 @@ export function HomeHero({ query }: { query: string }) {
         <form className="recipe-search glass" action="/#recipes" role="search">
           <Search size={21} aria-hidden="true" />
           <label htmlFor="recipe-search" className="sr-only">
-            Search sample recipes
+            Search recipes
           </label>
           <input
             id="recipe-search"
@@ -38,51 +42,33 @@ export function HomeHero({ query }: { query: string }) {
             <ArrowRight size={21} aria-hidden="true" />
           </button>
         </form>
-        <div className="search-suggestions" aria-label="Recipe suggestions">
-          <Link href="/?q=pasta#recipes">Pasta</Link>
-          <Link href="/?q=salmon#recipes">Salmon</Link>
-          <Link href="/?category=fresh#recipes">Fresh & green</Link>
-          <Link href="/?category=quick#recipes">30 mins</Link>
-          <Link href="/?category=vegetarian#recipes">Vegetarian</Link>
-        </div>
       </div>
-      <article className="featured-hero">
-        <Image
-          src={featuredRecipe.image}
-          alt={featuredRecipe.imageAlt}
-          fill
-          sizes="(max-width: 767px) 94vw, (max-width: 1023px) 54vw, 690px"
-          preload
-          className="hero-food"
-        />
-        <div className="featured-caption glass">
-          <p className="eyebrow">Featured recipe · Preview</p>
-          <h2>
-            <PreviewNotice
-              className="recipe-title-button"
-              title={featuredRecipe.title}
-              description="A bright bowl of inspiration from our sample collection. Full recipes, ingredients and instructions are coming in the recipe-details milestone."
-            >
-              Creamy Lemon <br />
-              Herb Pasta
-            </PreviewNotice>
-          </h2>
-          <p className="featured-description">{featuredRecipe.description}</p>
-          <div className="featured-author">
-            <span className="avatar" aria-hidden="true">
-              EC
-            </span>
-            <div>
-              <span>by {featuredRecipe.author}</span>
-              <small>Something fresh for your table</small>
-            </div>
+      {featured ? (
+        <Link
+          href={`/recipes/${featured.slug}`}
+          className="featured-hero hero-recipe glass"
+        >
+          <Image
+            src={featured.image}
+            alt={featured.title}
+            fill
+            sizes="(max-width: 767px) 90vw, 550px"
+            priority
+          />
+          <div>
+            <p className="eyebrow">On the table · {featured.author}</p>
+            <h2>{featured.title}</h2>
+            <span>{featured.minutes} min · Discover the recipe →</span>
           </div>
+        </Link>
+      ) : (
+        <div className="featured-hero hero-empty glass">
+          <Utensils size={36} strokeWidth={1.3} aria-hidden="true" />
+          <p className="eyebrow">Made to be shared</p>
+          <h2>Good food starts with a story.</h2>
+          <p>Community recipes and their photos will find a home here.</p>
         </div>
-        <span className="featured-time glass">
-          <Clock3 size={16} aria-hidden="true" />
-          20 min
-        </span>
-      </article>
+      )}
     </section>
   );
 }

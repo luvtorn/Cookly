@@ -10,12 +10,16 @@
   --muted: #e8eae3;
   --muted-foreground: #60665f;
   --destructive: #a83943;
-  --glass-background: rgb(255 255 252 / 70%);
+  --glass-background: rgb(255 255 252 / 78%);
+  --glass-reflection: rgb(255 255 255 / 72%);
+  --glass-reflection-soft: rgb(255 255 255 / 22%);
+  --button-glint: rgb(255 255 255 / 95%);
   --glass-strong: rgb(255 255 251 / 89%);
   --glass-border: rgb(255 255 255 / 85%);
   --glass-highlight: rgb(255 255 255 / 90%);
   --glass-shadow:
-    0 5px 20px rgb(45 54 33 / 6%), inset 0 1px 1px var(--glass-highlight);
+    0 8px 26px rgb(45 54 33 / 9%), inset 0 2px 1px var(--glass-highlight),
+    inset 0 -1px 1px rgb(83 104 71 / 13%);
   --panel-shadow: 0 15px 35px rgb(40 44 24 / 12%);
   --accent-lime: #627c25;
   --accent-coral: #a1404a;
@@ -30,7 +34,7 @@
   --radius-control: 0.9rem;
   --radius-card: 1.2rem;
   --radius-panel: 1.8rem;
-  --glass-blur: 18px;
+  --glass-blur: 26px;
   --motion-fast: 160ms;
   --motion-reveal: 450ms;
   --motion-ease: cubic-bezier(0.2, 0.65, 0.3, 1);
@@ -49,11 +53,15 @@
   --muted-foreground: #c0c8bb;
   --destructive: #f29c9a;
   --glass-background: rgb(35 49 40 / 80%);
+  --glass-reflection: rgb(232 245 215 / 17%);
+  --glass-reflection-soft: rgb(222 244 211 / 5%);
+  --button-glint: rgb(227 250 208 / 90%);
   --glass-strong: rgb(37 51 42 / 96%);
   --glass-border: rgb(206 223 192 / 25%);
-  --glass-highlight: rgb(229 241 210 / 14%);
+  --glass-highlight: rgb(229 241 210 / 32%);
   --glass-shadow:
-    0 5px 20px rgb(0 0 0 / 12%), inset 0 1px 1px var(--glass-highlight);
+    0 8px 26px rgb(0 0 0 / 18%), inset 0 2px 1px var(--glass-highlight),
+    inset 0 -1px 1px rgb(0 0 0 / 24%);
   --panel-shadow: 0 15px 35px rgb(0 0 0 / 22%);
   --accent-lime: #d1df9d;
   --accent-coral: #f1aaa4;
@@ -108,16 +116,27 @@ h2 {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(var(--scene-wash), var(--scene-wash)),
-    url("/images/kitchen.webp") center / cover no-repeat;
+  background: radial-gradient(
+    ellipse at top right,
+    var(--secondary),
+    transparent 65%
+  );
   pointer-events: none;
 }
 .glass {
-  background: var(--glass-background);
+  background:
+    linear-gradient(
+      128deg,
+      var(--glass-reflection),
+      transparent 28%,
+      var(--glass-reflection-soft) 48%,
+      transparent 64%,
+      var(--glass-reflection-soft)
+    ),
+    var(--glass-background);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur)) saturate(145%);
 }
 .home-container {
   width: min(1280px, calc(100% - 96px));
@@ -340,6 +359,25 @@ input::placeholder {
 .hero-food {
   object-fit: cover;
   object-position: center;
+}
+.hero-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 28px;
+  text-align: center;
+}
+.hero-empty > svg {
+  color: var(--primary);
+}
+.hero-empty > p:last-child {
+  color: var(--muted-foreground);
+  max-width: 32ch;
+}
+.section-heading p {
+  overflow-wrap: anywhere;
 }
 .featured-caption {
   position: relative;
@@ -651,7 +689,7 @@ input::placeholder {
   width: min(440px, calc(100% - 32px));
   max-height: calc(100dvh - 32px);
   border-radius: var(--radius-panel);
-  background: var(--glass-strong);
+  background-color: var(--glass-strong);
   color: var(--foreground);
 }
 .preview-dialog::backdrop {
@@ -866,7 +904,7 @@ input::placeholder {
     top: calc(100% + 10px);
     padding: 12px;
     border-radius: 22px;
-    background: var(--glass-strong);
+    background-color: var(--glass-strong);
     display: grid;
   }
   .mobile-menu a {

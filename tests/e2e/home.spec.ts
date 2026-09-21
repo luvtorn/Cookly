@@ -1,29 +1,26 @@
 import { expect, test } from "@playwright/test";
 
-test("opens the Home preview with local images and no hydration errors", async ({
+test("opens Home without demo recipes, photo requests or hydration errors", async ({
   page,
 }) => {
   const errors: string[] = [];
+  const photoRequests: string[] = [];
+  page.on("request", (request) => {
+    if (/\/images\/|\/_next\/image/.test(request.url()))
+      photoRequests.push(request.url());
+  });
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(
     page.getByRole("heading", { name: "Cook better, together." }),
   ).toBeVisible();
-  await expect(page.locator(".recipe-card")).toHaveCount(4);
+  await expect(page.locator(".recipe-card")).toHaveCount(0);
+  await expect(page.getByText("No recipes on the table yet")).toBeVisible();
+  await expect(page.locator("main img")).toHaveCount(0);
   await expect(
-    page.getByText("Design preview · Sample content & imagery"),
-  ).toBeVisible();
-  for (const image of await page.locator("main img").all()) {
-    await image.scrollIntoViewIfNeeded();
-    await expect
-      .poll(() =>
-        image.evaluate(
-          (element: HTMLImageElement) =>
-            element.complete && element.naturalWidth > 0,
-        ),
-      )
-      .toBe(true);
-  }
+    page.getByText(/Emma Chen|Miso Glazed Salmon|Sample recipes/),
+  ).toHaveCount(0);
+  expect(photoRequests).toEqual([]);
   expect(errors).toEqual([]);
 });
 
@@ -33,20 +30,25 @@ test("search, categories, empty state and clearing filters work", async ({
   await page.goto("/");
   await page.getByRole("searchbox").fill("salmon");
   await page.getByRole("button", { name: "Search recipes" }).click();
-  await expect(page.locator(".recipe-card")).toHaveCount(1);
-  await expect(page.locator(".recipe-card")).toContainText(
-    "Miso Glazed Salmon",
-  );
+  await expect(page).toHaveURL(/q=salmon/);
+  await expect(page.locator(".recipe-card")).toHaveCount(0);
+  await expect(
+    page.getByText(/The community catalog is not connected yet/),
+  ).toBeVisible();
   await page.getByRole("searchbox").fill("not-in-this-demo");
   await page.getByRole("button", { name: "Search recipes" }).click();
   await expect(page.getByText("No recipes on the table yet")).toBeVisible();
   await page.getByRole("link", { name: "Clear filters" }).first().click();
-  await expect(page.locator(".recipe-card")).toHaveCount(4);
+  await expect(page.getByRole("searchbox")).toHaveValue("");
   await page
     .locator("#categories")
     .getByRole("link", { name: "Vegetarian" })
     .click();
-  await expect(page.locator(".recipe-card")).toHaveCount(3);
+  await expect(page).toHaveURL(/category=vegetarian/);
+  await expect(
+    page.locator("#categories").getByRole("link", { name: "Vegetarian" }),
+  ).toHaveAttribute("aria-current", "true");
+  await expect(page.locator(".recipe-card")).toHaveCount(0);
 });
 
 test("theme respects the system and persists an override", async ({ page }) => {
@@ -63,7 +65,7 @@ test("preview dialogs support keyboard dismissal and restore focus", async ({
   page,
 }) => {
   await page.goto("/");
-  const signIn = page.getByRole("button", { name: "Sign in" });
+  const signIn = page.getByRole("button", { name: "Explore Pantry" });
   await signIn.click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(
@@ -76,9 +78,9 @@ test("preview dialogs support keyboard dismissal and restore focus", async ({
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(signIn).toBeFocused();
-  await page.getByRole("button", { name: "Miso Glazed Salmon" }).click();
+  await page.getByRole("button", { name: "Explore Pantry" }).click();
   await expect(page.getByRole("dialog")).toContainText(
-    "Full ingredients and cooking instructions",
+    "Pantry will match recipes",
   );
   await page.getByRole("button", { name: "Keep exploring" }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -154,36 +156,18 @@ test("unknown routes show the branded 404", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("long preview content wraps and long searches stay usable", async ({
+test("long searches stay usable without demo content", async ({
   page,
 }, testInfo) => {
   await page.setViewportSize({ width: 320, height: 844 });
   await page.goto("/");
-  // Wait for hydration before modifying the DOM, otherwise React can replace the fixture.
   await page.getByRole("button", { name: "Toggle color theme" }).click();
   await expect(page.locator("html")).toHaveClass(/dark/);
-  // Presentation stress fixture only; this does not change stored recipe content.
-  await page
-    .locator(".recipe-card h3 button")
-    .first()
-    .evaluate((element) => {
-      element.textContent = "Averylongrecipetitle".repeat(7);
-    });
-  await expect(page.locator(".recipe-card h3 button").first()).toHaveText(
-    "Averylongrecipetitle".repeat(7),
-  );
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBe(true);
-  await page.screenshot({
-    path: testInfo.outputPath("long-title-mobile.png"),
-    fullPage: true,
-  });
-  await expect(page.locator(".recipe-card h3 button").first()).toHaveText(
-    "Averylongrecipetitle".repeat(7),
-  );
   await page.getByRole("searchbox").fill("x".repeat(100));
   await page.getByRole("button", { name: "Search recipes" }).click();
   await expect(page.getByText("No recipes on the table yet")).toBeVisible();

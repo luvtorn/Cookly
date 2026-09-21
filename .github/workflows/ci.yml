@@ -54,3 +54,46 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+  auth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: cookly_test
+          POSTGRES_PASSWORD: isolated_ci_only
+          POSTGRES_DB: cookly_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cookly_test -d cookly_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      CI: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+      TEST_DATABASE_URL: postgresql://cookly_test:isolated_ci_only@127.0.0.1:5432/cookly_test
+      DATABASE_URL: ""
+      AUTH_SECRET: ""
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run prisma:generate
+      - run: npm run test:db:migrate
+      - run: npm run test:integration
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:auth:e2e
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: auth-failure-report
+          path: test-results/auth/
+          retention-days: 7

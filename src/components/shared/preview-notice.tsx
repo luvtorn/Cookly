@@ -82,8 +82,8 @@ export function PreviewNotice({
               <h2>{title}</h2>
               <p className="muted-copy">{description}</p>
               <p className="preview-disclaimer">
-                This is a design preview. No account, saved recipes, or pantry
-                data is created.
+                This feature is a preview. Opening it does not create saved
+                recipes or pantry data.
               </p>
               <form method="dialog">
                 <button ref={continueButton} className="button-primary">

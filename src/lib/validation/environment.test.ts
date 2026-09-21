@@ -1,8 +1,24 @@
 import { describe, expect, it } from "vitest";
 
-import { readServerEnvironment, requireDatabaseUrl } from "./environment";
+import {
+  readServerEnvironment,
+  requireDatabaseUrl,
+  requireAuthSecret,
+} from "./environment";
 
 describe("server environment", () => {
+  it("requires a secret only for auth, with safe errors", () => {
+    expect(() => readServerEnvironment({})).not.toThrow();
+    for (const AUTH_SECRET of [undefined, "", "private-secret"]) {
+      expect(() => requireAuthSecret({ AUTH_SECRET })).toThrow(
+        "AUTH_SECRET must contain at least 32 characters",
+      );
+    }
+    expect(requireAuthSecret({ AUTH_SECRET: "x".repeat(32) })).toHaveLength(32);
+    expect(() =>
+      readServerEnvironment({ NEXTAUTH_URL: "private-invalid-url" }),
+    ).toThrow("Invalid environment variables: NEXTAUTH_URL.");
+  });
   it.each([undefined, "", "   "])(
     "allows an absent database during foundation checks (%s)",
     (DATABASE_URL) => {

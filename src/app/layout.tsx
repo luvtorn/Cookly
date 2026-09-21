@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 
 import { Providers } from "@/app/providers";
+import { GlassEffects } from "@/components/shared/glass-effects";
 
 import "./globals.css";
 
@@ -38,6 +39,7 @@ export default function RootLayout({
         className={`${sans.variable} ${display.variable} font-sans antialiased`}
       >
         <Providers>{children}</Providers>
+        <GlassEffects />
       </body>
     </html>
   );

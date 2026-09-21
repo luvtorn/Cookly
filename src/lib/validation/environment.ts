@@ -27,6 +27,10 @@ const databaseUrlSchema = z.preprocess(
 const environmentSchema = z.object({
   DATABASE_URL: databaseUrlSchema,
   AUTH_SECRET: z.preprocess(emptyToUndefined, z.string().optional()),
+  NEXTAUTH_URL: z.preprocess(
+    emptyToUndefined,
+    z.url({ protocol: /^https?$/ }).optional(),
+  ),
   NEXT_PUBLIC_APP_URL: z.preprocess(
     emptyToUndefined,
     z.url({ protocol: /^https?$/ }).optional(),
@@ -57,4 +61,13 @@ export function requireDatabaseUrl(source: Record<string, unknown>): string {
   }
 
   return DATABASE_URL;
+}
+
+export function requireAuthSecret(source: Record<string, unknown>): string {
+  const { AUTH_SECRET } = readServerEnvironment(source);
+  if (!AUTH_SECRET || AUTH_SECRET.length < 32)
+    throw new Error(
+      "AUTH_SECRET must contain at least 32 characters for authentication.",
+    );
+  return AUTH_SECRET;
 }

@@ -1,0 +1,314 @@
+/* Material layers are independent: refracted backdrop / tint / rim / glint.
+   Never apply a displacement filter to an element containing text or icons. */
+:root {
+  --glass-background: rgb(255 255 248 / 58%);
+  --glass-reflection: rgb(255 255 255 / 90%);
+  --glass-reflection-soft: rgb(255 255 255 / 32%);
+  --glass-border: rgb(255 255 255 / 80%);
+  --glass-rim-shade: rgb(57 78 49 / 24%);
+  --glass-glint: rgb(255 255 255 / 100%);
+  --glass-sheen: rgb(255 255 255 / 48%);
+  --glass-shadow:
+    0 8px 24px rgb(36 52 29 / 10%), inset 0 2px 1px rgb(255 255 255 / 95%),
+    inset 1px 0 1px rgb(255 255 255 / 70%),
+    inset -1px -2px 2px var(--glass-rim-shade);
+  --glass-green-top: rgb(255 255 255 / 32%);
+  --glass-green-bottom: rgb(8 37 18 / 32%);
+  --glass-rim:
+    inset 0 2px 1px var(--glass-highlight), inset 1px 0 1px var(--glass-border),
+    inset -1px -2px 2px var(--glass-rim-shade);
+}
+.dark {
+  --glass-background: rgb(35 49 40 / 64%);
+  --glass-reflection: rgb(234 248 222 / 32%);
+  --glass-reflection-soft: rgb(224 240 218 / 9%);
+  --glass-border: rgb(227 245 212 / 34%);
+  --glass-rim-shade: rgb(0 9 3 / 52%);
+  --glass-glint: rgb(242 255 225 / 100%);
+  --glass-sheen: rgb(233 253 214 / 26%);
+  --glass-shadow:
+    0 8px 26px rgb(0 0 0 / 20%), inset 0 2px 1px rgb(234 249 219 / 46%),
+    inset 1px 0 1px rgb(234 249 219 / 20%),
+    inset -1px -2px 2px var(--glass-rim-shade);
+  --glass-green-top: rgb(255 255 240 / 66%);
+  --glass-green-bottom: rgb(27 67 17 / 32%);
+}
+.glass-definitions {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Low specificity preserves sticky/absolute positioning on existing components. */
+:where(
+  .glass,
+  .category-card,
+  .sign-in-button,
+  .button-primary,
+  .search-submit,
+  .auth-tabs a,
+  .auth-submit,
+  .icon-button
+) {
+  position: relative;
+  isolation: isolate;
+}
+.glass,
+:is(
+  .category-card,
+  .sign-in-button,
+  .button-primary,
+  .search-submit,
+  .auth-tabs a,
+  .auth-submit,
+  .icon-button
+) {
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: var(--glass-shadow);
+}
+:is(
+  .glass,
+  .category-card,
+  .sign-in-button,
+  .button-primary,
+  .search-submit,
+  .auth-tabs a,
+  .auth-submit,
+  .icon-button
+)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at var(--glint-x, 22%) var(--glint-y, 0%),
+      var(--glass-sheen),
+      transparent 68%
+    ),
+    linear-gradient(
+      145deg,
+      var(--glass-reflection),
+      transparent 28%,
+      var(--glass-reflection-soft) 52%,
+      transparent 68%
+    ),
+    var(--liquid-tint, var(--glass-background));
+  backdrop-filter: var(--liquid-lens, blur(0px)) blur(var(--liquid-blur, 18px))
+    saturate(150%);
+  box-shadow: var(--glass-rim);
+}
+.glass:not(.category-card, .site-header, .auth-modal) {
+  --glass-sheen: color-mix(in srgb, var(--glass-reflection) 25%, transparent);
+  --glass-reflection-soft: transparent;
+}
+[data-lens="ready"] {
+  --liquid-blur: 2px;
+}
+.site-header {
+  --liquid-blur: 5px;
+}
+.site-header:not([data-lens="ready"]) {
+  /* Preserve navigation contrast even when an engine cannot blur the backdrop. */
+  --liquid-tint: var(--glass-strong);
+  --liquid-blur: 16px;
+}
+.auth-modal {
+  --liquid-tint: var(--glass-strong);
+  --liquid-blur: 3px;
+}
+.auth-modal::before {
+  inset: -1px;
+  /* Keep the outer lens clear; the dense tint starts inside its rim. */
+  padding: 9px;
+  background-clip: content-box;
+}
+.auth-modal .auth-panel {
+  border-radius: 0 var(--radius-panel) var(--radius-panel) 0;
+}
+:is(.mobile-menu, .account-dropdown, .preview-dialog) {
+  --liquid-tint: var(--glass-strong);
+}
+
+:is(
+  .category-card,
+  .sign-in-button,
+  .button-primary,
+  .search-submit,
+  .auth-tabs a,
+  .auth-submit,
+  .icon-button
+)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100px 70px at var(--glint-x, 30%) var(--glint-y, 0%),
+    var(--glass-glint) 10%,
+    transparent 100%
+  );
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  :is(
+      .category-card,
+      .sign-in-button,
+      .button-primary,
+      .search-submit,
+      .auth-tabs a,
+      .auth-submit,
+      .icon-button
+    ):hover::after {
+    opacity: 1;
+  }
+}
+:is(
+    .category-card,
+    .sign-in-button,
+    .button-primary,
+    .search-submit,
+    .auth-tabs a,
+    .auth-submit,
+    .icon-button
+  ):is(:focus-visible, :active, [data-glass-pressed])::after {
+  opacity: 1;
+}
+[data-glass-pressed]::after {
+  transition-duration: 100ms;
+}
+:is(
+  .category-card,
+  .sign-in-button,
+  .button-primary,
+  .search-submit,
+  .auth-tabs a,
+  .auth-submit,
+  .icon-button
+):focus-visible {
+  --glint-x: 30% !important;
+  --glint-y: 0% !important;
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+:is(button:disabled, a[aria-disabled="true"])::after {
+  opacity: 0 !important;
+}
+:is(button:disabled, a[aria-disabled="true"]) {
+  --glint-x: 22% !important;
+  --glint-y: 0% !important;
+}
+.category-card:is(:hover, [aria-current]),
+.icon-button:hover {
+  background: transparent;
+}
+.category-card[aria-current] {
+  --liquid-tint: color-mix(in srgb, var(--secondary) 74%, transparent);
+}
+.sign-in-button {
+  border-radius: 999px;
+  padding: 0 16px;
+  justify-content: center;
+}
+.auth-tabs a {
+  box-shadow: none;
+}
+.auth-tabs a:not([aria-current])::before {
+  opacity: 0.35;
+}
+.auth-tabs [aria-current] {
+  background: transparent;
+  --liquid-tint: var(--secondary);
+  box-shadow: var(--glass-shadow);
+}
+:is(.button-primary, .auth-submit, .search-submit) {
+  --liquid-tint: var(--primary);
+  --glass-sheen: var(--glass-green-top);
+  --glass-rim-shade: var(--glass-green-bottom);
+  --glass-reflection: var(--glass-green-top);
+  --glass-highlight: var(--glass-green-top);
+  --glass-reflection-soft: transparent;
+  box-shadow:
+    0 6px 16px rgb(27 61 23 / 16%),
+    inset 0 2px 1px var(--glass-green-top),
+    inset 0 -3px 2px var(--glass-green-bottom);
+}
+:is(.button-primary, .search-submit):hover {
+  filter: none;
+}
+.auth-input-wrap .icon-button {
+  box-shadow: none;
+}
+.auth-input-wrap .icon-button::before {
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+@media (max-width: 380px) {
+  .sign-in-button {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(
+    .category-card,
+    .sign-in-button,
+    .button-primary,
+    .search-submit,
+    .auth-tabs a,
+    .auth-submit,
+    .icon-button
+  ) {
+    --glint-x: 30% !important;
+    --glint-y: 0% !important;
+  }
+  :is(
+    .category-card,
+    .sign-in-button,
+    .button-primary,
+    .search-submit,
+    .auth-tabs a,
+    .auth-submit,
+    .icon-button
+  )::after {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  :is(
+    .glass,
+    .category-card,
+    .sign-in-button,
+    .button-primary,
+    .search-submit,
+    .auth-tabs a,
+    .auth-submit,
+    .icon-button
+  )::before,
+  :is(
+    .category-card,
+    .sign-in-button,
+    .button-primary,
+    .search-submit,
+    .auth-tabs a,
+    .auth-submit,
+    .icon-button
+  )::after {
+    display: none;
+  }
+}

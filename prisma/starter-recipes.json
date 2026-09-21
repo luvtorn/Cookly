@@ -1,0 +1,314 @@
+[
+  {
+    "slug": "chicken-teriyaki",
+    "title": "Chicken Teriyaki",
+    "description": "Pan-seared chicken in a glossy ginger-soy glaze, served with rice and tender broccoli.",
+    "servings": 2,
+    "prepMinutes": 15,
+    "cookMinutes": 20,
+    "difficulty": "EASY",
+    "category": "Main courses",
+    "cuisine": "Japanese-inspired",
+    "tags": ["comfort"],
+    "ingredients": [
+      ["chicken breast", 300, "g"],
+      ["jasmine rice", 150, "g"],
+      ["broccoli", 200, "g"],
+      ["soy sauce", 30, "ml"],
+      ["honey", 20, "g"],
+      ["rice vinegar", 15, "ml"],
+      ["fresh ginger", 10, "g"],
+      ["garlic", 2, "cloves"],
+      ["sunflower oil", 10, "ml"],
+      ["water", 45, "ml"],
+      ["sesame seeds", 5, "g"],
+      ["spring onion", 1, "piece"]
+    ],
+    "steps": [
+      "Cook the rice according to its packet instructions. Cut broccoli into bite-sized florets and steam for 5–7 minutes until tender. Keep warm.",
+      "Finely grate the ginger and garlic. Whisk with soy sauce, honey, rice vinegar and 45 ml water.",
+      "Cut chicken into evenly sized 2 cm pieces. Heat the oil in a large frying pan over medium-high heat. Cook chicken for 6–8 minutes, turning regularly.",
+      "Add the sauce and simmer for 3–5 minutes, stirring, until glossy and lightly thickened. Check the thickest chicken pieces reach 74°C with a food thermometer; continue cooking if needed.",
+      "Divide rice, broccoli and chicken between two bowls. Spoon over the sauce and finish with sesame seeds and thinly sliced spring onion."
+    ],
+    "imageSubject": "Chicken teriyaki bowl: evenly diced browned chicken breast coated in glossy dark amber ginger-soy-honey glaze, white jasmine rice, steamed broccoli florets, sesame seeds and thin spring onion. No other toppings."
+  },
+  {
+    "slug": "lemon-parmesan-pasta",
+    "title": "Lemon Parmesan Pasta",
+    "description": "Silky spaghetti with lemon, butter and Parmesan, finished with parsley and black pepper.",
+    "servings": 2,
+    "prepMinutes": 10,
+    "cookMinutes": 15,
+    "difficulty": "EASY",
+    "category": "Pasta",
+    "cuisine": "Italian-inspired",
+    "tags": ["quick", "comfort"],
+    "ingredients": [
+      ["spaghetti", 200, "g"],
+      ["butter", 30, "g"],
+      ["parmesan", 50, "g"],
+      ["lemon", 1, "piece"],
+      ["parsley", 10, "g"],
+      ["salt", 5, "g"],
+      ["black pepper", 1, "g"]
+    ],
+    "steps": [
+      "Bring a large saucepan of water to the boil and add the salt. Cook spaghetti until just al dente according to its packet instructions. Reserve 250 ml cooking water before draining.",
+      "Finely grate the Parmesan and the yellow zest of the lemon. Squeeze the lemon; start with 1 tablespoon juice and reserve the remainder. Chop parsley.",
+      "Melt butter gently in a wide pan. Add lemon zest, spaghetti and 100 ml reserved cooking water. Toss over low heat for 1 minute.",
+      "Remove from the heat. Add Parmesan gradually while tossing vigorously. Add more reserved water a splash at a time until the sauce coats the pasta without clumping.",
+      "Add lemon juice to taste, parsley and black pepper. Serve immediately in warm bowls."
+    ],
+    "imageSubject": "A shallow cream bowl of spaghetti in a light glossy lemon-butter Parmesan sauce, finely grated Parmesan, tiny lemon zest curls, chopped parsley and black pepper. No chicken, no cream pool, no tomatoes."
+  },
+  {
+    "slug": "roasted-tomato-soup",
+    "title": "Roasted Tomato Soup",
+    "description": "Slow-roasted tomatoes blended with onion, garlic and basil into a comforting, velvety soup.",
+    "servings": 4,
+    "prepMinutes": 15,
+    "cookMinutes": 45,
+    "difficulty": "EASY",
+    "category": "Soups",
+    "cuisine": "Mediterranean-inspired",
+    "tags": ["vegetarian", "comfort"],
+    "ingredients": [
+      ["tomato", 1000, "g"],
+      ["onion", 150, "g"],
+      ["garlic", 4, "cloves"],
+      ["olive oil", 30, "ml"],
+      ["vegetable stock", 500, "ml"],
+      ["basil", 15, "g"],
+      ["salt", 2, "g"],
+      ["black pepper", 1, "g"]
+    ],
+    "steps": [
+      "Heat the oven to 200°C conventional / 180°C fan. Halve tomatoes, quarter the peeled onion and peel the garlic.",
+      "Spread the vegetables on a rimmed roasting tray. Toss with olive oil, salt and pepper. Roast for 35 minutes until softened and lightly browned.",
+      "Transfer vegetables and tray juices to a large saucepan. Add vegetable stock and simmer for 10 minutes.",
+      "Remove from the heat and add most of the basil. Blend carefully with an immersion blender until smooth, keeping its head submerged to avoid hot splashes. Add a little water if too thick.",
+      "Taste and adjust seasoning. Ladle into bowls and finish with the remaining basil."
+    ],
+    "imageSubject": "A cream ceramic bowl filled with smooth warm red-orange roasted tomato soup, a few fresh basil leaves at center and subtle tiny olive oil droplets. No cream swirl, croutons or bread."
+  },
+  {
+    "slug": "baked-salmon-with-rice",
+    "title": "Baked Salmon with Rice",
+    "description": "Lemon-dill salmon with fluffy rice and green beans: a simple oven-to-table dinner.",
+    "servings": 2,
+    "prepMinutes": 10,
+    "cookMinutes": 25,
+    "difficulty": "EASY",
+    "category": "Main courses",
+    "cuisine": "European-inspired",
+    "tags": ["fresh"],
+    "ingredients": [
+      ["salmon fillet", 300, "g"],
+      ["basmati rice", 150, "g"],
+      ["green beans", 200, "g"],
+      ["lemon", 1, "piece"],
+      ["olive oil", 15, "ml"],
+      ["dill", 10, "g"],
+      ["salt", 2, "g"],
+      ["black pepper", 1, "g"]
+    ],
+    "steps": [
+      "Heat the oven to 200°C conventional / 180°C fan. Cook the rice following its packet instructions.",
+      "Place the salmon fillets in a small baking dish. Rub with olive oil, salt and pepper. Top with half the chopped dill and a few thin lemon slices.",
+      "Bake for 12–18 minutes, depending on thickness, until the center reaches 63°C on a food thermometer and the flesh flakes readily.",
+      "Meanwhile, trim the green beans and boil for 5–7 minutes until tender. Drain well.",
+      "Serve salmon beside the rice and green beans. Finish with remaining dill and lemon wedges."
+    ],
+    "imageSubject": "One baked salmon fillet with gently browned edges topped with thin roasted lemon slices and fresh dill, beside fluffy white basmati rice and whole green beans on a cream plate. No teriyaki sauce or broccoli."
+  },
+  {
+    "slug": "chickpea-grain-bowl",
+    "title": "Chickpea Grain Bowl",
+    "description": "Warm quinoa, spiced chickpeas and crisp vegetables with a bright lemon-tahini dressing.",
+    "servings": 2,
+    "prepMinutes": 15,
+    "cookMinutes": 20,
+    "difficulty": "EASY",
+    "category": "Bowls",
+    "cuisine": "Mediterranean-inspired",
+    "tags": ["vegetarian", "fresh"],
+    "ingredients": [
+      ["quinoa", 120, "g"],
+      ["cooked chickpeas", 240, "g"],
+      ["cucumber", 150, "g"],
+      ["cherry tomato", 150, "g"],
+      ["baby spinach", 60, "g"],
+      ["tahini", 30, "g"],
+      ["lemon juice", 20, "ml"],
+      ["olive oil", 10, "ml"],
+      ["ground cumin", 2, "g"],
+      ["parsley", 5, "g"],
+      ["black pepper", 1, "g"],
+      ["water", 30, "ml"],
+      ["salt", 2, "g"]
+    ],
+    "steps": [
+      "Rinse quinoa thoroughly and cook according to its packet instructions. Drain if needed and let stand covered for 5 minutes.",
+      "Rinse and drain chickpeas. Heat olive oil in a frying pan, add chickpeas and cumin, and cook for 5–7 minutes, stirring, until warm and lightly golden.",
+      "Whisk tahini, lemon juice, water and salt into a pourable dressing. Add a little more water if needed.",
+      "Dice cucumber, halve cherry tomatoes and wash and dry the spinach.",
+      "Divide quinoa, spinach, chickpeas, cucumber and tomatoes between bowls. Drizzle with the tahini dressing, sprinkle with chopped parsley and black pepper, and serve."
+    ],
+    "imageSubject": "A cream grain bowl with distinct sections of cooked quinoa, cumin-spiced golden chickpeas, diced cucumber, halved red cherry tomatoes and fresh baby spinach, drizzled with pale lemon-tahini dressing. No avocado or meat."
+  },
+  {
+    "slug": "spinach-feta-omelette",
+    "title": "Spinach and Feta Omelette",
+    "description": "A tender folded omelette filled with wilted spinach and tangy feta, ready for a relaxed breakfast.",
+    "servings": 1,
+    "prepMinutes": 5,
+    "cookMinutes": 10,
+    "difficulty": "EASY",
+    "category": "Breakfast",
+    "cuisine": "European-inspired",
+    "tags": ["vegetarian", "quick"],
+    "ingredients": [
+      ["egg", 3, "pieces"],
+      ["baby spinach", 60, "g"],
+      ["feta", 40, "g"],
+      ["olive oil", 10, "ml"],
+      ["black pepper", 1, "g"]
+    ],
+    "steps": [
+      "Crack eggs into a bowl and beat with black pepper until the yolks and whites are combined. Crumble the feta.",
+      "Heat half the olive oil in a non-stick frying pan over medium heat. Add washed spinach and stir for 1–2 minutes until wilted. Transfer to a plate and drain excess liquid.",
+      "Add the remaining oil and pour in the eggs. Reduce the heat. Draw the set edges gently toward the middle, tilting the pan so uncooked egg fills the gaps.",
+      "When the top is almost set, scatter spinach and feta over one half. Fold the other half over the filling and cook gently until the eggs are fully set, without visible liquid egg.",
+      "Slide onto a warm plate and serve straight away."
+    ],
+    "imageSubject": "A single golden folded half-moon omelette on a cream plate, cut edge revealing wilted green spinach and crumbled white feta, tiny black pepper flecks. No toast, tomatoes or extra sides."
+  },
+  {
+    "slug": "mushroom-risotto",
+    "title": "Mushroom Risotto",
+    "description": "Creamy arborio rice with deeply browned mushrooms, thyme and Parmesan, made without cream.",
+    "servings": 2,
+    "prepMinutes": 10,
+    "cookMinutes": 30,
+    "difficulty": "MEDIUM",
+    "category": "Main courses",
+    "cuisine": "Italian-inspired",
+    "tags": ["comfort"],
+    "ingredients": [
+      ["arborio rice", 160, "g"],
+      ["mushroom", 250, "g"],
+      ["onion", 80, "g"],
+      ["garlic", 1, "clove"],
+      ["vegetable stock", 750, "ml"],
+      ["olive oil", 15, "ml"],
+      ["butter", 20, "g"],
+      ["parmesan", 40, "g"],
+      ["thyme", 3, "g"],
+      ["black pepper", 1, "g"]
+    ],
+    "steps": [
+      "Keep vegetable stock hot in a small saucepan. Slice mushrooms, finely chop the onion and garlic, and grate Parmesan.",
+      "Heat olive oil in a wide pan. Brown mushrooms over medium-high heat for 6–8 minutes. Remove half and reserve for serving.",
+      "Lower the heat. Add half the butter, onion and thyme leaves. Cook for 4 minutes, then add garlic and rice and stir for 1 minute.",
+      "Add a ladle of hot stock and stir until mostly absorbed. Continue adding stock a ladle at a time for 18–22 minutes, stirring frequently, until rice is tender with a slight bite. Add hot water if the stock runs out.",
+      "Remove from the heat. Stir in remaining butter, Parmesan and pepper. Rest for 2 minutes, loosen with a splash of stock if needed, and serve topped with reserved mushrooms."
+    ],
+    "imageSubject": "Creamy pale arborio mushroom risotto in a shallow cream bowl with visibly distinct rice grains, browned sliced mushrooms on top, small thyme leaves and finely grated Parmesan. No cream pour, no parsley, no meat."
+  },
+  {
+    "slug": "red-lentil-curry",
+    "title": "Red Lentil Curry",
+    "description": "A gently spiced coconut and tomato lentil curry with spinach, served over basmati rice.",
+    "servings": 4,
+    "prepMinutes": 15,
+    "cookMinutes": 30,
+    "difficulty": "EASY",
+    "category": "Main courses",
+    "cuisine": "Indian-inspired",
+    "tags": ["vegetarian", "comfort"],
+    "ingredients": [
+      ["red lentils", 200, "g"],
+      ["basmati rice", 240, "g"],
+      ["coconut milk", 400, "ml"],
+      ["chopped canned tomato", 400, "g"],
+      ["onion", 150, "g"],
+      ["garlic", 2, "cloves"],
+      ["fresh ginger", 15, "g"],
+      ["curry powder", 8, "g"],
+      ["sunflower oil", 15, "ml"],
+      ["baby spinach", 100, "g"],
+      ["water", 300, "ml"],
+      ["salt", 3, "g"]
+    ],
+    "steps": [
+      "Rinse lentils in a sieve. Finely chop onion and grate garlic and ginger. Cook rice separately following the packet instructions.",
+      "Heat oil in a large saucepan over medium heat. Cook onion for 5 minutes. Add garlic, ginger and curry powder and stir for 1 minute.",
+      "Add lentils, chopped tomatoes, coconut milk, 300 ml water and salt. Bring to a gentle simmer.",
+      "Cook uncovered for 20–25 minutes, stirring regularly, until lentils are soft. Add more water a little at a time if the curry becomes too thick or starts sticking.",
+      "Stir in washed spinach and cook for 2 minutes until wilted. Taste and adjust seasoning. Serve with the rice."
+    ],
+    "imageSubject": "A cream bowl of thick orange-red lentil coconut tomato curry with wilted spinach visible in the sauce, beside a crescent of fluffy basmati rice. Soft lentil texture, gentle sheen. No chickpeas, chicken or garnish not in recipe."
+  },
+  {
+    "slug": "blueberry-pancakes",
+    "title": "Blueberry Pancakes",
+    "description": "Fluffy blueberry pancakes with golden edges, served with maple syrup for a slow morning.",
+    "servings": 3,
+    "prepMinutes": 10,
+    "cookMinutes": 20,
+    "difficulty": "EASY",
+    "category": "Breakfast",
+    "cuisine": "American-inspired",
+    "tags": ["vegetarian", "quick"],
+    "ingredients": [
+      ["plain flour", 180, "g"],
+      ["milk", 220, "ml"],
+      ["egg", 1, "piece"],
+      ["baking powder", 8, "g"],
+      ["sugar", 20, "g"],
+      ["butter", 30, "g"],
+      ["blueberry", 150, "g"],
+      ["maple syrup", 45, "ml"],
+      ["salt", 1, "g"]
+    ],
+    "steps": [
+      "Mix flour, baking powder, sugar and salt in a bowl. Melt 20 g butter and let it cool slightly.",
+      "Whisk milk and egg with the melted butter. Pour into the dry ingredients and stir just until combined; a few small lumps are fine. Fold in 100 g blueberries.",
+      "Heat a non-stick pan over medium-low heat and lightly grease with some of the remaining butter. Add roughly 60 ml batter per pancake, leaving room between them.",
+      "Cook for 2–3 minutes until bubbles form and the edges look set. Flip and cook for another 1–2 minutes until golden and the middle is cooked through. Repeat, using the remaining butter as needed.",
+      "Serve pancakes with the remaining fresh blueberries and maple syrup."
+    ],
+    "imageSubject": "A small stack of fluffy golden blueberry pancakes on a cream plate, purple-blue berries visible inside pancakes, fresh blueberries on top and a light maple syrup drizzle. No powdered sugar, whipped cream or strawberries."
+  },
+  {
+    "slug": "cinnamon-baked-apples",
+    "title": "Cinnamon Baked Apples",
+    "description": "Tender whole apples filled with cinnamon oats, walnuts and raisins, baked until fragrant.",
+    "servings": 4,
+    "prepMinutes": 15,
+    "cookMinutes": 40,
+    "difficulty": "EASY",
+    "category": "Desserts",
+    "cuisine": "European-inspired",
+    "tags": ["vegetarian", "comfort"],
+    "ingredients": [
+      ["apple", 4, "pieces"],
+      ["rolled oats", 40, "g"],
+      ["walnut", 30, "g"],
+      ["raisin", 30, "g"],
+      ["butter", 30, "g"],
+      ["brown sugar", 30, "g"],
+      ["ground cinnamon", 3, "g"],
+      ["water", 120, "ml"]
+    ],
+    "steps": [
+      "Heat the oven to 190°C conventional / 170°C fan. Core the apples from the top, leaving their bottoms intact so the filling stays inside. Score a shallow line around the middle of each apple skin.",
+      "Chop walnuts. Rub softened butter into the oats, walnuts, raisins, brown sugar and cinnamon to make a crumbly filling.",
+      "Place apples in a snug baking dish and pack the filling into the cavities. Pour water into the bottom of the dish, not over the filling.",
+      "Bake for 30–40 minutes until the apples are tender when pierced with a small knife. Cover loosely with foil if the filling browns too quickly.",
+      "Let stand for 5 minutes. Serve warm, spooning a little of the buttery cooking juice over each apple."
+    ],
+    "imageSubject": "Two whole baked red-gold apples with wrinkled tender skin, open cores filled with toasted oats, chopped walnuts and raisins with cinnamon, in a small cream baking dish with a little amber baking juice. No ice cream, caramel sauce or pastry."
+  }
+]

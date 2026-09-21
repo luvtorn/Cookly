@@ -1,11 +1,15 @@
-import { Leaf, UserRound } from "lucide-react";
+import { Leaf } from "lucide-react";
+import { SignInLink } from "@/features/auth/sign-in-link";
 import Link from "next/link";
 
 import { MobileNavigation } from "@/components/shared/mobile-navigation";
-import { PreviewNotice } from "@/components/shared/preview-notice";
+import { DesktopNavigation } from "@/components/shared/desktop-navigation";
+import { AccountMenu } from "@/features/auth/account-menu";
+import { getCurrentUser } from "@/lib/auth/session";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const user = await getCurrentUser();
   return (
     <>
       <Link className="skip-link" href="#main-content">
@@ -16,26 +20,18 @@ export function SiteHeader() {
           <Leaf aria-hidden="true" />
           Cookly
         </Link>
-        <nav className="desktop-navigation" aria-label="Main navigation">
-          <Link href="/" className="nav-home">
-            Home
-          </Link>
-          <Link href="/#recipes">Discover</Link>
-          <Link href="/#pantry">Pantry</Link>
-          <Link href="/#categories">Categories</Link>
-        </nav>
+        <DesktopNavigation />
         <div className="header-actions">
           <ThemeToggle />
           <span className="header-divider" aria-hidden="true" />
-          <PreviewNotice
-            className="sign-in-button"
-            ariaLabel="Sign in"
-            title="Your cooking story starts here"
-            description="Accounts are coming in the authentication milestone. For now, explore the sample recipes and make yourself at home."
-          >
-            <UserRound size={18} aria-hidden="true" />
-            <span>Sign in</span>
-          </PreviewNotice>
+          {user ? (
+            <AccountMenu
+              name={user.profile?.displayName ?? "Cookly member"}
+              isAdmin={user.role === "ADMIN"}
+            />
+          ) : (
+            <SignInLink />
+          )}
           <MobileNavigation />
         </div>
       </header>

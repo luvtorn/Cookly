@@ -8,6 +8,60 @@ Target: **14–20 focused development days**.
 
 Do not start post-MVP work until the MVP quality gate is green.
 
+## Authentication and sticky navigation — 2026-09-18
+
+### Editorial studio and starter collection — 2026-09-21
+
+- [x] Disable Server Function argument logging; preserve generic auth errors and rate limiting.
+- [x] Migration adds persisted editorial attribution and AI-cover provenance; tested against isolated PostgreSQL.
+- [x] ADMIN-only overview, owned recipe list and editor with canonical ingredients, ordered steps, draft/publish/archive and server ownership checks.
+- [x] Database-backed Home search/categories/pagination and public recipe details; editorial author is Cookly without administrator identity.
+- [x] ADMIN-only validated Cloudinary cover uploads with HMAC receipts, origin checks and bounded rate limits.
+- [x] Explicit conflict-safe administrator provisioning and non-overwriting transactional starter seed; tested on isolated PostgreSQL.
+- [x] Ten complete English recipe drafts and dish-specific generated covers saved locally; prompts and provenance documented.
+- [x] Offline production build, lint and 77 unit/component tests; 10 PostgreSQL integration tests passed.
+- [x] Chromium: 27 offline scenarios and two complete auth/editorial journeys passed; responsive studio screenshots reviewed in both themes.
+- [x] Applied auth/editorial migrations to configured Neon and provisioned the requested ACTIVE administrator on 2026-09-21. No test users or starter recipes were inserted there.
+- [ ] Upload approved covers and publish the ten starter recipes: blocked by Cloudinary key missing `create` permission (ping succeeds).
+- [ ] Confirm remote CI and Vercel smoke checks after a separate deployment.
+
+The remaining historical sections retain their delivery-time status. Avatars, public profile editing, ordinary-user recipe editing and full moderation remain later milestones.
+
+### Modal and glass follow-up — 2026-09-21
+
+#### Lens material and stable photo refinement
+
+- [x] Layered glass with deterministic SVG edge displacement in Chromium; visually distinct CSS fallback in Firefox/WebKit, without new dependencies or continuous animation.
+- [x] Pointer-following glints on categories, green controls, Sign in, search, auth tabs and icons; explicit Sign in rounding, separate keyboard rings, touch/disabled/reduced-motion handling.
+- [x] Fixed desktop modal geometry (960px / up to 720px / 40:60), persistent full-height local photo and caption, paired registration fields, internal form scrolling and always-accessible close control.
+- [x] Preserve server/client boundaries, auth endpoints, callback/history/focus behavior, database schema, uploads and deployment scope.
+- [x] Lint, typecheck, production build, 68 unit/component tests, 6 isolated PostgreSQL integration tests, 27 offline Chromium scenarios, full auth E2E and 4 Firefox/WebKit fallback scenarios passed locally. Reviewed both themes and desktop/tablet/mobile screenshots; recorded pointer-motion videos. The optical fixture measured 4,788 changed rim pixels and zero changed text pixels. Modal/photo bounds and photo DOM identity remain unchanged across mode switches and validation errors.
+- Production Neon, auth APIs, migrations, uploads and deployment were not changed. The temporary local test PostgreSQL was stopped after verification; remote smoke checks remain separate.
+
+Initial modal delivery (the one-shot glint below is superseded by the refinement above):
+
+- [x] URL-addressable auth modal over the current page; direct links/reloads over shared Home content.
+- [x] Desktop photo/form composition, compact mobile/tablet form, native dialog focus/inert handling, scroll lock and pending close protection.
+- [x] Shared reflective glass tokens and one-shot 1.8-second hover/focus border glints, including reduced-motion alternatives.
+- [x] Preserve server auth, database schema, sticky header and noindex behavior; keep upload work deferred.
+- [x] Lint, typecheck, production build, 66 unit/component tests (two workers), 6 isolated PostgreSQL integration tests, 23 offline Chromium scenarios and the full register/login/account/logout/CSRF scenario passed. Desktop/tablet/mobile screenshots checked in both themes; pending protection, focus, history, scroll restoration, reduced motion and 520px-tall mobile viewport covered.
+- Remote Vercel verification remains separate. Test PostgreSQL and Playwright servers were stopped after verification; no production database changes.
+
+- [x] Credentials registration/login/logout with NextAuth 4 JWT sessions; no Prisma adapter or OAuth.
+- [x] Atomic User/Profile creation, normalized identifiers, versioned scrypt hashes and generic failures.
+- [x] Server access helpers re-read current role/status; deleted, suspended and banned users lose protected access.
+- [x] PostgreSQL atomic HMAC-keyed auth limits; new `auth_rate_limits` migration checked on isolated PostgreSQL.
+- [x] Read-only connected-Neon identity preflight: zero conflicts and zero noncanonical identifiers; no existing records changed.
+- [x] Responsive auth forms following `design-package/auth.png`, local decorative photo, both themes and accessible errors/pending/password visibility.
+- [x] Protected read-only account screen, account/signout menu, noindex auth/settings.
+- [x] Sticky glass navigation with anchor clearance and route-aware Home highlighting.
+- [x] Separate CI PostgreSQL auth integration/E2E job; offline checks remain independent of production secrets/database.
+- [x] Local lint, typecheck, formatting, Prisma validation, 66 unit/component tests, 6 real PostgreSQL integration tests, production build without DB/auth credentials, and 17 Chromium scenarios passed. Desktop/tablet/mobile light/dark screenshots reviewed; keyboard, reduced motion, long names, validation errors, pending states, session refresh, guest redirects and CSRF rejection covered.
+- [ ] Apply auth migration to connected Neon as a separately approved step.
+- [ ] Confirm remote CI and deployed Vercel auth smoke flow after deployment.
+
+Next: authenticated Cloudinary avatar/recipe-cover upload, then public profile/account editing. No upload endpoints or editing controls are included in this auth slice. Historical milestone notes below describe their state at that time.
+
 ## Foundation synchronization — 2026-09-16
 
 - [x] Supplied Prisma schema validated; client regenerated for all 21 models and 9 enums.
@@ -16,7 +70,7 @@ Do not start post-MVP work until the MVP quality gate is green.
 - [x] Generation is part of development/typecheck/build; Node.js 22 is declared in the runtime configuration.
 - [x] GitHub Actions workflow added for install, schema validation, typecheck, lint, tests, build and Chromium smoke testing.
 - [x] Documentation references the existing `design-package/` directory.
-- [ ] Connect a development PostgreSQL/Neon database, apply the initial migration and verify database behavior.
+- [x] Connect the configured PostgreSQL/Neon database and apply the initial migration (2026-09-18); seed constraints and repeatability tested with rollback. Vercel connectivity remains unconfirmed.
 - [ ] Confirm the first successful remote GitHub Actions run after publishing the repository.
 - [x] Implement local fonts, semantic design tokens, public route group and Home shell in the UI milestone.
 
@@ -106,6 +160,28 @@ Definition of done:
 ## Phase 2 — Taxonomy, seed data, discovery
 
 **Target: Days 4–5**
+
+Database update — 2026-09-18:
+
+- [x] Apply `20260916000000_init_cookly` to the configured empty Neon database using a direct connection; migration history records success.
+- [x] Prepare `prisma/demo-data.sql` for manual import: 5 fictional creators, taxonomy, 31 canonical ingredients and 5 published/unverified recipes with ordered ingredients and steps.
+- [x] Execute the seed twice inside a transaction to verify repeatability, then roll back; no demo content persisted.
+- [ ] Import demo data into the intended database when ready.
+- [ ] Connect discovery to Prisma; Home now shows an explicit empty state, without presentation fixtures.
+- [ ] Verify the Vercel deployment uses the intended Neon database.
+
+Image handling is deferred; seed records reference the existing local illustrative assets. No authentication credentials or privileged users are seeded. The earlier foundation/UI notes describe their historical verification state.
+
+Content cleanup — 2026-09-18:
+
+- [x] Remove fictional recipes/authors, hero photography, kitchen background and Pantry example contents from the public UI. Keep the design shell and explicit unavailable/empty states; do not delete database records.
+- [x] Keep the existing SQL seed opt-in, separate from schema migrations and deployment.
+- [x] Research photo storage options in `docs/photo-storage.md`; the user selected Cloudinary.
+- [x] Add official Cloudinary SDK, lazy server-only configuration, safe environment validation and an opt-in read-only connectivity check. Public upload endpoints remain deferred until authentication/authorization exists.
+- [x] Confirm local Cloudinary credentials with authenticated API ping (no asset changes); lint, typecheck, 37 tests and production build pass. Vercel credentials and end-to-end uploads are not yet verified.
+- [x] Verify cleanup with lint, typecheck, 30 unit/component tests, production build and 12 Chromium E2E tests. Inspect desktop/tablet/mobile empty states in light/dark; keyboard, reduced motion, long search, loading/error components and no demo-photo requests covered. Tests were rerun against a fresh server after stopping the stale local preview.
+- [ ] Complete authentication/ownership checks before exposing avatar or recipe-cover uploads.
+- [ ] Implement validated uploads, image normalization, safe replacement and orphan cleanup after selecting the provider.
 
 Deliverables:
 

@@ -1,8 +1,8 @@
 import { Clock3 } from "lucide-react";
 import Image from "next/image";
 
-import { PreviewNotice } from "@/components/shared/preview-notice";
-import type { RecipePreview } from "@/features/discovery/demo-recipes";
+import Link from "next/link";
+import type { RecipePreview } from "@/features/discovery/recipe-preview";
 
 export function RecipeCard({ recipe }: { recipe: RecipePreview }) {
   return (
@@ -17,20 +17,21 @@ export function RecipeCard({ recipe }: { recipe: RecipePreview }) {
       </div>
       <div className="recipe-card-body">
         <h3>
-          <PreviewNotice
+          <Link
+            href={`/recipes/${recipe.slug}`}
             className="recipe-title-button"
-            title={recipe.title}
-            description={`${recipe.description} This sample recipe introduces the visual design. Full ingredients and cooking instructions will arrive with recipe details.`}
           >
             {recipe.title}
-          </PreviewNotice>
+          </Link>
         </h3>
         <p>{recipe.description}</p>
         <div className="recipe-meta">
           <span className="author">
-            <span className="avatar" aria-hidden="true">
-              {recipe.initials}
-            </span>
+            {!recipe.isEditorial && (
+              <span className="avatar" aria-hidden="true">
+                {recipe.initials}
+              </span>
+            )}
             {recipe.author}
           </span>
           <span className="recipe-time">

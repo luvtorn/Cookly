@@ -1,0 +1,46 @@
+{
+  "tool": "Built-in image_gen",
+  "outputs": "public/images/editorial/{slug}.png",
+  "prompts": [
+    {
+      "slug": "chicken-teriyaki",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: Chicken teriyaki bowl: evenly diced browned chicken breast coated in glossy dark amber ginger-soy-honey glaze, white jasmine rice, steamed broccoli florets, sesame seeds and thin spring onion. No other toppings."
+    },
+    {
+      "slug": "lemon-parmesan-pasta",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: A shallow cream bowl of spaghetti in a light glossy lemon-butter Parmesan sauce, finely grated Parmesan, tiny lemon zest curls, chopped parsley and black pepper. No chicken, no cream pool, no tomatoes."
+    },
+    {
+      "slug": "roasted-tomato-soup",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: A cream ceramic bowl filled with smooth warm red-orange roasted tomato soup, a few fresh basil leaves at center and subtle tiny olive oil droplets. No cream swirl, croutons or bread."
+    },
+    {
+      "slug": "baked-salmon-with-rice",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: One baked salmon fillet with gently browned edges topped with thin roasted lemon slices and fresh dill, beside fluffy white basmati rice and whole green beans on a cream plate. No teriyaki sauce or broccoli."
+    },
+    {
+      "slug": "chickpea-grain-bowl",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: A cream grain bowl with distinct sections of cooked quinoa, cumin-spiced golden chickpeas, diced cucumber, halved red cherry tomatoes and fresh baby spinach, drizzled with pale lemon-tahini dressing. No avocado or meat."
+    },
+    {
+      "slug": "spinach-feta-omelette",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: A single golden folded half-moon omelette on a cream plate, cut edge revealing wilted green spinach and crumbled white feta, tiny black pepper flecks. No toast, tomatoes or extra sides."
+    },
+    {
+      "slug": "mushroom-risotto",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: Creamy pale arborio mushroom risotto in a shallow cream bowl with visibly distinct rice grains, browned sliced mushrooms on top, small thyme leaves and finely grated Parmesan. No cream pour, no parsley, no meat."
+    },
+    {
+      "slug": "red-lentil-curry",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: A cream bowl of thick orange-red lentil coconut tomato curry with wilted spinach visible in the sauce, beside a crescent of fluffy basmati rice. Soft lentil texture, gentle sheen. No chickpeas, chicken or garnish not in recipe."
+    },
+    {
+      "slug": "blueberry-pancakes",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: A small stack of fluffy golden blueberry pancakes on a cream plate, purple-blue berries visible inside pancakes, fresh blueberries on top and a light maple syrup drizzle. No powdered sugar, whipped cream or strawberries."
+    },
+    {
+      "slug": "cinnamon-baked-apples",
+      "prompt": "Use case: photorealistic-natural. Asset type: Cookly recipe cover, landscape 3:2 editorial food photography. Scene: warm ivory stone tabletop, quiet cream ceramics, soft natural side-window daylight, subtle olive linen in background. Style: realistic appetizing home-cooked food, natural texture, calm premium cookbook composition, shot from 45 degrees, central dish fully readable with crop-safe margins. No people, text, logos, watermarks, collage or extra side dishes. Subject: Two whole baked red-gold apples with wrinkled tender skin, open cores filled with toasted oats, chopped walnuts and raisins with cinnamon, in a small cream baking dish with a little amber baking juice. No ice cream, caramel sauce or pastry."
+    }
+  ]
+}

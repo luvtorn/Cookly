@@ -7,7 +7,7 @@ export function SiteFooter() {
       <Heart size={13} aria-hidden="true" />
       <span>Cookly</span>
       <span className="demo-label">
-        Design preview · Sample content & imagery
+        Cookly is taking shape · More coming soon
       </span>
     </footer>
   );
