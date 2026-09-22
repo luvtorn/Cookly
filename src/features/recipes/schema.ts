@@ -27,21 +27,35 @@ export const recipeSchema = z
     coverImageIsAi: z.boolean(),
     ingredients: z
       .array(
-        z.object({
-          name: text(100).transform(normalizeIngredient),
-          amount: z
-            .string()
-            .trim()
-            .max(12)
-            .refine(
-              (v) =>
-                v === "" || (/^\d{1,8}(\.\d{1,2})?$/.test(v) && Number(v) > 0),
-              "Enter a positive amount with up to two decimal places.",
-            ),
-          unit: z.string().trim().max(32),
-          note: z.string().trim().max(160),
-          isOptional: z.boolean(),
-        }),
+        z
+          .object({
+            ingredientId: z.string().max(100).optional(),
+            createNew: z.boolean().optional(),
+            name: text(100).transform(normalizeIngredient),
+            amount: z
+              .string()
+              .trim()
+              .max(12)
+              .refine(
+                (v) =>
+                  v === "" ||
+                  (/^\d{1,8}(\.\d{1,2})?$/.test(v) && Number(v) > 0),
+                "Enter a positive amount with up to two decimal places.",
+              ),
+            unit: z.string().trim().max(32),
+            note: z.string().trim().max(160),
+            isOptional: z.boolean(),
+          })
+          .superRefine((ingredient, context) => {
+            if (!ingredient.ingredientId && !ingredient.createNew) {
+              context.addIssue({
+                code: "custom",
+                path: ["name"],
+                message:
+                  "Choose an existing ingredient or confirm adding a new one.",
+              });
+            }
+          }),
       )
       .min(1)
       .max(60),

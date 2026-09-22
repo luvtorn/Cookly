@@ -81,7 +81,7 @@ test("pending auth stays open, traps focus and reports failure without a databas
       .getByRole("navigation", { name: "Account access" })
       .getByRole("link", { name: "Create account" }),
   ).toHaveAttribute("aria-disabled", "true");
-  await expect(page).toHaveURL("/auth/sign-in");
+  await expect(page).toHaveURL("/en/auth/sign-in");
   await expect(page.getByRole("dialog")).toBeVisible();
   release?.();
   await expect(page.getByRole("dialog").getByRole("alert")).toContainText(
@@ -96,7 +96,7 @@ test("pending auth stays open, traps focus and reports failure without a databas
   await page.keyboard.press("Tab");
   await expect(close).toBeFocused();
   await page.getByRole("dialog").click({ position: { x: 2, y: 2 } });
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/en");
 });
 
 test("low mobile viewport keeps close visible and respects reduced motion", async ({
@@ -123,7 +123,7 @@ test("low mobile viewport keeps close visible and respects reduced motion", asyn
     ),
   ).toBe("none");
   await page.keyboard.press("Escape");
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/en");
 });
 
 for (const width of [320, 390, 768, 1024, 1448]) {
@@ -178,39 +178,69 @@ for (const width of [320, 390, 768, 1024, 1448]) {
     expect(errors).toEqual([]);
   });
 }
-test("sticky header clears anchored section titles", async ({ page }) => {
+test("desktop header yields to a stable expandable dock", async ({
+  page,
+}, testInfo) => {
+  await page.setViewportSize({ width: 1448, height: 800 });
   await page.goto("/");
-  for (const [name, id] of [
-    ["Discover", "recipes"],
-    ["Categories", "categories"],
-    ["Pantry", "pantry"],
-  ]) {
-    await page
-      .getByRole("navigation", { name: "Main navigation", exact: true })
-      .getByRole("link", { name, exact: true })
-      .click();
-    await expect(page).toHaveURL(new RegExp(`#${id}$`));
-    await expect(page.locator(".site-header")).toBeInViewport();
-    const header = await page.locator(".site-header").boundingBox();
-    const heading = await page.locator(`#${id} h2`).boundingBox();
-    expect(heading?.y).toBeGreaterThanOrEqual(
-      (header?.y ?? 0) + (header?.height ?? 0),
-    );
-  }
+  const headerNav = page.getByRole("navigation", {
+    name: "Main navigation",
+    exact: true,
+  });
+  await expect(
+    headerNav.getByRole("link", { name: "Home", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  await expect(
+    headerNav.getByRole("link", { name: "New recipe", exact: true }),
+  ).toHaveAttribute("href", "/en/recipes/new");
+
+  await page.evaluate(() => window.scrollTo(0, 170));
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-navigation-docked",
+    "true",
+  );
+  const dock = page
+    .getByRole("complementary", { name: "Cookly shortcuts" })
+    .getByRole("navigation", { name: "Main navigation" });
+  await expect(
+    dock.getByRole("link", { name: "Home", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  await page.evaluate(() => window.scrollTo(0, 100));
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-navigation-docked",
+    "true",
+  );
+  await page
+    .locator(".desktop-dock-surface")
+    .hover({ position: { x: 28, y: 28 } });
+  await expect(
+    dock.getByRole("link", { name: "New recipe", exact: true }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: testInfo.outputPath("desktop-dock-expanded.png"),
+    fullPage: false,
+  });
+  await page.evaluate(() => window.scrollTo(0, 70));
+  await expect(page.locator("html")).not.toHaveAttribute(
+    "data-navigation-docked",
+    "true",
+  );
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(page.locator(".site-header")).toBeInViewport();
 });
 
 test("modal keeps the background, replaces tabs, restores focus and supports history", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/?q=soup#pantry");
-  await expect(page.locator("#pantry")).toBeInViewport();
-  const trigger = page.locator(".sign-in-button");
+  await page.goto("/recipes?q=soup");
+  await expect(page.locator("#catalog-results")).toBeInViewport();
+  const trigger = page.locator(".site-header .sign-in-button");
   await trigger.focus();
   const before = await page.evaluate(() => scrollY);
   await trigger.press("Enter");
   await expect(page.getByRole("dialog")).toBeVisible();
-  await expect(page.locator("#recipes-title")).toHaveText("Recipe search");
+  await expect(page.locator("#catalog-results")).toHaveText("Your results");
   await page
     .getByRole("navigation", { name: "Account access" })
     .getByRole("link", { name: "Create account" })
@@ -221,7 +251,7 @@ test("modal keeps the background, replaces tabs, restores focus and supports his
     .getByLabel("Password", { exact: true })
     .fill("discard this password");
   await page.keyboard.press("Escape");
-  await expect(page).toHaveURL("/?q=soup#pantry");
+  await expect(page).toHaveURL("/en/recipes?q=soup");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(trigger).toBeFocused();
   expect(Math.abs((await page.evaluate(() => scrollY)) - before)).toBeLessThan(
@@ -257,7 +287,7 @@ test("direct auth links and refresh use Home, with an explicit close fallback", 
       .click();
     await expect(page.locator("dialog[open]")).toHaveCount(1);
     await page.getByRole("button", { name: "Close authentication" }).click();
-    await expect(page).toHaveURL("/");
+    await expect(page).toHaveURL("/en");
     await expect(page.getByRole("dialog")).toHaveCount(0);
   }
 });

@@ -1,69 +1,136 @@
 "use client";
 
+import {
+  BookOpen,
+  House,
+  Plus,
+  Refrigerator,
+  UserRound,
+  X,
+} from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useRef } from "react";
 
-import { Menu, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useRef, useState } from "react";
+import type { NavigationUser } from "./desktop-dock";
+import { getNavigationState } from "./navigation-state";
+import { AccountLinks } from "@/features/auth/account-menu";
+import { SignInLink } from "@/features/auth/sign-in-link";
+import { useI18n } from "@/lib/i18n/context";
 
-export function MobileNavigation() {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = useRef<HTMLButtonElement>(null);
-  const reduceMotion = useReducedMotion();
-  const close = () => {
-    setIsOpen(false);
-    toggle.current?.focus();
-  };
+export function MobileNavigation({ user }: { user?: NavigationUser }) {
+  const pathname = usePathname() ?? "";
+  const state = getNavigationState(pathname);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const profileButton = useRef<HTMLButtonElement>(null);
+  const closeProfile = () => dialog.current?.close();
+  const finishClose = () => profileButton.current?.focus();
+  const { t, href } = useI18n();
 
   return (
-    <div
-      className="mobile-navigation"
-      onKeyDown={(event) => {
-        if (event.key === "Escape" && isOpen) close();
-      }}
-    >
-      <button
-        ref={toggle}
-        className="icon-button"
-        type="button"
-        aria-label={isOpen ? "Close navigation" : "Open navigation"}
-        aria-expanded={isOpen}
-        aria-controls="mobile-navigation"
-        onClick={() => setIsOpen(!isOpen)}
+    <>
+      <nav
+        className={`mobile-bottom-navigation glass${state.isEditor ? "mobile-bottom-navigation--hidden" : ""}`}
+        aria-label={t("nav.mobile")}
       >
-        {isOpen ? (
-          <X size={20} aria-hidden="true" />
-        ) : (
-          <Menu size={20} aria-hidden="true" />
-        )}
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.nav
-            id="mobile-navigation"
-            aria-label="Mobile navigation"
-            className="mobile-menu glass"
-            initial={{ opacity: 0, y: reduceMotion ? 0 : -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.16 }}
+        <Link href={href("/")} aria-current={state.isHome ? "page" : undefined}>
+          <House aria-hidden="true" />
+          <span>{t("common.home")}</span>
+        </Link>
+        <Link
+          href={href("/recipes")}
+          aria-current={state.isRecipes ? "page" : undefined}
+        >
+          <BookOpen aria-hidden="true" />
+          <span>{t("common.recipes")}</span>
+        </Link>
+        <Link
+          href={href("/recipes/new")}
+          className="mobile-create-button"
+          aria-label={t("nav.createRecipe")}
+          aria-current={state.isCreate ? "page" : undefined}
+        >
+          <span className="mobile-create-icon">
+            <Plus aria-hidden="true" />
+          </span>
+          <span>{t("common.create")}</span>
+        </Link>
+        <Link
+          href={href("/pantry")}
+          aria-current={state.isIngredients ? "page" : undefined}
+        >
+          <Refrigerator aria-hidden="true" />
+          <span>{t("common.ingredients")}</span>
+        </Link>
+        {user ? (
+          <button
+            ref={profileButton}
+            type="button"
+            aria-label={t("nav.openProfile")}
+            aria-haspopup="dialog"
+            onClick={() => dialog.current?.showModal()}
           >
-            <Link href="/" onClick={close}>
-              Home
-            </Link>
-            <Link href="/#recipes" onClick={close}>
-              Discover recipes
-            </Link>
-            <Link href="/#categories" onClick={close}>
-              Explore categories
-            </Link>
-            <Link href="/#pantry" onClick={close}>
-              Pantry
-            </Link>
-            <span className="mobile-menu-note">A taste of what’s cooking.</span>
-          </motion.nav>
+            {user.avatarUrl ? (
+              <Image
+                className="mobile-nav-avatar"
+                src={user.avatarUrl}
+                alt=""
+                width={24}
+                height={24}
+              />
+            ) : (
+              <UserRound aria-hidden="true" />
+            )}
+            <span>{t("common.profile")}</span>
+          </button>
+        ) : (
+          <SignInLink
+            className="mobile-profile-access"
+            label={t("common.profile")}
+            ariaLabel={t("common.signIn")}
+          />
         )}
-      </AnimatePresence>
-    </div>
+      </nav>
+      {user ? (
+        <dialog
+          ref={dialog}
+          className="mobile-account-sheet"
+          aria-labelledby="mobile-account-title"
+          onClose={finishClose}
+          onCancel={(event) => {
+            event.preventDefault();
+            closeProfile();
+          }}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeProfile();
+          }}
+        >
+          <div className="mobile-account-surface glass">
+            <header>
+              <div>
+                <p className="eyebrow">{t("nav.yourSpace")}</p>
+                <h2 id="mobile-account-title">{user.name}</h2>
+              </div>
+              <button
+                type="button"
+                className="icon-button"
+                aria-label={t("nav.closeProfile")}
+                onClick={closeProfile}
+              >
+                <X aria-hidden="true" />
+              </button>
+            </header>
+            <nav aria-label={t("nav.accountAccess")}>
+              <AccountLinks
+                username={user.username}
+                isAdmin={user.isAdmin}
+                onNavigate={closeProfile}
+              />
+            </nav>
+          </div>
+        </dialog>
+      ) : null}
+    </>
   );
 }

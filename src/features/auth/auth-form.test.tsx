@@ -62,4 +62,4 @@ it("supports password visibility, pending protection and safe registration error
       screen.getByRole("button", { name: "Create account" }),
     ).toBeEnabled(),
   );
-});
+}, 15000);

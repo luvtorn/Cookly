@@ -1,27 +1,13 @@
 "use server";
 import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
-import { getCurrentUser } from "@/lib/auth/session";
+import { actionAdmin } from "@/lib/auth/admin-action";
 import { consumeLimit } from "@/lib/auth/rate-limit";
 import { getCloudinary } from "@/lib/storage/cloudinary";
 import { imageFormat, signImageReceipt } from "@/lib/storage/image-receipt";
 import { saveAdminRecipe } from "./service";
 import type { UploadApiResponse } from "cloudinary";
 
-async function actionAdmin() {
-  const h = await headers();
-  // Also reject missing Origin for cookie-authenticated mutations.
-  const origin = h.get("origin");
-  if (
-    !origin ||
-    new URL(origin).host !== (h.get("x-forwarded-host") ?? h.get("host"))
-  )
-    throw new Error("Access denied.");
-  const user = await getCurrentUser();
-  if (!user || user.role !== "ADMIN") throw new Error("Access denied.");
-  return user;
-}
 export async function saveRecipeAction(input: unknown) {
   try {
     const user = await actionAdmin();
@@ -30,6 +16,8 @@ export async function saveRecipeAction(input: unknown) {
     const recipe = await saveAdminRecipe(user.id, input);
     for (const path of [
       "/",
+      "/recipes",
+      "/admin/verification",
       "/admin",
       "/admin/recipes",
       `/admin/recipes/${recipe.id}/edit`,
@@ -65,6 +53,7 @@ export async function uploadCoverAction(form: FormData) {
         .uploader.upload_stream(
           {
             resource_type: "image",
+            asset_folder: "cookly",
             public_id: `cookly/recipes/${user.id}/${randomUUID()}`,
             overwrite: false,
             allowed_formats: ["jpg", "png", "webp"],

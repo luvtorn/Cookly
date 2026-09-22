@@ -7,8 +7,9 @@ test("registration → login → refreshed account → logout, credentials and C
 }, testInfo) => {
   const suffix = randomUUID().replaceAll("-", "").slice(0, 12);
   const email = `e2e-${suffix}@example.test`;
+  const username = `e2e_${suffix}`;
   const password = "a long e2e cooking passphrase";
-  await page.goto("/settings/account");
+  await page.goto("/recipes/new");
   await expect(page).toHaveURL(/auth\/sign-in\?callbackUrl/);
   await page
     .getByRole("navigation", { name: "Account access" })
@@ -19,7 +20,7 @@ test("registration → login → refreshed account → logout, credentials and C
     .fill(
       "A Cook with a deliberately long display name for account navigation",
     );
-  await page.getByLabel("Username", { exact: true }).fill(`e2e_${suffix}`);
+  await page.getByLabel("Username", { exact: true }).fill(username);
   await page.getByLabel("Email address", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByLabel("Confirm password", { exact: true }).fill(password);
@@ -36,18 +37,43 @@ test("registration → login → refreshed account → logout, credentials and C
   );
   await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
-  await expect(page).toHaveURL(/settings\/account$/);
+  await expect(page).toHaveURL(/recipes\/new$/);
   await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", { name: "A new recipe" }),
+  ).toBeVisible();
+  await page.goto("/settings/account");
   await expect(page.locator("main")).toContainText(email);
   await page.reload();
   await expect(page.locator("main")).toContainText(email);
-  await page.locator(".account-menu summary").focus();
+  const headerAccount = page.locator(".site-header .account-menu summary");
+  await headerAccount.focus();
   await page.keyboard.press("Enter");
   await expect(
     page.getByRole("link", { name: "Your account", exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.locator(".account-menu summary")).toBeFocused();
+  await expect(headerAccount).toBeFocused();
+  await page.goto("/settings/profile");
+  await page
+    .getByLabel("Display name", { exact: true })
+    .fill("E2E Community Cook");
+  await page
+    .getByLabel("Bio", { exact: true })
+    .fill("Seasonal recipes from an isolated test.");
+  await page.getByLabel("Location", { exact: true }).fill("Test Kitchen");
+  await page.getByRole("button", { name: "Save profile" }).click();
+  await expect(page.getByRole("status")).toContainText("Profile updated");
+  await page.goto(`/u/${username}`);
+  await expect(
+    page.getByRole("heading", { name: "E2E Community Cook", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator("main")).toContainText(
+    "Seasonal recipes from an isolated test.",
+  );
+  await page.goto("/my-recipes");
+  await expect(page.getByRole("heading", { name: "My recipes" })).toBeVisible();
+  await expect(page.getByText("Your first recipe starts here.")).toBeVisible();
   for (const width of [390, 768, 1448]) {
     await page.setViewportSize({ width, height: 1000 });
     expect(
@@ -60,6 +86,21 @@ test("registration → login → refreshed account → logout, credentials and C
       fullPage: true,
     });
   }
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileProfile = page.getByRole("button", {
+    name: "Open profile menu",
+  });
+  await mobileProfile.click();
+  await expect(
+    page.getByRole("dialog", { name: "E2E Community Cook" }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("dialog", { name: "E2E Community Cook" })
+      .getByRole("link", { name: "Public profile" }),
+  ).toHaveAttribute("href", `/u/${username}`);
+  await page.keyboard.press("Escape");
+  await expect(mobileProfile).toBeFocused();
   const cookies = await page.context().cookies();
   expect(
     cookies.find((cookie) => cookie.name === "next-auth.session-token"),
@@ -70,8 +111,9 @@ test("registration → login → refreshed account → logout, credentials and C
   expect(await csrf.text()).toContain("csrf=true");
   expect(csrf.headers()["set-cookie"] ?? "").not.toContain("session-token");
   expect(await (await request.get("/api/auth/session")).json()).toEqual({});
+  await page.goto("/settings/account");
   await page.locator("main").getByRole("button", { name: "Sign out" }).click();
   await expect(page).toHaveURL("/");
-  await page.goto("/settings/account");
+  await page.goto("/recipes/new");
   await expect(page).toHaveURL(/auth\/sign-in/);
 });

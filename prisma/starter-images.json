@@ -1,0 +1,42 @@
+{
+  "chicken-teriyaki": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013618/cookly/editorial/v1/chicken-teriyaki.webp",
+    "key": "cookly/editorial/v1/chicken-teriyaki"
+  },
+  "lemon-parmesan-pasta": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013620/cookly/editorial/v1/lemon-parmesan-pasta.webp",
+    "key": "cookly/editorial/v1/lemon-parmesan-pasta"
+  },
+  "roasted-tomato-soup": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013621/cookly/editorial/v1/roasted-tomato-soup.webp",
+    "key": "cookly/editorial/v1/roasted-tomato-soup"
+  },
+  "baked-salmon-with-rice": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013622/cookly/editorial/v1/baked-salmon-with-rice.webp",
+    "key": "cookly/editorial/v1/baked-salmon-with-rice"
+  },
+  "chickpea-grain-bowl": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013623/cookly/editorial/v1/chickpea-grain-bowl.webp",
+    "key": "cookly/editorial/v1/chickpea-grain-bowl"
+  },
+  "spinach-feta-omelette": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013624/cookly/editorial/v1/spinach-feta-omelette.webp",
+    "key": "cookly/editorial/v1/spinach-feta-omelette"
+  },
+  "mushroom-risotto": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013626/cookly/editorial/v1/mushroom-risotto.webp",
+    "key": "cookly/editorial/v1/mushroom-risotto"
+  },
+  "red-lentil-curry": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013627/cookly/editorial/v1/red-lentil-curry.webp",
+    "key": "cookly/editorial/v1/red-lentil-curry"
+  },
+  "blueberry-pancakes": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013629/cookly/editorial/v1/blueberry-pancakes.webp",
+    "key": "cookly/editorial/v1/blueberry-pancakes"
+  },
+  "cinnamon-baked-apples": {
+    "url": "https://res.cloudinary.com/buxi4hiv/image/upload/v1790013630/cookly/editorial/v1/cinnamon-baked-apples.webp",
+    "key": "cookly/editorial/v1/cinnamon-baked-apples"
+  }
+}

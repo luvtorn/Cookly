@@ -4,24 +4,39 @@ import { getDb } from "@/lib/db/client";
 import { recipeSchema, slugify } from "./schema";
 import { verifyImageReceipt } from "@/lib/storage/image-receipt";
 
-// Recheck identity in the transaction; neither client input nor JWT roles grant access.
-export async function saveAdminRecipe(userId: string, input: unknown) {
+// Recheck identity and ownership in the transaction; client input never grants access.
+async function saveOwnedRecipe(
+  userId: string,
+  input: unknown,
+  isEditorial: boolean,
+) {
   const data = recipeSchema.parse(input);
   const uploaded = data.imageReceipt
     ? verifyImageReceipt(data.imageReceipt, userId)
     : null;
   return getDb().$transaction(
     async (tx) => {
-      const admin = await tx.user.findFirst({
-        where: { id: userId, role: "ADMIN", status: "ACTIVE" },
-        select: { id: true },
+      const owner = await tx.user.findFirst({
+        where: {
+          id: userId,
+          status: "ACTIVE",
+          ...(isEditorial ? { role: "ADMIN" as const } : {}),
+        },
+        select: { id: true, role: true },
       });
-      if (!admin) throw new Error("Access denied.");
+      if (!owner) throw new Error("Access denied.");
+      if (!isEditorial && owner.role === "ADMIN")
+        throw new Error("Use the editorial studio.");
       if (data.id)
         await tx.$queryRaw`SELECT id FROM "Recipe" WHERE id = ${data.id} AND "authorId" = ${userId} FOR UPDATE`;
       const existing = data.id
         ? await tx.recipe.findFirst({
-            where: { id: data.id, authorId: userId },
+            where: { id: data.id, authorId: userId, isEditorial },
+            include: {
+              ingredients: { orderBy: { position: "asc" } },
+              steps: { orderBy: { position: "asc" } },
+              tags: true,
+            },
           })
         : null;
       if (data.id && !existing) throw new Error("Recipe unavailable.");
@@ -36,15 +51,18 @@ export async function saveAdminRecipe(userId: string, input: unknown) {
       if (!cover) throw new Error("Upload a cover before saving.");
       const ingredients = [];
       for (const [position, item] of data.ingredients.entries()) {
-        const ingredient = await tx.ingredient.upsert({
-          where: { normalizedName: item.name },
-          update: {},
-          create: {
-            name: item.name,
-            normalizedName: item.name,
-            slug: `${slugify(item.name).slice(0, 80) || "ingredient"}-${createHash("sha256").update(item.name).digest("hex").slice(0, 10)}`,
-          },
-        });
+        const ingredient = item.ingredientId
+          ? await tx.ingredient.findUnique({ where: { id: item.ingredientId } })
+          : await tx.ingredient.upsert({
+              where: { normalizedName: item.name },
+              update: {},
+              create: {
+                name: item.name,
+                normalizedName: item.name,
+                slug: `${slugify(item.name).slice(0, 80) || "ingredient"}-${createHash("sha256").update(item.name).digest("hex").slice(0, 10)}`,
+              },
+            });
+        if (!ingredient) throw new Error("Ingredient unavailable.");
         ingredients.push({
           ingredientId: ingredient.id,
           amount: item.amount || null,
@@ -72,6 +90,47 @@ export async function saveAdminRecipe(userId: string, input: unknown) {
             ? (existing?.publishedAt ?? new Date())
             : (existing?.publishedAt ?? null),
       };
+      const changed =
+        !existing ||
+        Object.entries(record).some(([key, value]) => {
+          if (
+            key === "verificationStatus" ||
+            key === "publishedAt" ||
+            key === "status"
+          )
+            return false;
+          return existing[key as keyof typeof existing] !== value;
+        }) ||
+        JSON.stringify(
+          existing.ingredients.map((i) => ({
+            ingredientId: i.ingredientId,
+            amount: i.amount?.toString() ?? null,
+            unit: i.unit,
+            note: i.note,
+            isOptional: i.isOptional,
+            position: i.position,
+          })),
+        ) !==
+          JSON.stringify(
+            ingredients.map((i) => ({
+              ...i,
+              amount: i.amount ? String(Number(i.amount)) : null,
+            })),
+          ) ||
+        JSON.stringify(existing.steps.map((s) => s.instruction)) !==
+          JSON.stringify(data.steps.map((s) => s.instruction)) ||
+        JSON.stringify(existing.tags.map((t) => t.tagId).sort()) !==
+          JSON.stringify([...new Set(data.tagIds)].sort());
+      const verificationStatus = changed ? "NONE" : existing.verificationStatus;
+      if (existing && changed) {
+        await tx.recipeVerificationRequest.updateMany({
+          where: { recipeId: existing.id, status: "PENDING" },
+          data: {
+            status: "NONE",
+            reviewerNote: "Closed after recipe content changed.",
+          },
+        });
+      }
       if (existing) {
         await tx.recipeIngredient.deleteMany({
           where: { recipeId: existing.id },
@@ -92,7 +151,7 @@ export async function saveAdminRecipe(userId: string, input: unknown) {
       return existing
         ? tx.recipe.update({
             where: { id: existing.id, authorId: userId },
-            data: { ...record, ...relations },
+            data: { ...record, verificationStatus, ...relations },
             select: { id: true, slug: true },
           })
         : tx.recipe.create({
@@ -100,7 +159,7 @@ export async function saveAdminRecipe(userId: string, input: unknown) {
               ...record,
               ...relations,
               authorId: userId,
-              isEditorial: true,
+              isEditorial,
               slug: `${slugify(data.title) || "recipe"}-${randomUUID().slice(0, 8)}`,
             },
             select: { id: true, slug: true },
@@ -108,4 +167,12 @@ export async function saveAdminRecipe(userId: string, input: unknown) {
     },
     { timeout: 20000 },
   );
+}
+
+export function saveAdminRecipe(userId: string, input: unknown) {
+  return saveOwnedRecipe(userId, input, true);
+}
+
+export function saveUserRecipe(userId: string, input: unknown) {
+  return saveOwnedRecipe(userId, input, false);
 }

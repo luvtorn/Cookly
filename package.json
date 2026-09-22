@@ -21,6 +21,7 @@
     "auth:preflight": "node scripts/check-auth-identities.mjs",
     "admin:create": "node --experimental-strip-types scripts/create-admin.mjs --show-credentials",
     "seed:editorial": "node scripts/seed-editorial.mjs",
+    "verify:editorial": "node scripts/verify-editorial.mjs",
     "images:editorial": "node scripts/upload-editorial-images.mjs",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "npm run build && playwright test",

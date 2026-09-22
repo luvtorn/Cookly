@@ -16,8 +16,8 @@ it("offers retry without exposing error details", async () => {
   expect(reset).toHaveBeenCalledOnce();
 });
 
-it("announces the loading state", () => {
-  render(<Loading />);
+it("announces the loading state", async () => {
+  render(await Loading());
   expect(screen.getByRole("main")).toHaveAttribute("aria-busy", "true");
   expect(screen.getByRole("status")).toHaveTextContent(
     "Preparing some cooking inspiration",

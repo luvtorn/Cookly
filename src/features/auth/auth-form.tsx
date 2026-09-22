@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
@@ -8,7 +14,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { registerAction } from "./actions";
-import { signInSchema, signUpSchema, type SignUpInput } from "./schema";
+import {
+  createSignInSchema,
+  createSignUpSchema,
+  type SignUpInput,
+} from "./schema";
+import { useI18n } from "@/lib/i18n/context";
 
 const subscribeHydration = () => () => {};
 const hydratedSnapshot = () => true;
@@ -27,6 +38,24 @@ export function AuthForm({
 }) {
   const isSignUp = mode === "sign-up";
   const router = useRouter();
+  const { t, href, messages } = useI18n();
+  const validationMessages = useMemo(
+    () => ({
+      passwordRequired: messages["auth.passwordRequired"],
+      passwordLength: messages["auth.passwordLength"],
+      usernameFormat: messages["auth.usernameFormat"],
+      passwordMismatch: messages["auth.passwordMismatch"],
+    }),
+    [messages],
+  );
+  const signInSchema = useMemo(
+    () => createSignInSchema(validationMessages),
+    [validationMessages],
+  );
+  const signUpSchema = useMemo(
+    () => createSignUpSchema(validationMessages),
+    [validationMessages],
+  );
   const hydrated = useSyncExternalStore(
     subscribeHydration,
     hydratedSnapshot,
@@ -75,10 +104,12 @@ export function AuthForm({
       window.history.replaceState(
         null,
         "",
-        `/auth/sign-in?registered=1&callbackUrl=${encodeURIComponent(callbackUrl)}`,
+        href(
+          `/auth/sign-in?registered=1&callbackUrl=${encodeURIComponent(callbackUrl)}`,
+        ),
       );
     } catch {
-      setError("Something went wrong. Please try again later.");
+      setError(t("auth.genericError"));
     }
   };
   const submitLogin = async (data: { email: string; password: string }) => {
@@ -91,13 +122,13 @@ export function AuthForm({
       });
       if (!mounted.current) return;
       if (!result?.ok || result.error) {
-        setError("Unable to sign in. Check your details or try again later.");
+        setError(t("auth.invalidCredentials"));
         return;
       }
       router.replace(callbackUrl);
       router.refresh();
     } catch {
-      setError("Sign in is temporarily unavailable. Please try again later.");
+      setError(t("auth.genericError"));
     }
   };
   const fieldError = (name: keyof SignUpInput) =>
@@ -116,25 +147,25 @@ export function AuthForm({
       ? [
           {
             name: "displayName" as const,
-            label: "Display name",
+            label: t("auth.displayName"),
             autocomplete: "name",
           },
           {
             name: "username" as const,
-            label: "Username",
+            label: t("auth.username"),
             autocomplete: "username",
           },
         ]
       : []),
     {
       name: "email",
-      label: "Email address",
+      label: t("auth.email"),
       autocomplete: "email",
       type: "email",
     },
     {
       name: "password",
-      label: "Password",
+      label: t("auth.password"),
       autocomplete: isSignUp ? "new-password" : "current-password",
       type: "password",
     },
@@ -142,7 +173,7 @@ export function AuthForm({
       ? [
           {
             name: "confirmation" as const,
-            label: "Confirm password",
+            label: t("auth.confirmPassword"),
             autocomplete: "new-password",
             type: "password",
           },
@@ -156,14 +187,12 @@ export function AuthForm({
       aria-labelledby="auth-title"
     >
       <h1 id="auth-title" ref={heading} tabIndex={-1}>
-        {isSignUp ? "A place at the table" : "Welcome to Cookly"}
+        {isSignUp ? t("auth.placeAtTable") : t("auth.welcome")}
       </h1>
       <p>
-        {isSignUp
-          ? "Start your own cooking story."
-          : "Sign in to continue your culinary journey."}
+        {isSignUp ? t("auth.signUpDescription") : t("auth.signInDescription")}
       </p>
-      <nav className="auth-tabs" aria-label="Account access">
+      <nav className="auth-tabs" aria-label={t("auth.access")}>
         <Link
           replace
           scroll={false}
@@ -177,13 +206,17 @@ export function AuthForm({
               window.history.replaceState(
                 null,
                 "",
-                `/auth/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+                href(
+                  `/auth/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+                ),
               );
           }}
-          href={`/auth/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+          href={href(
+            `/auth/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          )}
           aria-current={!isSignUp ? "page" : undefined}
         >
-          Sign in
+          {t("common.signIn")}
         </Link>
         <Link
           replace
@@ -198,18 +231,22 @@ export function AuthForm({
               window.history.replaceState(
                 null,
                 "",
-                `/auth/sign-up?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+                href(
+                  `/auth/sign-up?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+                ),
               );
           }}
-          href={`/auth/sign-up?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+          href={href(
+            `/auth/sign-up?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          )}
           aria-current={isSignUp ? "page" : undefined}
         >
-          Create account
+          {t("auth.createAccount")}
         </Link>
       </nav>
       {registered && !isSignUp && (
         <p className="auth-success" role="status">
-          Your account is ready. Sign in to get started.
+          {t("auth.registered")}
         </p>
       )}
       <form
@@ -258,7 +295,9 @@ export function AuthForm({
                   <button
                     className="icon-button"
                     type="button"
-                    aria-label={visible ? "Hide password" : "Show password"}
+                    aria-label={
+                      visible ? t("auth.hidePassword") : t("auth.showPassword")
+                    }
                     aria-pressed={visible}
                     onClick={() => setVisible(!visible)}
                   >
@@ -267,9 +306,7 @@ export function AuthForm({
                 )}
               </div>
               {name === "password" && isSignUp && (
-                <small id="password-hint">
-                  At least 8 characters. A memorable phrase works well.
-                </small>
+                <small id="password-hint">{t("auth.passwordHint")}</small>
               )}
               {fieldError(name) && (
                 <small id={`${name}-error`} className="auth-error">
@@ -286,7 +323,11 @@ export function AuthForm({
             )}
           </div>
           <button className="auth-submit" type="submit">
-            {pending ? "Please wait…" : isSignUp ? "Create account" : "Sign in"}
+            {pending
+              ? t("auth.wait")
+              : isSignUp
+                ? t("auth.createAccount")
+                : t("common.signIn")}
             <ArrowRight size={18} aria-hidden="true" />
           </button>
         </fieldset>
@@ -297,7 +338,7 @@ export function AuthForm({
         </p>
       </noscript>
       <p className="auth-switch">
-        {isSignUp ? "Already part of Cookly?" : "New to Cookly?"}{" "}
+        {isSignUp ? t("auth.alreadyMember") : t("auth.newToCookly")}{" "}
         <Link
           replace
           scroll={false}
@@ -311,12 +352,16 @@ export function AuthForm({
               window.history.replaceState(
                 null,
                 "",
-                `/auth/${isSignUp ? "sign-in" : "sign-up"}?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+                href(
+                  `/auth/${isSignUp ? "sign-in" : "sign-up"}?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+                ),
               );
           }}
-          href={`/auth/${isSignUp ? "sign-in" : "sign-up"}?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+          href={href(
+            `/auth/${isSignUp ? "sign-in" : "sign-up"}?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          )}
         >
-          {isSignUp ? "Sign in" : "Create an account"}
+          {isSignUp ? t("common.signIn") : t("auth.createAccount")}
         </Link>
       </p>
     </section>

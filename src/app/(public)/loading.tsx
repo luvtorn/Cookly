@@ -1,13 +1,16 @@
-export default function Loading() {
+import { getI18n } from "@/lib/i18n/server";
+
+export default async function Loading() {
+  const { t } = await getI18n();
   return (
     <main
       id="main-content"
       className="home-container loading-shell"
       aria-busy="true"
-      aria-label="Loading recipes"
+      aria-label={t("error.loading")}
     >
       <p role="status" className="sr-only">
-        Preparing some cooking inspiration…
+        {t("error.loading")}…
       </p>
       <div className="skeleton skeleton-hero" />
       <div className="recipe-grid">

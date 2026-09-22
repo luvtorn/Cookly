@@ -1,11 +1,13 @@
 "use client";
+import { useI18n } from "@/lib/i18n/context";
 export default function RecipeError({ reset }: { reset: () => void }) {
+  const { t } = useI18n();
   return (
     <main id="main-content" className="home-container catalog-error glass">
-      <h1>The recipe could not load</h1>
-      <p>Please try again in a moment.</p>
+      <h1>{t("error.title")}</h1>
+      <p>{t("error.description")}</p>
       <button className="button-primary" onClick={reset}>
-        Try again
+        {t("common.tryAgain")}
       </button>
     </main>
   );

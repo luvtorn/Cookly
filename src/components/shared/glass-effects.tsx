@@ -1,17 +1,37 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createLensMap } from "./lens-map";
 
 const controls =
-  ".category-card, .sign-in-button, .button-primary, .search-submit, .auth-tabs a, .auth-submit, .icon-button";
-const surfaces = `${controls}, .site-header, .auth-modal`;
+  ".category-card, .sign-in-button, .button-primary, .search-submit, .auth-tabs a, .auth-submit, .icon-button, .new-recipe-button, .desktop-dock nav a, .mobile-bottom-navigation a, .mobile-bottom-navigation button";
+const surfaces = `${controls}, .site-header, .auth-modal, .desktop-dock-surface, .mobile-bottom-navigation, .mobile-account-surface`;
 const svgNamespace = "http://www.w3.org/2000/svg";
 
 /** Progressive enhancement only; the material and keyboard states work without JS. */
 export function GlassEffects() {
   const definitions = useRef<SVGDefsElement>(null);
+  const [canEnhance, setCanEnhance] = useState(false);
+
   useEffect(() => {
+    let firstFrame = 0;
+    let secondFrame = 0;
+    const start = () => {
+      firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => setCanEnhance(true));
+      });
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      window.removeEventListener("load", start);
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!canEnhance) return;
     const defs = definitions.current;
     if (!defs) return;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
@@ -28,6 +48,8 @@ export function GlassEffects() {
     >();
     let nextId = 0;
     let pointerFrame = 0;
+    let attachFrame = 0;
+    let settleFrame = 0;
     let current: HTMLElement | null = null;
     let pressed: HTMLElement | null = null;
     let releaseTimer: ReturnType<typeof setTimeout> | undefined;
@@ -94,13 +116,28 @@ export function GlassEffects() {
       filters.set(element, { filter, size: "" });
       resize.observe(element);
     };
+    const pendingAttachments = new Set<HTMLElement>();
+    const scheduleAttach = (element: HTMLElement) => {
+      pendingAttachments.add(element);
+      if (attachFrame || settleFrame) return;
+      attachFrame = requestAnimationFrame(() => {
+        attachFrame = 0;
+        settleFrame = requestAnimationFrame(() => {
+          settleFrame = 0;
+          for (const pending of pendingAttachments) {
+            if (pending.isConnected) attach(pending);
+          }
+          pendingAttachments.clear();
+        });
+      });
+    };
     document.querySelectorAll<HTMLElement>(surfaces).forEach(attach);
     const mutation = new MutationObserver((records) => {
       for (const record of records) {
         for (const node of record.addedNodes) {
           if (!(node instanceof HTMLElement)) continue;
-          if (node.matches(surfaces)) attach(node);
-          node.querySelectorAll<HTMLElement>(surfaces).forEach(attach);
+          if (node.matches(surfaces)) scheduleAttach(node);
+          node.querySelectorAll<HTMLElement>(surfaces).forEach(scheduleAttach);
         }
       }
       for (const [element, entry] of filters) {
@@ -175,6 +212,9 @@ export function GlassEffects() {
     return () => {
       reset();
       releaseTouch();
+      cancelAnimationFrame(attachFrame);
+      cancelAnimationFrame(settleFrame);
+      pendingAttachments.clear();
       resize.disconnect();
       mutation.disconnect();
       document.removeEventListener("pointermove", move);
@@ -190,7 +230,7 @@ export function GlassEffects() {
         entry.filter.remove();
       }
     };
-  }, []);
+  }, [canEnhance]);
 
   return (
     <svg className="glass-definitions" aria-hidden="true" focusable="false">

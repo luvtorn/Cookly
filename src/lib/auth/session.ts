@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { getAuthConfig } from "./config";
 import { getDb } from "@/lib/db/client";
 import { safeCallback } from "@/features/auth/schema";
+import { localeFromPathname, localizePath } from "@/lib/i18n/config";
 
 export const getCurrentUser = cache(async () => {
   const jar = await cookies();
@@ -26,17 +27,21 @@ export const getCurrentUser = cache(async () => {
       email: true,
       role: true,
       status: true,
-      profile: { select: { displayName: true, username: true } },
+      profile: {
+        select: { displayName: true, username: true, avatarUrl: true },
+      },
     },
   });
   return user?.status === "ACTIVE" ? user : null;
 });
 export async function requireUser(callback = "/settings/account") {
   const user = await getCurrentUser();
-  if (!user)
-    redirect(
-      `/auth/sign-in?callbackUrl=${encodeURIComponent(safeCallback(callback))}`,
-    );
+  if (!user) {
+    const safe = safeCallback(callback);
+    const locale = localeFromPathname(safe);
+    const signIn = `/auth/sign-in?callbackUrl=${encodeURIComponent(safe)}`;
+    redirect(locale ? localizePath(locale, signIn) : signIn);
+  }
   return user;
 }
 export async function requireModerator() {

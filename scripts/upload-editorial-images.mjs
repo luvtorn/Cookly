@@ -34,6 +34,7 @@ try {
       `public/images/editorial/${recipe.slug}.png`,
       {
         public_id,
+        asset_folder: "cookly",
         resource_type: "image",
         overwrite: false,
         format: "webp",
@@ -41,6 +42,9 @@ try {
       },
     );
     assets[recipe.slug] = { url: result.secure_url, key: result.public_id };
+    console.error(
+      `Uploaded ${recipe.slug} (${Object.keys(assets).length}/${recipes.length}).`,
+    );
   }
   // Public metadata only. Persist the reviewed manifest with apply_patch, not credentials.
   console.log(JSON.stringify(assets, null, 2));
@@ -48,6 +52,7 @@ try {
   console.error(
     JSON.stringify({
       message: "Cover upload failed; existing uploads preserved.",
+      completed: Object.keys(assets),
       code: typeof error?.code === "string" ? error.code : undefined,
       httpCode: error?.http_code,
       category: /signature/i.test(error?.message ?? "")

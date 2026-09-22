@@ -5,13 +5,25 @@ import { useRouter } from "next/navigation";
 import { UserRound } from "lucide-react";
 import { safeCallback } from "./schema";
 import { rememberModalOrigin } from "./modal-origin";
+import { useI18n } from "@/lib/i18n/context";
 
-export function SignInLink() {
+export function SignInLink({
+  className = "sign-in-button",
+  label,
+  ariaLabel,
+}: {
+  className?: string;
+  label?: string;
+  ariaLabel?: string;
+} = {}) {
   const router = useRouter();
+  const { t, href } = useI18n();
+  const visibleLabel = label ?? t("common.signIn");
   return (
     <Link
-      className="sign-in-button"
-      href="/auth/sign-in"
+      className={className}
+      aria-label={ariaLabel}
+      href={href("/auth/sign-in")}
       scroll={false}
       onClick={(event) => {
         if (
@@ -28,13 +40,15 @@ export function SignInLink() {
         );
         rememberModalOrigin(callback, event.currentTarget);
         router.push(
-          `/auth/sign-in?callbackUrl=${encodeURIComponent(callback)}`,
+          href(`/auth/sign-in?callbackUrl=${encodeURIComponent(callback)}`),
           { scroll: false },
         );
       }}
     >
-      <UserRound size={18} aria-hidden="true" />
-      <span>Sign in</span>
+      <span className="dock-icon">
+        <UserRound size={18} aria-hidden="true" />
+      </span>
+      <span>{visibleLabel}</span>
     </Link>
   );
 }

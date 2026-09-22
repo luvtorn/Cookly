@@ -3,8 +3,18 @@ import Image from "next/image";
 
 import Link from "next/link";
 import type { RecipePreview } from "@/features/discovery/recipe-preview";
+import { VerifiedIcon } from "@/features/recipes/verified-badge";
+import { getI18n } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/config";
 
-export function RecipeCard({ recipe }: { recipe: RecipePreview }) {
+export async function RecipeCard({
+  recipe,
+  returnTo,
+}: {
+  recipe: RecipePreview;
+  returnTo?: string;
+}) {
+  const { locale, t } = await getI18n();
   return (
     <article className="recipe-card glass">
       <div className="recipe-image">
@@ -16,27 +26,47 @@ export function RecipeCard({ recipe }: { recipe: RecipePreview }) {
         />
       </div>
       <div className="recipe-card-body">
-        <h3>
+        <h3 className="recipe-title-row">
           <Link
-            href={`/recipes/${recipe.slug}`}
+            href={localizePath(
+              locale,
+              `/recipes/${recipe.slug}${returnTo ? `?from=${encodeURIComponent(localizePath(locale, returnTo))}` : ""}`,
+            )}
             className="recipe-title-button"
           >
             {recipe.title}
           </Link>
+          {recipe.isVerified ? <VerifiedIcon /> : null}
         </h3>
         <p>{recipe.description}</p>
         <div className="recipe-meta">
-          <span className="author">
-            {!recipe.isEditorial && (
-              <span className="avatar" aria-hidden="true">
-                {recipe.initials}
-              </span>
-            )}
-            {recipe.author}
-          </span>
+          {recipe.authorUsername ? (
+            <Link
+              className="author author-link"
+              href={localizePath(locale, `/u/${recipe.authorUsername}`)}
+            >
+              {recipe.authorAvatar ? (
+                <span className="avatar avatar-image">
+                  <Image
+                    src={recipe.authorAvatar}
+                    alt=""
+                    width={30}
+                    height={30}
+                  />
+                </span>
+              ) : (
+                <span className="avatar" aria-hidden="true">
+                  {recipe.initials}
+                </span>
+              )}
+              {recipe.author}
+            </Link>
+          ) : (
+            <span className="author">{recipe.author}</span>
+          )}
           <span className="recipe-time">
             <Clock3 size={15} aria-hidden="true" />
-            {recipe.minutes} min
+            {recipe.minutes} {t("common.minutes")}
           </span>
         </div>
       </div>

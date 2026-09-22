@@ -2,7 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import { recipeSchema, normalizeIngredient } from "./schema";
 import {
   imageFormat,
+  signAvatarReceipt,
   signImageReceipt,
+  verifyAvatarReceipt,
   verifyImageReceipt,
 } from "@/lib/storage/image-receipt";
 import { publicCard } from "./repository";
@@ -20,6 +22,7 @@ const input = {
   coverImageIsAi: false,
   ingredients: [
     {
+      createNew: true,
       name: "  Chicken   Breast ",
       amount: "1.25",
       unit: "g",
@@ -58,6 +61,32 @@ describe("editorial recipe boundaries", () => {
         }).success,
       ).toBe(false);
   });
+  it("requires a canonical selection or explicit new ingredient confirmation", () => {
+    expect(
+      recipeSchema.safeParse({
+        ...input,
+        ingredients: [
+          {
+            ...input.ingredients[0],
+            createNew: false,
+            ingredientId: undefined,
+          },
+        ],
+      }).success,
+    ).toBe(false);
+    expect(
+      recipeSchema.safeParse({
+        ...input,
+        ingredients: [
+          {
+            ...input.ingredients[0],
+            createNew: false,
+            ingredientId: "ingredient-id",
+          },
+        ],
+      }).success,
+    ).toBe(true);
+  });
   it("binds uploaded covers to the administrator, integrity and expiry", () => {
     vi.stubEnv("AUTH_SECRET", "isolated-receipt-test-secret-at-least-32");
     const token = signImageReceipt(
@@ -72,6 +101,17 @@ describe("editorial recipe boundaries", () => {
     expect(() => verifyImageReceipt(token, "other", 101)).toThrow();
     expect(() => verifyImageReceipt(token, "admin", 1800100)).toThrow();
     expect(() => verifyImageReceipt(token + "x", "admin", 101)).toThrow();
+    const avatar = signAvatarReceipt(
+      "admin",
+      "avatar-key",
+      "https://res.cloudinary.com/test/image/upload/avatar",
+      100,
+    );
+    expect(verifyAvatarReceipt(avatar, "admin", 101).avatarKey).toBe(
+      "avatar-key",
+    );
+    expect(() => verifyImageReceipt(avatar, "admin", 101)).toThrow();
+    expect(() => verifyAvatarReceipt(token, "admin", 101)).toThrow();
     vi.unstubAllEnvs();
   });
   it("rejects SVG and disguised non-image bytes", () => {
@@ -95,12 +135,22 @@ describe("editorial recipe boundaries", () => {
       prepMinutes: 1,
       cookMinutes: 2,
       isEditorial: true,
+      verificationStatus: "VERIFIED" as const,
       category: { name: "Soup" },
-      author: { profile: { displayName: "Private administrator" } },
+      author: {
+        profile: {
+          displayName: "Private administrator",
+          username: "private-admin",
+          avatarUrl: "private-avatar",
+        },
+      },
+      _count: { likes: 2, comments: 1 },
     };
     const card = publicCard(row);
     expect(card.author).toBe("Cookly");
     expect(card.initials).toBe("");
+    expect(card.authorUsername).toBeNull();
+    expect(card.authorAvatar).toBeNull();
     expect(JSON.stringify(card)).not.toContain("Private administrator");
     expect(publicCard({ ...row, isEditorial: false }).author).toBe(
       "Private administrator",

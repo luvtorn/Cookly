@@ -8,19 +8,20 @@ test.describe("touch glass", () => {
     isMobile: true,
     viewport: { width: 320, height: 680 },
   });
-  test("mobile Sign in is circular and highlights only during touch", async ({
+  test("mobile Create is circular and highlights only during touch", async ({
     page,
   }) => {
     await page.goto("/");
-    const button = page.locator(".sign-in-button");
+    const button = page.locator(".mobile-create-button");
     await expect(button).toHaveAttribute("data-lens", "ready");
     const box = await button.boundingBox();
-    if (!box) throw new Error("Missing Sign in bounds");
-    expect(box.width).toBe(box.height);
+    if (!box) throw new Error("Missing Create bounds");
+    const icon = button.locator(".mobile-create-icon");
+    const iconBox = await icon.boundingBox();
+    if (!iconBox) throw new Error("Missing Create icon bounds");
+    expect(iconBox.width).toBe(iconBox.height);
     expect(
-      await button.evaluate(
-        (element) => getComputedStyle(element).borderRadius,
-      ),
+      await icon.evaluate((element) => getComputedStyle(element).borderRadius),
     ).toBe("50%");
     const touch = await page.context().newCDPSession(page);
     await touch.send("Input.dispatchTouchEvent", {
@@ -57,13 +58,8 @@ for (const theme of ["light", "dark"] as const) {
       reducedMotion: "no-preference",
     });
     await page.goto("/");
-    for (const selector of [
-      ".category-card",
-      ".button-primary",
-      ".sign-in-button",
-      ".search-submit",
-    ]) {
-      const control = page.locator(selector).first();
+    for (const selector of [".site-header .sign-in-button", ".search-submit"]) {
+      const control = page.locator(selector);
       await control.scrollIntoViewIfNeeded();
       await expect(control).toHaveAttribute("data-lens", "ready");
       await control.hover({ position: { x: 10, y: 10 } });
@@ -103,8 +99,19 @@ for (const theme of ["light", "dark"] as const) {
         )
         .toBe("0");
     }
+    await page.goto("/recipes");
+    const primary = page.getByRole("button", { name: "Find recipes" });
+    await expect(primary).toHaveAttribute("data-lens", "ready");
+    await primary.hover();
+    await expect
+      .poll(() =>
+        primary.evaluate(
+          (element) => getComputedStyle(element, "::after").opacity,
+        ),
+      )
+      .toBe("1");
     await page.emulateMedia({ reducedMotion: "reduce" });
-    const signIn = page.locator(".sign-in-button");
+    const signIn = page.locator(".site-header .sign-in-button");
     await signIn.hover();
     expect(
       await signIn.evaluate((element) =>
@@ -167,5 +174,5 @@ test("switching forms and validation never resize or remount the desktop photo",
   await expect.poll(async () => (await modal.boundingBox())?.height).toBe(492);
   await page.screenshot({ path: testInfo.outputPath("desktop-short.png") });
   await page.keyboard.press("Escape");
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/en");
 });

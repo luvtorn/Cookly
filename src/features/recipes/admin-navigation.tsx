@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen } from "lucide-react";
+import { LayoutDashboard, BookOpen, BadgeCheck } from "lucide-react";
 export function AdminNavigation() {
   const path = usePathname();
   return (
@@ -9,6 +9,11 @@ export function AdminNavigation() {
       {[
         { href: "/admin", label: "Overview", Icon: LayoutDashboard },
         { href: "/admin/recipes", label: "Recipes", Icon: BookOpen },
+        {
+          href: "/admin/verification",
+          label: "Verification",
+          Icon: BadgeCheck,
+        },
       ].map(({ href, label, Icon }) => (
         <Link
           key={href}

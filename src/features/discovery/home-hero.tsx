@@ -2,42 +2,39 @@ import { ArrowRight, Search, Utensils } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { RecipePreview } from "./recipe-preview";
+import { RecipeSearchField } from "./recipe-search-field";
+import { getI18n } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/config";
 
-export function HomeHero({
+export async function HomeHero({
   query,
   featured,
 }: {
   query: string;
   featured?: RecipePreview;
 }) {
+  const { locale, t } = await getI18n();
   return (
     <section className="home-hero" aria-labelledby="home-title">
       <div className="hero-copy">
-        <h1 id="home-title">
-          Cook better, <br />
-          <em>together.</em>
-        </h1>
-        <p className="hero-description">
-          Discover real recipes from real people.
-          <br className="desktop-break" /> Simple food, a kinder, tastier world.
-        </p>
-        <form className="recipe-search glass" action="/#recipes" role="search">
+        <h1 id="home-title">{t("home.title")}</h1>
+        <p className="hero-description">{t("home.description")}</p>
+        <form
+          className="recipe-search glass"
+          action={localizePath(locale, "/recipes")}
+          role="search"
+        >
           <Search size={21} aria-hidden="true" />
-          <label htmlFor="recipe-search" className="sr-only">
-            Search recipes
-          </label>
-          <input
+          <RecipeSearchField
             id="recipe-search"
-            type="search"
-            name="q"
-            maxLength={100}
             defaultValue={query}
-            placeholder="What would you like to cook?"
+            placeholder={t("search.placeholder")}
+            hideLabel
           />
           <button
             className="search-submit"
             type="submit"
-            aria-label="Search recipes"
+            aria-label={t("search.label")}
           >
             <ArrowRight size={21} aria-hidden="true" />
           </button>
@@ -45,7 +42,7 @@ export function HomeHero({
       </div>
       {featured ? (
         <Link
-          href={`/recipes/${featured.slug}`}
+          href={localizePath(locale, `/recipes/${featured.slug}`)}
           className="featured-hero hero-recipe glass"
         >
           <Image
@@ -56,17 +53,21 @@ export function HomeHero({
             priority
           />
           <div>
-            <p className="eyebrow">On the table · {featured.author}</p>
+            <p className="eyebrow">
+              {t("home.fromCookly")} · {featured.author}
+            </p>
             <h2>{featured.title}</h2>
-            <span>{featured.minutes} min · Discover the recipe →</span>
+            <span>
+              {featured.minutes} {t("common.minutes")} · {t("home.viewAll")} →
+            </span>
           </div>
         </Link>
       ) : (
         <div className="featured-hero hero-empty glass">
           <Utensils size={36} strokeWidth={1.3} aria-hidden="true" />
-          <p className="eyebrow">Made to be shared</p>
-          <h2>Good food starts with a story.</h2>
-          <p>Community recipes and their photos will find a home here.</p>
+          <p className="eyebrow">{t("home.community")}</p>
+          <h2>{t("home.noEditorial")}</h2>
+          <p>{t("home.noEditorialDescription")}</p>
         </div>
       )}
     </section>

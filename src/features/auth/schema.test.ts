@@ -48,11 +48,17 @@ describe("safe return destinations", () => {
     "/%61uth/sign-up",
     "/%2f%2fevil.test",
     "/x/../auth/sign-in",
+    "/ru/auth/sign-in",
+    "/pl/auth/sign-up?callbackUrl=%2Fpl",
     " /settings",
     "/%zz",
   ])("rejects %s", (value) => expect(safeCallback(value)).toBe("/"));
   it("preserves internal paths", () =>
     expect(safeCallback("/settings/account?tab=1#name")).toBe(
       "/settings/account?tab=1#name",
+    ));
+  it("preserves localized internal paths", () =>
+    expect(safeCallback("/ru/settings/account?tab=profile")).toBe(
+      "/ru/settings/account?tab=profile",
     ));
 });

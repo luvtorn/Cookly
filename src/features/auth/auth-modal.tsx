@@ -8,6 +8,8 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { AuthForm } from "./auth-form";
 import { getModalOrigin } from "./modal-origin";
+import { stripLocalePrefix } from "@/lib/i18n/config";
+import { useI18n } from "@/lib/i18n/context";
 
 const subscribe = () => () => {};
 
@@ -22,11 +24,13 @@ export function AuthModal({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const localizedPathname = stripLocalePrefix(pathname);
+  const { t, href } = useI18n();
   const searchParams = useSearchParams();
   const mode =
-    pathname === "/auth/sign-up"
+    localizedPathname === "/auth/sign-up"
       ? "sign-up"
-      : pathname === "/auth/sign-in"
+      : localizedPathname === "/auth/sign-in"
         ? "sign-in"
         : initialMode;
   const registered = searchParams.get("registered") === "1";
@@ -84,12 +88,12 @@ export function AuthModal({
     const timer = setTimeout(
       () => {
         if (intercepted) router.back();
-        else router.replace("/", { scroll: false });
+        else router.replace(href("/"), { scroll: false });
       },
       reduced ? 0 : 220,
     );
     return () => clearTimeout(timer);
-  }, [closing, intercepted, reduced, router]);
+  }, [closing, href, intercepted, reduced, router]);
 
   if (!hydrated) return null;
   return createPortal(
@@ -140,7 +144,7 @@ export function AuthModal({
         <button
           type="button"
           className="icon-button auth-close"
-          aria-label="Close authentication"
+          aria-label={t("auth.close")}
           disabled={pending || closing}
           onClick={close}
         >
@@ -157,13 +161,13 @@ export function AuthModal({
             />
           </div>
           <div className="auth-photo-caption">
-            <span className="auth-eyebrow">Real recipes. Real people.</span>
+            <span className="auth-eyebrow">{t("auth.realRecipes")}</span>
             <h2>
-              Good food.
+              Cookly
               <br />
-              <em>Better together.</em>
+              <em>{t("auth.betterTogether")}</em>
             </h2>
-            <p>A little inspiration for your everyday cooking.</p>
+            <p>{t("auth.inspiration")}</p>
           </div>
         </aside>
         <AuthForm

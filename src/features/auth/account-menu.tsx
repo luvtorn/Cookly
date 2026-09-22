@@ -1,11 +1,15 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useI18n } from "@/lib/i18n/context";
 
 export function SignOutButton() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
+  const { t, href } = useI18n();
   return (
     <>
       <button
@@ -15,31 +19,62 @@ export function SignOutButton() {
           setPending(true);
           setError(false);
           try {
-            await signOut({ callbackUrl: "/" });
+            await signOut({ callbackUrl: href("/") });
           } catch {
             setError(true);
             setPending(false);
           }
         }}
       >
-        {pending ? "Signing out…" : "Sign out"}
+        {pending ? t("account.signingOut") : t("common.signOut")}
       </button>
-      {error && <p role="alert">Please try again.</p>}
+      {error && <p role="alert">{t("common.tryAgain")}</p>}
     </>
   );
 }
 export function AccountMenu({
   name,
+  username,
+  avatarUrl,
   isAdmin = false,
+  variant = "header",
 }: {
   name: string;
+  username?: string;
+  avatarUrl?: string | null;
   isAdmin?: boolean;
+  variant?: "header" | "dock";
 }) {
   const details = useRef<HTMLDetailsElement>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (details.current) details.current.open = false;
+  }, [pathname]);
+
+  useEffect(() => {
+    const closeFromOutside = (event: PointerEvent) => {
+      const menu = details.current;
+      if (
+        menu?.open &&
+        event.target instanceof Node &&
+        !menu.contains(event.target)
+      )
+        menu.open = false;
+    };
+    document.addEventListener("pointerdown", closeFromOutside);
+    return () => document.removeEventListener("pointerdown", closeFromOutside);
+  }, []);
+
   return (
     <details
       ref={details}
-      className="account-menu"
+      className={`account-menu account-menu--${variant}`}
+      onBlur={(event) => {
+        const next = event.relatedTarget;
+        if (next instanceof Node && event.currentTarget.contains(next)) return;
+        event.currentTarget.open = false;
+      }}
       onKeyDown={(event) => {
         if (event.key === "Escape" && details.current) {
           details.current.open = false;
@@ -49,22 +84,61 @@ export function AccountMenu({
     >
       <summary aria-label={`Account: ${name}`}>
         <span className="account-initials" aria-hidden="true">
-          {name.trim().slice(0, 2).toUpperCase()}
+          {avatarUrl ? (
+            <Image src={avatarUrl} alt="" width={34} height={34} />
+          ) : (
+            name.trim().slice(0, 2).toUpperCase()
+          )}
         </span>
         <span className="account-name">{name}</span>
       </summary>
       <div className="account-dropdown glass">
-        {isAdmin && <Link href="/admin">Cookly studio</Link>}
-        <Link
-          href="/settings/account"
-          onClick={() => {
+        <AccountLinks
+          username={username}
+          isAdmin={isAdmin}
+          onNavigate={() => {
             if (details.current) details.current.open = false;
           }}
-        >
-          Your account
-        </Link>
-        <SignOutButton />
+        />
       </div>
     </details>
+  );
+}
+
+export function AccountLinks({
+  username,
+  isAdmin = false,
+  onNavigate,
+}: {
+  username?: string;
+  isAdmin?: boolean;
+  onNavigate?: () => void;
+}) {
+  const { t, href } = useI18n();
+  return (
+    <>
+      {isAdmin && (
+        <Link href="/admin" onClick={onNavigate}>
+          {t("account.studio")}
+        </Link>
+      )}
+      {username ? (
+        <Link href={href(`/u/${username}`)} onClick={onNavigate}>
+          {t("account.publicProfile")}
+        </Link>
+      ) : null}
+      {!isAdmin ? (
+        <Link href={href("/my-recipes")} onClick={onNavigate}>
+          {t("account.myRecipes")}
+        </Link>
+      ) : null}
+      <Link href={href("/settings/profile")} onClick={onNavigate}>
+        {t("account.editProfile")}
+      </Link>
+      <Link href={href("/settings/account")} onClick={onNavigate}>
+        {t("account.yourAccount")}
+      </Link>
+      <SignOutButton />
+    </>
   );
 }

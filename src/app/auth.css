@@ -175,13 +175,30 @@ html {
 .account-dropdown button {
   display: block;
   width: 100%;
+  border: 1px solid transparent;
   text-align: left;
   padding: 12px;
   border-radius: 12px;
+  cursor: pointer;
+  transition:
+    color var(--motion-fast),
+    background-color var(--motion-fast),
+    border-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 .account-dropdown a:hover,
-.account-dropdown button:hover {
-  background: var(--secondary);
+.account-dropdown button:hover,
+.account-dropdown a:focus-visible,
+.account-dropdown button:focus-visible {
+  border-color: color-mix(in srgb, var(--primary) 32%, var(--border));
+  background: color-mix(in srgb, var(--primary) 14%, var(--glass-strong));
+  color: var(--foreground);
+  transform: translateX(3px);
+}
+.account-dropdown a:focus-visible,
+.account-dropdown button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
 }
 .account-page {
   width: min(640px, calc(100% - 40px));

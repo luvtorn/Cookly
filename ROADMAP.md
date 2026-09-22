@@ -8,9 +8,58 @@ Target: **14–20 focused development days**.
 
 Do not start post-MVP work until the MVP quality gate is green.
 
+## Public localization and layer polish — 2026-09-22
+
+- [x] Add typed dependency-free EN/RU/PL dictionaries and locale-prefixed consumer routes while keeping `/admin`, API and Auth.js endpoints unprefixed.
+- [x] Detect locale from the persistent cookie and `Accept-Language`, preserve query/fragment on manual switching, and adapt auth callbacks, navigation, metadata, canonical and language alternates.
+- [x] Localize the consumer shell, discovery, catalog, recipe, profile, Pantry preview, authentication, account and creator interfaces; preserve author-authored content in its original language.
+- [x] Rebuild the desktop dock with complete circular icon wells and correct search, navigation and modal stacking layers.
+- [x] Confirm lint, typecheck, formatting, 96 unit/component tests, production build and 30 Chromium scenarios. Commit this completed slice; push and Vercel verification remain separate.
+
+## Search assistance and navigation fixes — 2026-09-22
+
+- [x] Add visible hover/focus feedback and complete outside-focus, outside-pointer, Escape and route-change closing for the desktop account menu.
+- [x] Animate the desktop header-to-dock transition with reduced-motion support and retain the 160/80 px hysteresis.
+- [x] Defer liquid-lens DOM enhancement until hydration settles, including streamed elements added after navigation.
+- [x] Add image-and-title recipe suggestions to Home and catalog search with direct links, keyboard navigation, request cancellation and a no-JavaScript form fallback.
+- [x] Add authenticated canonical ingredient suggestions to the recipe editor; persist selected IDs and require explicit confirmation before creating a normalized ingredient.
+- [x] Pass lint, typecheck, 88 unit/component tests and production build. Isolated PostgreSQL integration/auth E2E remain environment-gated and were not run against Neon.
+
+## Adaptive social navigation — 2026-09-22
+
+- [x] Replace the ambiguous Create link with a prominent `+ New recipe` action while preserving guest callback and ADMIN Studio routing.
+- [x] Replace the permanently sticky desktop header with a scroll-triggered, hysteresis-stable side dock that expands on hover/focus without layout shift.
+- [x] Replace the mobile hamburger with a safe-area-aware bottom bar and accessible Profile account sheet; hide it in the recipe editor.
+- [x] Preserve active routes, keyboard focus, reduced motion, modal layering, liquid-glass effects and the separate admin navigation.
+- [x] Pass lint, typecheck, 86 unit/component tests, 14 isolated PostgreSQL integration tests, production build, 26 offline Chromium scenarios and full authentication/creator and administrator E2E journeys. Review 390/768/1024/1100/1448 px layouts in both themes.
+- [ ] Commit, push and verify the updated Vercel deployment separately.
+
 ## Authentication and sticky navigation — 2026-09-18
 
 ### Editorial studio and starter collection — 2026-09-21
+
+#### Discovery and verification refinement — 2026-09-21
+
+- [x] Replace ambiguous anchor navigation with route-aware Home and Recipes destinations; temporarily hide Pantry until the matcher exists.
+- [x] Simplify Home to a six-recipe Cookly collection and move all discovery into `/recipes` with combinable URL search/category/cuisine/difficulty/time/tag filters and pagination.
+- [x] Make cards fully clickable, increase their typography and expand centered recipe details with taxonomy, total time, section jumps and readable ingredients/method layouts.
+- [x] Add Cookly verified badges and an ADMIN-only verification queue with atomic verify/reject/revoke decisions, private reasons, stale-edit protection and moderation audit history.
+- [x] Preserve verification on non-material status-only saves; reset it on material recipe edits. Add a separate repeat-safe command for the administrator-approved starter ten; future admin recipes remain unverified by default.
+- [x] Local lint, typecheck, 81 unit/component tests, 12 isolated PostgreSQL integration tests, production build, 25 offline Chromium scenarios and full auth/editorial E2E passed. Home, catalog, recipe and verification layouts were checked at 390/768/1448px in both themes.
+- [x] Applied the explicit starter approval to Neon: exactly ten starter recipes are `VERIFIED`, with ten matching moderation audit records. No schema migration or test identity was added.
+- [ ] Confirm the updated Vercel deployment separately after commit and push.
+
+#### Creator profiles and community publishing — 2026-09-21
+
+- [x] Restore the product navigation as Home, Recipes, My Ingredients and Create, with guest authentication return and separate administrator Studio routing.
+- [x] Add user-owned recipe drafts/publication/archive, `/my-recipes`, strict ownership checks, community attribution and purpose-bound Cloudinary cover receipts.
+- [x] Add public creator profiles and editable display name, username, bio, location and Cloudinary avatar without exposing account or moderation data.
+- [x] Add a real-data community section to Home, author links, bottom-aligned card metadata and a compact accessible Cookly verification icon beside recipe titles.
+- [x] Add real like/visible-comment counts, read-only recent comments and an explicitly disabled composer preview to recipe details.
+- [x] Add the responsive `/pantry` My Ingredients preview without fictional matches or an AI runtime.
+- [x] Pass lint, typecheck, production build, 86 unit/component tests, 14 isolated PostgreSQL integration tests, 26 offline Chromium scenarios and complete creator/authentication and administrator E2E journeys. Review Home, recipe details and responsive navigation at desktop/tablet sizes; mobile/tablet/desktop layout guards pass in Chromium.
+- [ ] Implement like/comment/follow mutations and the deterministic Pantry matcher in their dedicated milestones.
+- [ ] Commit, push and verify the updated deployment on Vercel separately.
 
 - [x] Disable Server Function argument logging; preserve generic auth errors and rate limiting.
 - [x] Migration adds persisted editorial attribution and AI-cover provenance; tested against isolated PostgreSQL.
@@ -22,10 +71,10 @@ Do not start post-MVP work until the MVP quality gate is green.
 - [x] Offline production build, lint and 77 unit/component tests; 10 PostgreSQL integration tests passed.
 - [x] Chromium: 27 offline scenarios and two complete auth/editorial journeys passed; responsive studio screenshots reviewed in both themes.
 - [x] Applied auth/editorial migrations to configured Neon and provisioned the requested ACTIVE administrator on 2026-09-21. No test users or starter recipes were inserted there.
-- [ ] Upload approved covers and publish the ten starter recipes: blocked by Cloudinary key missing `create` permission (ping succeeds).
+- [x] Uploaded all ten covers to the `cookly` Cloudinary folder using folder-scoped Contributor permissions; published all ten recipes in Neon with editorial attribution and AI illustration labels. Added an upload-action regression test for the explicit folder and administrator-bound receipt.
 - [ ] Confirm remote CI and Vercel smoke checks after a separate deployment.
 
-The remaining historical sections retain their delivery-time status. Avatars, public profile editing, ordinary-user recipe editing and full moderation remain later milestones.
+The remaining historical sections retain their delivery-time status. Interactive social actions, deterministic Pantry matching and full moderation remain later milestones.
 
 ### Modal and glass follow-up — 2026-09-21
 

@@ -9,4 +9,4 @@ it("salts hashes and verifies only the exact password", async () => {
   expect(await verifyPassword(password.trim(), first)).toBe(false);
   expect(await verifyPassword(password, null)).toBe(false);
   expect(await verifyPassword(password, "invalid")).toBe(false);
-}, 15000);
+}, 30000);

@@ -44,6 +44,8 @@ export default async function EditRecipe({
         tagIds: recipe.tags.map((t) => t.tagId),
         coverImageIsAi: recipe.coverImageIsAi,
         ingredients: recipe.ingredients.map((i) => ({
+          ingredientId: i.ingredientId,
+          createNew: false,
           name: i.ingredient.name,
           amount: i.amount?.toString() ?? "",
           unit: i.unit ?? "",

@@ -443,6 +443,54 @@
   padding: 0 0.4rem;
   color: var(--muted-foreground);
 }
+.ingredient-combobox {
+  position: relative;
+}
+.ingredient-suggestions {
+  position: absolute;
+  top: calc(100% - 0.1rem);
+  left: 0;
+  z-index: 30;
+  width: min(390px, calc(100vw - 56px));
+  max-height: 320px;
+  overflow-y: auto;
+  border-radius: 17px;
+  padding: 7px;
+  background-color: var(--glass-strong);
+}
+.ingredient-suggestions > p,
+.ingredient-suggestions > button,
+.ingredient-suggestions li > button {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 12px;
+  text-align: left;
+}
+.ingredient-suggestions li > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.ingredient-suggestions li > button:is(:hover, :focus-visible),
+.ingredient-suggestions button[aria-selected="true"],
+.ingredient-suggestions .ingredient-create:is(:hover, :focus-visible) {
+  background: color-mix(in srgb, var(--primary) 13%, var(--surface-muted));
+}
+.ingredient-suggestions small {
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+.ingredient-create {
+  margin-top: 4px;
+  border-top: 1px solid var(--border);
+  color: var(--primary);
+  font-weight: 650;
+}
+.ingredient-confirmed {
+  color: var(--primary);
+  font-size: 0.75rem;
+}
 .editor-row-controls {
   display: flex;
   align-items: center;

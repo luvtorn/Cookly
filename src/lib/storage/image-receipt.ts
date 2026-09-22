@@ -4,29 +4,39 @@ import { requireAuthSecret } from "@/lib/validation/environment";
 
 const receiptSchema = z.object({
   userId: z.string(),
+  purpose: z.enum(["recipe-cover", "avatar"]),
   key: z.string(),
   url: z.url(),
   expires: z.number(),
 });
+type ImagePurpose = z.infer<typeof receiptSchema>["purpose"];
 function signature(payload: string) {
   return createHmac("sha256", requireAuthSecret(process.env))
-    .update(`recipe-cover:v1:${payload}`)
+    .update(`cookly-upload:v2:${payload}`)
     .digest();
 }
-export function signImageReceipt(
+function signUploadReceipt(
+  purpose: ImagePurpose,
   userId: string,
   key: string,
   url: string,
   now = Date.now(),
 ) {
   const payload = Buffer.from(
-    JSON.stringify({ userId, key, url, expires: now + 30 * 60 * 1000 }),
+    JSON.stringify({
+      userId,
+      purpose,
+      key,
+      url,
+      expires: now + 30 * 60 * 1000,
+    }),
   ).toString("base64url");
   return `${payload}.${signature(payload).toString("base64url")}`;
 }
-export function verifyImageReceipt(
+function verifyUploadReceipt(
   token: string,
   userId: string,
+  purpose: ImagePurpose,
   now = Date.now(),
 ) {
   const [payload, mac, extra] = token.split(".");
@@ -39,9 +49,41 @@ export function verifyImageReceipt(
   const data = receiptSchema.parse(
     JSON.parse(Buffer.from(payload, "base64url").toString()),
   );
-  if (data.userId !== userId || data.expires <= now)
+  if (data.userId !== userId || data.purpose !== purpose || data.expires <= now)
     throw new Error("Image receipt expired or invalid.");
+  return data;
+}
+export function signImageReceipt(
+  userId: string,
+  key: string,
+  url: string,
+  now = Date.now(),
+) {
+  return signUploadReceipt("recipe-cover", userId, key, url, now);
+}
+export function verifyImageReceipt(
+  token: string,
+  userId: string,
+  now = Date.now(),
+) {
+  const data = verifyUploadReceipt(token, userId, "recipe-cover", now);
   return { coverImageKey: data.key, coverImageUrl: data.url };
+}
+export function signAvatarReceipt(
+  userId: string,
+  key: string,
+  url: string,
+  now = Date.now(),
+) {
+  return signUploadReceipt("avatar", userId, key, url, now);
+}
+export function verifyAvatarReceipt(
+  token: string,
+  userId: string,
+  now = Date.now(),
+) {
+  const data = verifyUploadReceipt(token, userId, "avatar", now);
+  return { avatarKey: data.key, avatarUrl: data.url };
 }
 export function imageFormat(bytes: Uint8Array): "jpeg" | "png" | "webp" | null {
   const b = Buffer.from(bytes);
