@@ -43,7 +43,12 @@ for (const width of [390, 768, 1100, 1448]) {
               .getByRole("option")
               .last()
               .locator("img")
-              .evaluate((image) => image.complete && image.naturalWidth > 0),
+              .evaluate(
+                (image) =>
+                  image instanceof HTMLImageElement &&
+                  image.complete &&
+                  image.naturalWidth > 0,
+              ),
           )
           .toBe(true);
         const geometry = await panel.evaluate((element) => {
