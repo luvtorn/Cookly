@@ -8,6 +8,21 @@ Target: **14–20 focused development days**.
 
 Do not start post-MVP work until the MVP quality gate is green.
 
+## Dock motion and design audit — 2026-09-27
+
+- [x] Keep desktop dock rows, icon positions, and total height stable throughout expansion/collapse; verify pointer, keyboard and reduced motion at 1100/1448 px in both themes.
+- [x] Audit 15 page types across desktop, tablet and mobile with isolated local fixtures. Record evidence and follow-up priorities in `docs/design-audit-2026-09-27.md`.
+- [x] Address audit D01–D06 and D12: viewport-aware dropdowns, mobile editor navigation, mobile Studio navigation, remaining system translations, long-author metadata, verification heading hierarchy and excessive mobile filter height.
+- [x] Apply audit D07–D11 refinements: symmetric public gutters, unwrapped navigation labels, calmer mobile profiles, deduplicated Home captions and shared accessible upload controls with larger tag targets.
+
+## Unified profile and navigation polish — 2026-09-24
+
+- [x] Consolidate public and owner profile into `/en|ru|pl/u/[username]`; keep email/sign-out behind an owner-only collapsed account section and public metadata free of private data.
+- [x] Redirect legacy account/profile settings to the owner's profile and simplify account menus to My profile, My recipes and Studio where applicable.
+- [x] Fix profile heading/form separation, desktop dock geometry and contrast, and replace native language/filter/editor dropdowns with cohesive keyboard-accessible glass menus.
+- [x] Pass lint, typecheck, 98 unit tests, 14 isolated PostgreSQL integration tests, production build and 33 Chromium browser tests; both isolated auth/admin E2E scenarios passed their assertions.
+- [ ] Resolve the Windows Playwright web-server teardown hang and obtain a clean exit for the combined auth E2E run before release. Push and Vercel smoke-check remain separate.
+
 ## Public localization and layer polish — 2026-09-22
 
 - [x] Add typed dependency-free EN/RU/PL dictionaries and locale-prefixed consumer routes while keeping `/admin`, API and Auth.js endpoints unprefixed.
@@ -532,6 +547,14 @@ Rules:
 - AI output is always treated as untrusted data and validated;
 - core product must still work if AI provider is disabled;
 - introduce no paid AI dependency without explicit approval.
+
+## Search and recipe motion polish
+
+- [x] Separate stationary search glass from its scroll container; bound suggestions to the viewport and mobile navigation.
+- [x] Dismiss loading/empty suggestions with Escape; prevent dismissed asynchronous results from reopening the menu.
+- [x] Scroll the keyboard-selected suggestion inside the list without moving the page.
+- [x] Refine shared card hover/focus, stagger catalog results by URL, and progressively reveal recipe sections.
+- [x] Preserve readable server content and reduced-motion/touch alternatives; add responsive search regressions.
 
 # Suggested implementation order for Codex prompts
 

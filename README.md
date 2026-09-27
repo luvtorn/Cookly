@@ -2,6 +2,15 @@
 
 Cookly is a social recipe platform in development, built with Next.js App Router, strict TypeScript, Tailwind and PostgreSQL/Prisma. The current slice connects discovery, creator profiles, user-owned recipes and a protected editorial studio.
 
+The desktop dock keeps icon positions fixed while expanding. The [2026-09-27 design audit](docs/design-audit-2026-09-27.md) now records the D01–D12 fixes and repeat visual checks: viewport-aware select menus, responsive Studio/editor navigation, centered content, compact mobile profiles, aligned card metadata, completed consumer UI strings, and shared accessible image-upload controls. Author content and Studio remain untranslated by design.
+
+## Unified profile and dropdowns — 2026-09-24
+
+- `/en|ru|pl/u/[username]` is the public creator profile and, for its owner, the place to edit the profile or expand private account details. The email and sign-out control are rendered only for the authenticated owner; public metadata contains only public profile data. After changing a username, the browser moves to the new profile URL.
+- `/settings/profile` and `/settings/account`, including localized variants, redirect to the owner's profile after authentication. Guests retain a safe sign-in callback. The account menu has one **My profile** entry alongside My recipes and Studio where applicable.
+- The desktop dock uses true circular collapsed controls, readable expanded labels in both themes, and a contrasting New recipe label. Language switching and form/filter selections use styled keyboard-accessible menus instead of operating-system dropdown chrome. Locale switching keeps the current path, query, fragment and locale cookie.
+- Run database-backed profile/auth tests only with the isolated loopback `TEST_DATABASE_URL`, never with production Neon.
+
 ## Localized public experience — 2026-09-22
 
 - All consumer routes use an explicit locale prefix: `/en`, `/ru` or `/pl`. Legacy unprefixed public URLs redirect to the locale stored in `cookly_locale`, then `Accept-Language`, with English as the fallback; query parameters are preserved.
@@ -30,7 +39,7 @@ Cookly is a social recipe platform in development, built with Next.js App Router
 
 - Main navigation is route-aware and exposes Home, Recipes, My Ingredients and Create. Guests who choose Create return to `/recipes/new` after authentication; administrators are redirected to the editorial Studio.
 - Registered users create, edit, publish and archive non-editorial recipes through `/recipes/new` and `/my-recipes`. Ownership, current account status, rate limits and `isEditorial=false` are enforced on the server.
-- `/u/[username]` exposes only intended public profile fields, real social counts and published visible community recipes. `/settings/profile` updates display name, username, bio, location and a Cloudinary avatar with a purpose-bound HMAC receipt.
+- `/u/[username]` exposes only intended public profile fields, real social counts and published visible community recipes. The owner can update display name, username, bio, location and a Cloudinary avatar there with a purpose-bound HMAC receipt.
 - Home keeps the six-recipe Cookly collection and adds a separate community section without invented authors or engagement. Cards link the whole surface while preserving a separate author link, pin metadata to the bottom and place the accessible verification icon beside the title.
 - Recipe details show real like and visible-comment counts plus up to five real visible comments. The disabled composer is an honest preview; like/comment/follow mutations remain deferred.
 - `/pantry` is a responsive My Ingredients preview following `design-package/pantry.png`. It does not generate recipes or fabricate matches; deterministic ingredient matching remains the next Pantry milestone.
@@ -220,6 +229,12 @@ npx playwright install chromium
 `typecheck` generates Prisma Client and Next.js route types before TypeScript, so it works without an existing `.next/` directory. `test:e2e` builds and starts the production server automatically. After an existing build, `npx playwright test` runs the same smoke test without rebuilding. Use `npm run start` to serve a production build manually.
 
 Additional commands: `test:watch`, `test:coverage`, and `format`. Fonts and images are local: a cold production build no longer needs access to Google Fonts. Browser tests cover Home search, theme persistence, preview dialogs, mobile keyboard navigation, the 404 page, and overflow/screenshots at 320, 390, 768, 1024 and 1448px in both themes. Screenshots are written to ignored `test-results/`; these are review artifacts, not pixel-diff baselines.
+
+## Search surfaces and recipe motion
+
+Search suggestions use a stationary glass shell and a separate transparent scroll area. Their height respects the visual viewport and mobile navigation; keyboard selection scrolls only the list. Escape and focus departure dismiss pending responses as well as visible suggestions.
+
+Recipe cards share a pointer-only lift/image zoom and keyboard focus treatment. Catalog results stagger once per applied URL query; recipe sections progressively reveal once in view using the existing Framer Motion dependency. Server content remains visible without JavaScript. Reduced motion disables movement and delays. `tests/e2e/search-motion.spec.ts` covers responsive search geometry, localization and reduced motion, retaining video/screenshots under ignored test artifacts.
 
 ## CI and delivery status
 

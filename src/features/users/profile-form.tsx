@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema, type ProfileInput } from "./schema";
 import { updateProfileAction, uploadAvatarAction } from "./actions";
 import { useI18n } from "@/lib/i18n/context";
+import { ImageUploadControl } from "@/components/shared/image-upload-control";
 
 export function ProfileForm({
   initial,
@@ -17,7 +18,7 @@ export function ProfileForm({
   avatarUrl: string | null;
 }) {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, href } = useI18n();
   const locked = useRef(false);
   const [avatar, setAvatar] = useState(avatarUrl);
   const [uploading, setUploading] = useState(false);
@@ -43,8 +44,16 @@ export function ProfileForm({
           setMessage("");
           try {
             const result = await updateProfileAction(data);
-            setMessage(result.success ? t("profile.updated") : result.message);
-            if (result.success) router.refresh();
+            setMessage(
+              result.success ? t("profile.updated") : t("profile.saveError"),
+            );
+            if (result.success) {
+              if (result.profile.username !== initial.username) {
+                router.replace(href(`/u/${result.profile.username}`));
+              } else {
+                router.refresh();
+              }
+            }
           } catch {
             setMessage(t("auth.genericError"));
           } finally {
@@ -65,51 +74,48 @@ export function ProfileForm({
                 sizes="144px"
               />
             ) : (
-              <span aria-hidden="true">You</span>
+              <span aria-hidden="true">{t("profile.you")}</span>
             )}
           </div>
-          <label className="button-secondary">
-            {uploading ? t("profile.uploading") : t("profile.chooseAvatar")}
-            <input
-              className="sr-only"
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              onChange={async (event) => {
-                const file = event.target.files?.[0];
-                event.target.value = "";
-                if (!file || locked.current) return;
-                if (file.size > 3 * 1024 * 1024) {
-                  setMessage("Choose an image up to 3 MiB.");
-                  return;
-                }
-                locked.current = true;
-                setUploading(true);
-                setMessage("");
-                try {
-                  const form = new FormData();
-                  form.set("file", file);
-                  const result = await uploadAvatarAction(form);
-                  if (result.success) {
-                    setAvatar(result.url);
-                    setValue("avatarReceipt", result.receipt, {
-                      shouldDirty: true,
-                    });
-                    setMessage("Avatar uploaded. Save to use it on Cookly.");
-                  } else setMessage(result.message);
-                } finally {
-                  locked.current = false;
-                  setUploading(false);
-                }
-              }}
-            />
-          </label>
-          <small>{t("profile.avatarHelp")}</small>
+          <ImageUploadControl
+            label={t("profile.chooseAvatar")}
+            pendingLabel={t("profile.uploading")}
+            pending={pending}
+            help={t("profile.avatarHelp")}
+            onFile={async (file) => {
+              if (locked.current) return;
+              if (file.size > 3 * 1024 * 1024) {
+                setMessage(t("editor.imageSizeError"));
+                return;
+              }
+              locked.current = true;
+              setUploading(true);
+              setMessage("");
+              try {
+                const form = new FormData();
+                form.set("file", file);
+                const result = await uploadAvatarAction(form);
+                if (result.success) {
+                  setAvatar(result.url);
+                  setValue("avatarReceipt", result.receipt, {
+                    shouldDirty: true,
+                  });
+                  setMessage(t("profile.uploaded"));
+                } else setMessage(t("editor.uploadError"));
+              } catch {
+                setMessage(t("editor.uploadError"));
+              } finally {
+                locked.current = false;
+                setUploading(false);
+              }
+            }}
+          />
         </div>
         <label>
           {t("auth.displayName")}
           <input {...register("displayName")} maxLength={80} />
           {errors.displayName ? (
-            <small className="field-error">{errors.displayName.message}</small>
+            <small className="field-error">{t("profile.nameHint")}</small>
           ) : null}
         </label>
         <label>
@@ -120,7 +126,7 @@ export function ProfileForm({
             autoCapitalize="none"
           />
           {errors.username ? (
-            <small className="field-error">{errors.username.message}</small>
+            <small className="field-error">{t("profile.usernameHint")}</small>
           ) : null}
         </label>
         <label>

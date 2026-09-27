@@ -24,7 +24,10 @@ export function catalogUrl(query: CatalogQuery) {
   return `/recipes${params.size ? `?${params}` : ""}`;
 }
 export function catalogReturn(value: unknown) {
-  if (typeof value !== "string" || !/^\/recipes(?:\?|$)/.test(value))
+  if (
+    typeof value !== "string" ||
+    !/^\/(?:en\/|ru\/|pl\/)?recipes(?:\?|$)/.test(value)
+  )
     return "/recipes";
   return catalogUrl(
     catalogQuerySchema.parse(

@@ -59,10 +59,14 @@ export async function RecipeCard({
                   {recipe.initials}
                 </span>
               )}
-              {recipe.author}
+              <span className="author-name" title={recipe.author}>
+                {recipe.author}
+              </span>
             </Link>
           ) : (
-            <span className="author">{recipe.author}</span>
+            <span className="author author-name" title={recipe.author}>
+              {recipe.author}
+            </span>
           )}
           <span className="recipe-time">
             <Clock3 size={15} aria-hidden="true" />

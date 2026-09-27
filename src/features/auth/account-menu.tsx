@@ -124,7 +124,7 @@ export function AccountLinks({
       )}
       {username ? (
         <Link href={href(`/u/${username}`)} onClick={onNavigate}>
-          {t("account.publicProfile")}
+          {t("account.myProfile")}
         </Link>
       ) : null}
       {!isAdmin ? (
@@ -132,12 +132,6 @@ export function AccountLinks({
           {t("account.myRecipes")}
         </Link>
       ) : null}
-      <Link href={href("/settings/profile")} onClick={onNavigate}>
-        {t("account.editProfile")}
-      </Link>
-      <Link href={href("/settings/account")} onClick={onNavigate}>
-        {t("account.yourAccount")}
-      </Link>
       <SignOutButton />
     </>
   );

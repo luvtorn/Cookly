@@ -24,7 +24,7 @@ export default async function PantryPreviewPage() {
         <div className="pantry-photo glass">
           <Image
             src="/images/kitchen.webp"
-            alt="Fresh ingredients on a bright kitchen counter"
+            alt={t("pantry.imageAlt")}
             fill
             sizes="(max-width: 767px) 100vw, 48vw"
             priority
@@ -50,23 +50,16 @@ export default async function PantryPreviewPage() {
             {t("editor.addIngredient")}
           </button>
         </div>
-        <div
-          className="pantry-filter-preview"
-          aria-label="Future match filters"
-        >
+        <div className="pantry-filter-preview" aria-label={t("pantry.filters")}>
           <span>
-            <Clock3 aria-hidden="true" /> Cooking time
+            <Clock3 aria-hidden="true" /> {t("editor.cookTime")}
           </span>
           <span>
             <SlidersHorizontal aria-hidden="true" /> {t("catalog.difficulty")}
           </span>
           <span>{t("pantry.maxMissing")}</span>
         </div>
-        <p className="pantry-disclaimer">
-          This preview does not generate recipes and does not show fictional
-          matches. The next Pantry milestone will compare canonical ingredient
-          IDs and clearly list matched and missing ingredients.
-        </p>
+        <p className="pantry-disclaimer">{t("pantry.disclaimer")}</p>
       </section>
     </main>
   );

@@ -3,13 +3,15 @@ import { useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm, useFieldArray } from "react-hook-form";
+import { Controller, useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { recipeSchema, type RecipeInput, type RecipeOptions } from "./schema";
 import { saveRecipeAction, uploadCoverAction } from "./actions";
 import { saveUserRecipeAction, uploadUserCoverAction } from "./creator-actions";
 import { IngredientCombobox } from "./ingredient-combobox";
 import { useI18n } from "@/lib/i18n/context";
+import { GlassSelect } from "@/components/shared/glass-select";
+import { ImageUploadControl } from "@/components/shared/image-upload-control";
 
 function Field({
   label,
@@ -20,11 +22,18 @@ function Field({
   error?: string;
   children: ReactNode;
 }) {
+  const { t } = useI18n();
   return (
     <label className="editor-field">
       <span>{label}</span>
       {children}
-      {error && <small className="field-error">{error}</small>}
+      {error && (
+        <small className="field-error">
+          {error === "Enter a positive amount with up to two decimal places."
+            ? t("editor.amountError")
+            : t("editor.invalidField")}
+        </small>
+      )}
     </label>
   );
 }
@@ -88,9 +97,7 @@ export function RecipeEditor({
     if (
       data.status === "ARCHIVED" &&
       initial?.status !== "ARCHIVED" &&
-      !window.confirm(
-        "Archive this recipe? It will no longer be visible on Cookly.",
-      )
+      !window.confirm(t("editor.archiveConfirm"))
     )
       return;
     locked.current = true;
@@ -101,7 +108,7 @@ export function RecipeEditor({
           ? await saveRecipeAction(data)
           : await saveUserRecipeAction(data);
       if (!result.success) {
-        setMessage(result.message);
+        setMessage(t("editor.saveError"));
         return;
       }
       setMessage(t("editor.saved"));
@@ -153,7 +160,7 @@ export function RecipeEditor({
               <input
                 {...register("title")}
                 maxLength={140}
-                placeholder="Give your dish a name"
+                placeholder={t("editor.titlePlaceholder")}
                 aria-invalid={!!errors.title}
               />
             </Field>
@@ -165,7 +172,7 @@ export function RecipeEditor({
                 {...register("description")}
                 rows={3}
                 maxLength={600}
-                placeholder="What makes this dish special?"
+                placeholder={t("editor.descriptionPlaceholder")}
                 aria-invalid={!!errors.description}
               />
             </Field>
@@ -205,35 +212,69 @@ export function RecipeEditor({
               </Field>
             </div>
             <div className="editor-three">
-              <Field
-                label={t("editor.category")}
-                error={errors.categoryId?.message}
-              >
-                <select {...register("categoryId")}>
-                  {options.categories.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label={t("editor.cuisine")}>
-                <select {...register("cuisineId")}>
-                  <option value="">{t("editor.notSpecified")}</option>
-                  {options.cuisines.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label={t("catalog.difficulty")}>
-                <select {...register("difficulty")}>
-                  <option value="EASY">{t("difficulty.easy")}</option>
-                  <option value="MEDIUM">{t("difficulty.medium")}</option>
-                  <option value="HARD">{t("difficulty.hard")}</option>
-                </select>
-              </Field>
+              <div className="editor-field">
+                <span>{t("editor.category")}</span>
+                <Controller
+                  name="categoryId"
+                  control={control}
+                  render={({ field }) => (
+                    <GlassSelect
+                      ariaLabel={t("editor.category")}
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={options.categories.map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      }))}
+                    />
+                  )}
+                />
+                {errors.categoryId && (
+                  <small className="field-error">
+                    {t("editor.invalidField")}
+                  </small>
+                )}
+              </div>
+              <div className="editor-field">
+                <span>{t("editor.cuisine")}</span>
+                <Controller
+                  name="cuisineId"
+                  control={control}
+                  render={({ field }) => (
+                    <GlassSelect
+                      ariaLabel={t("editor.cuisine")}
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={[
+                        { value: "", label: t("editor.notSpecified") },
+                        ...options.cuisines.map((item) => ({
+                          value: item.id,
+                          label: item.name,
+                        })),
+                      ]}
+                    />
+                  )}
+                />
+              </div>
+              <div className="editor-field">
+                <span>{t("catalog.difficulty")}</span>
+                <Controller
+                  name="difficulty"
+                  control={control}
+                  render={({ field }) => (
+                    <GlassSelect
+                      ariaLabel={t("catalog.difficulty")}
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={[
+                        { value: "EASY", label: t("difficulty.easy") },
+                        { value: "MEDIUM", label: t("difficulty.medium") },
+                        { value: "HARD", label: t("difficulty.hard") },
+                      ]}
+                    />
+                  )}
+                />
+              </div>
             </div>
             <fieldset className="editor-tags">
               <legend>{t("editor.discoveryTags")}</legend>
@@ -249,7 +290,7 @@ export function RecipeEditor({
             <div className="section-heading">
               <div>
                 <h2>{t("editor.ingredients")}</h2>
-                <p>Use simple names, such as “chicken breast”.</p>
+                <p>{t("editor.ingredientsHelp")}</p>
               </div>
             </div>
             {ingredients.fields.map((item, index) => (
@@ -287,7 +328,7 @@ export function RecipeEditor({
                   <input
                     {...register(`ingredients.${index}.note`)}
                     maxLength={160}
-                    placeholder="Optional: finely chopped"
+                    placeholder={t("editor.notePlaceholder")}
                   />
                 </Field>
                 <div className="editor-row-controls">
@@ -302,7 +343,10 @@ export function RecipeEditor({
                     type="button"
                     disabled={index === 0}
                     onClick={() => ingredients.move(index, index - 1)}
-                    aria-label={`Move ingredient ${index + 1} up`}
+                    aria-label={t("editor.moveUp").replace(
+                      "{item}",
+                      `${t("common.ingredients")} ${index + 1}`,
+                    )}
                   >
                     ↑
                   </button>
@@ -310,7 +354,10 @@ export function RecipeEditor({
                     type="button"
                     disabled={index === ingredients.fields.length - 1}
                     onClick={() => ingredients.move(index, index + 1)}
-                    aria-label={`Move ingredient ${index + 1} down`}
+                    aria-label={t("editor.moveDown").replace(
+                      "{item}",
+                      `${t("common.ingredients")} ${index + 1}`,
+                    )}
                   >
                     ↓
                   </button>
@@ -320,7 +367,10 @@ export function RecipeEditor({
                     onClick={() => ingredients.remove(index)}
                   >
                     {t("editor.remove")}
-                    <span className="sr-only"> ingredient {index + 1}</span>
+                    <span className="sr-only">
+                      {" "}
+                      {t("common.ingredients")} {index + 1}
+                    </span>
                   </button>
                 </div>
               </fieldset>
@@ -345,7 +395,7 @@ export function RecipeEditor({
           </section>
           <section className="admin-panel glass">
             <h2>{t("recipe.method")}</h2>
-            <p>One clear instruction at a time.</p>
+            <p>{t("editor.methodHelp")}</p>
             {steps.fields.map((step, index) => (
               <div className="step-row" key={step.id}>
                 <Field
@@ -363,7 +413,10 @@ export function RecipeEditor({
                     type="button"
                     disabled={index === 0}
                     onClick={() => steps.move(index, index - 1)}
-                    aria-label={`Move step ${index + 1} up`}
+                    aria-label={t("editor.moveUp").replace(
+                      "{item}",
+                      `${t("editor.step")} ${index + 1}`,
+                    )}
                   >
                     ↑
                   </button>
@@ -371,7 +424,10 @@ export function RecipeEditor({
                     type="button"
                     disabled={index === steps.fields.length - 1}
                     onClick={() => steps.move(index, index + 1)}
-                    aria-label={`Move step ${index + 1} down`}
+                    aria-label={t("editor.moveDown").replace(
+                      "{item}",
+                      `${t("editor.step")} ${index + 1}`,
+                    )}
                   >
                     ↓
                   </button>
@@ -406,57 +462,52 @@ export function RecipeEditor({
               {image ? (
                 <Image
                   src={image}
-                  alt="Recipe cover preview"
+                  alt={t("editor.coverPreview")}
                   fill
                   sizes="(max-width: 800px) 90vw, 330px"
                 />
               ) : (
-                <span>Your dish belongs here</span>
+                <span>{t("editor.coverEmpty")}</span>
               )}
             </div>
-            <Field label={t("editor.uploadCover")}>
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={async (event) => {
-                  const file = event.target.files?.[0];
-                  event.target.value = "";
-                  if (!file || locked.current) return;
-                  if (file.size > 3 * 1024 * 1024) {
-                    setMessage("Choose an image up to 3 MiB.");
-                    return;
-                  }
-                  locked.current = true;
-                  setUploading(true);
-                  setMessage("");
-                  try {
-                    const form = new FormData();
-                    form.set("file", file);
-                    const result =
-                      mode === "admin"
-                        ? await uploadCoverAction(form)
-                        : await uploadUserCoverAction(form);
-                    if (result.success) {
-                      setImage(result.url);
-                      setValue("imageReceipt", result.receipt, {
-                        shouldDirty: true,
-                      });
-                      setMessage(
-                        "Cover uploaded. Save within 30 minutes to attach it.",
-                      );
-                    } else setMessage(result.message);
-                  } catch {
-                    setMessage("Upload failed. Please try again.");
-                  } finally {
-                    locked.current = false;
-                    setUploading(false);
-                  }
-                }}
-              />
-            </Field>
-            <p className="editor-help">{t("editor.imageHelp")}</p>
+            <ImageUploadControl
+              label={t("editor.uploadCover")}
+              pendingLabel={t("editor.uploading")}
+              pending={pending}
+              help={t("editor.imageHelp")}
+              onFile={async (file) => {
+                if (locked.current) return;
+                if (file.size > 3 * 1024 * 1024) {
+                  setMessage(t("editor.imageSizeError"));
+                  return;
+                }
+                locked.current = true;
+                setUploading(true);
+                setMessage("");
+                try {
+                  const form = new FormData();
+                  form.set("file", file);
+                  const result =
+                    mode === "admin"
+                      ? await uploadCoverAction(form)
+                      : await uploadUserCoverAction(form);
+                  if (result.success) {
+                    setImage(result.url);
+                    setValue("imageReceipt", result.receipt, {
+                      shouldDirty: true,
+                    });
+                    setMessage(t("editor.coverUploaded"));
+                  } else setMessage(t("editor.uploadError"));
+                } catch {
+                  setMessage(t("editor.uploadError"));
+                } finally {
+                  locked.current = false;
+                  setUploading(false);
+                }
+              }}
+            />
             <label className="editor-checkbox">
-              <input type="checkbox" {...register("coverImageIsAi")} /> This
+              <input type="checkbox" {...register("coverImageIsAi")} />
               {t("editor.aiCover")}
             </label>
           </section>
@@ -465,15 +516,30 @@ export function RecipeEditor({
             <p>
               {mode === "admin"
                 ? "Published under Cookly. Verification is a separate review."
-                : "Published under your profile. Cookly verification is a separate review."}
+                : t("editor.publishHelp")}
             </p>
-            <Field label={t("editor.publication")}>
-              <select {...register("status")}>
-                <option value="DRAFT">{t("editor.draftOption")}</option>
-                <option value="PUBLISHED">{t("editor.publishedOption")}</option>
-                <option value="ARCHIVED">{t("editor.archivedOption")}</option>
-              </select>
-            </Field>
+            <div className="editor-field">
+              <span>{t("editor.publication")}</span>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <GlassSelect
+                    ariaLabel={t("editor.publication")}
+                    value={field.value}
+                    onChange={field.onChange}
+                    options={[
+                      { value: "DRAFT", label: t("editor.draftOption") },
+                      {
+                        value: "PUBLISHED",
+                        label: t("editor.publishedOption"),
+                      },
+                      { value: "ARCHIVED", label: t("editor.archivedOption") },
+                    ]}
+                  />
+                )}
+              />
+            </div>
             <button className="button-primary" type="submit" disabled={pending}>
               {pending
                 ? uploading

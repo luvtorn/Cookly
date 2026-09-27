@@ -7,6 +7,7 @@ import { getDb } from "@/lib/db/client";
 import { MyRecipeList } from "@/features/recipes/my-recipe-list";
 import { getI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/config";
+import { GlassSelect } from "@/components/shared/glass-select";
 
 export const metadata: Metadata = {
   title: "My recipes",
@@ -72,24 +73,31 @@ export default async function MyRecipes({
           className="creator-filters"
           action={localizePath(locale, "/my-recipes")}
         >
-          <label>
-            Status
-            <select name="status" defaultValue={status ?? ""}>
-              <option value="">{t("status.all")}</option>
-              <option value="DRAFT">{t("status.draft")}</option>
-              <option value="PUBLISHED">{t("status.published")}</option>
-              <option value="ARCHIVED">{t("status.archived")}</option>
-            </select>
-          </label>
+          <div className="glass-select-field">
+            <span>{t("status.label")}</span>
+            <GlassSelect
+              name="status"
+              ariaLabel={t("status.label")}
+              defaultValue={status ?? ""}
+              options={[
+                { value: "", label: t("status.all") },
+                { value: "DRAFT", label: t("status.draft") },
+                { value: "PUBLISHED", label: t("status.published") },
+                { value: "ARCHIVED", label: t("status.archived") },
+              ]}
+            />
+          </div>
           <button className="button-secondary">{t("common.filter")}</button>
         </form>
         <MyRecipeList recipes={recipes.slice(0, 12)} />
         {(page > 1 || recipes.length > 12) && (
-          <nav className="pagination" aria-label="My recipe pages">
+          <nav className="pagination" aria-label={t("common.pages")}>
             {page > 1 ? (
               <Link href={pageUrl(page - 1)}>{t("common.previous")}</Link>
             ) : null}
-            <span>Page {page}</span>
+            <span>
+              {t("common.page")} {page}
+            </span>
             {recipes.length > 12 ? (
               <Link href={pageUrl(page + 1)}>{t("common.next")}</Link>
             ) : null}

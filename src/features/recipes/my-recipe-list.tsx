@@ -36,7 +36,13 @@ export async function MyRecipeList({
           <Image src={recipe.coverImageUrl} alt="" width={120} height={84} />
           <div>
             <h2>{recipe.title}</h2>
-            <p>Updated {recipe.updatedAt.toISOString().slice(0, 10)}</p>
+            <p>
+              {t("common.updated")}{" "}
+              {new Intl.DateTimeFormat(locale, {
+                dateStyle: "medium",
+                timeZone: "UTC",
+              }).format(recipe.updatedAt)}
+            </p>
           </div>
           <span
             className={`recipe-status status-${recipe.status.toLowerCase()}`}
@@ -51,14 +57,14 @@ export async function MyRecipeList({
               className="text-link"
               href={localizePath(locale, `/recipes/${recipe.slug}`)}
             >
-              View
+              {t("common.view")}
             </Link>
           ) : null}
           <Link
             className="button-secondary"
             href={localizePath(locale, `/my-recipes/${recipe.id}/edit`)}
           >
-            Edit <span className="sr-only">{recipe.title}</span>→
+            {t("common.edit")} <span className="sr-only">{recipe.title}</span>→
           </Link>
         </li>
       ))}

@@ -3,8 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { MobileNavigation } from "./mobile-navigation";
 
+const route = vi.hoisted(() => ({ pathname: "/" }));
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/",
+  usePathname: () => route.pathname,
   useRouter: () => ({ push: vi.fn() }),
 }));
 
@@ -19,6 +20,21 @@ beforeAll(() => {
 });
 
 describe("MobileNavigation", () => {
+  it("uses a separate hidden class on localized editor routes", () => {
+    for (const pathname of [
+      "/ru/recipes/new",
+      "/pl/my-recipes/recipe-id/edit",
+    ]) {
+      route.pathname = pathname;
+      const { unmount } = render(<MobileNavigation />);
+      expect(screen.getByRole("navigation")).toHaveClass(
+        "glass",
+        "mobile-bottom-navigation--hidden",
+      );
+      unmount();
+    }
+    route.pathname = "/";
+  });
   it("exposes five destinations and restores focus after closing Profile", async () => {
     const user = userEvent.setup();
     render(
@@ -46,9 +62,10 @@ describe("MobileNavigation", () => {
     await user.click(profile);
     const sheet = screen.getByRole("dialog", { name: "Garden Cook" });
     expect(sheet).toHaveAttribute("open");
-    expect(
-      screen.getByRole("link", { name: "Public profile" }),
-    ).toHaveAttribute("href", "/en/u/garden_cook");
+    expect(screen.getByRole("link", { name: "My profile" })).toHaveAttribute(
+      "href",
+      "/en/u/garden_cook",
+    );
     fireEvent(sheet, new Event("cancel", { cancelable: true }));
     expect(sheet).not.toHaveAttribute("open");
     expect(profile).toHaveFocus();

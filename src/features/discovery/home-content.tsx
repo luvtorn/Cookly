@@ -55,7 +55,6 @@ export async function HomeContent({
       <section className="recipes-section" aria-labelledby="community-title">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">{t("home.community")}</p>
             <h2 id="community-title">{t("home.community")}</h2>
             <p>{t("home.communityDescription")}</p>
           </div>
@@ -79,7 +78,6 @@ export async function HomeContent({
         ) : (
           <div className="community-empty glass">
             <div>
-              <p className="eyebrow">{t("home.community")}</p>
               <h3>{t("home.noCommunity")}</h3>
               <p>{t("home.noCommunityDescription")}</p>
             </div>

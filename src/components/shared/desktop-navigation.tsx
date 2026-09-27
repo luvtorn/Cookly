@@ -30,7 +30,7 @@ export function DesktopNavigation() {
         className={state.isIngredients ? "nav-home" : undefined}
         aria-current={state.isIngredients ? "page" : undefined}
       >
-        {t("common.myIngredients")}
+        {t("common.ingredients")}
       </Link>
       <Link
         href={href("/recipes/new")}

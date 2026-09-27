@@ -1,4 +1,5 @@
 "use client";
+import clsx from "clsx";
 
 import {
   BookOpen,
@@ -31,7 +32,10 @@ export function MobileNavigation({ user }: { user?: NavigationUser }) {
   return (
     <>
       <nav
-        className={`mobile-bottom-navigation glass${state.isEditor ? "mobile-bottom-navigation--hidden" : ""}`}
+        className={clsx(
+          "mobile-bottom-navigation glass",
+          state.isEditor && "mobile-bottom-navigation--hidden",
+        )}
         aria-label={t("nav.mobile")}
       >
         <Link href={href("/")} aria-current={state.isHome ? "page" : undefined}>

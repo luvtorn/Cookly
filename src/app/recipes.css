@@ -506,6 +506,8 @@
   gap: 0.4rem;
 }
 .editor-row-controls button {
+  min-height: 44px;
+  min-width: 44px;
   padding: 0.4rem 0.7rem;
   border: 1px solid var(--border);
   border-radius: 0.6rem;
@@ -534,7 +536,27 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
+  min-height: 44px;
+  cursor: pointer;
+}
+.editor-tags label {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+}
+.editor-tags label:has(:checked) {
+  background: var(--accent-soft-green);
+  border-color: var(--primary);
+}
+.editor-tags label:has(:focus-visible) {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.editor-row-controls label {
+  min-height: 44px;
+  cursor: pointer;
 }
 .editor-cover {
   aspect-ratio: 3/2;
@@ -551,6 +573,37 @@
   font-size: 0.75rem;
   margin: 0.5rem 0 1rem;
   color: var(--muted-foreground);
+}
+.image-upload-control {
+  display: grid;
+  gap: 0.5rem;
+  margin-block: 1rem;
+  min-width: 0;
+}
+.image-upload-trigger {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 44px;
+  white-space: normal;
+  cursor: pointer;
+}
+.image-upload-trigger:has(:focus-visible) {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+.image-upload-trigger:has(:disabled) {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.image-upload-control small,
+.image-upload-filename {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+.image-upload-filename {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .editor-aside .button-primary {
   width: 100%;
@@ -617,13 +670,20 @@
     display: none;
   }
   .admin-sidebar nav {
-    flex-direction: row;
-    margin-left: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
     gap: 0.3rem;
   }
   .admin-sidebar nav a {
-    padding: 0.65rem;
+    padding: 0.65rem 0.25rem;
     font-size: 0.85rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: 0;
+    text-align: center;
   }
   .admin-sidebar .wordmark {
     font-size: 1.5rem;

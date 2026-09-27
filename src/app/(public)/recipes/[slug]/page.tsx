@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { RecipeMotion } from "@/components/shared/recipe-motion";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Heart, MessageCircle } from "lucide-react";
@@ -41,7 +42,8 @@ export default async function RecipePage({
       >
         ← {t("catalog.allRecipes")}
       </Link>
-      <header className="recipe-detail-heading">
+      <RecipeMotion key={recipe.slug} />
+      <header className="recipe-detail-heading" data-recipe-reveal>
         <span className="eyebrow recipe-byline">
           {recipe.categories[0]} ·{" "}
           {recipe.authorUsername ? (
@@ -100,7 +102,7 @@ export default async function RecipePage({
           </Link>
         </nav>
       </header>
-      <figure>
+      <figure data-recipe-reveal>
         <div className="recipe-cover">
           <Image
             src={recipe.image}
@@ -115,9 +117,11 @@ export default async function RecipePage({
         )}
       </figure>
       <div className="recipe-instructions">
-        <section className="glass" id="ingredients">
+        <section className="glass" id="ingredients" data-recipe-reveal>
           <h2>{t("recipe.ingredients")}</h2>
-          <p>For {recipe.servings} servings</p>
+          <p>
+            {t("recipe.forServings")} {recipe.servings}
+          </p>
           <ul>
             {recipe.ingredients.map((item) => (
               <li key={item.id}>
@@ -126,12 +130,12 @@ export default async function RecipePage({
                 </strong>{" "}
                 {item.name}
                 {item.note && <small> — {item.note}</small>}
-                {item.isOptional && <small> (optional)</small>}
+                {item.isOptional && <small> ({t("recipe.optional")})</small>}
               </li>
             ))}
           </ul>
         </section>
-        <section className="glass" id="method">
+        <section className="glass" id="method" data-recipe-reveal>
           <h2>{t("recipe.letsCook")}</h2>
           <ol>
             {recipe.steps.map((step) => (
@@ -143,7 +147,11 @@ export default async function RecipePage({
           </ol>
         </section>
       </div>
-      <section className="recipe-community glass" aria-labelledby="community">
+      <section
+        className="recipe-community glass"
+        aria-labelledby="community"
+        data-recipe-reveal
+      >
         <header>
           <div>
             <p className="eyebrow">{t("recipe.communityEyebrow")}</p>

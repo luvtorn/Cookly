@@ -12,6 +12,7 @@ import { RecipeCard } from "@/features/discovery/recipe-card";
 import { RecipeSearchField } from "@/features/discovery/recipe-search-field";
 import { getI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/config";
+import { GlassSelect } from "@/components/shared/glass-select";
 
 export const metadata = {
   title: "Recipes",
@@ -65,17 +66,21 @@ export default async function RecipesPage({
             id="catalog-recipe-search"
             defaultValue={query.q}
           />
-          <label>
-            {t("catalog.category")}
-            <select name="category" defaultValue={query.category ?? ""}>
-              <option value="">{t("catalog.allCategories")}</option>
-              {options?.categories.map((c) => (
-                <option key={c.id} value={c.slug}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="glass-select-field">
+            <span>{t("catalog.category")}</span>
+            <GlassSelect
+              name="category"
+              ariaLabel={t("catalog.category")}
+              defaultValue={query.category ?? ""}
+              options={[
+                { value: "", label: t("catalog.allCategories") },
+                ...(options?.categories.map((c) => ({
+                  value: c.slug,
+                  label: c.name,
+                })) ?? []),
+              ]}
+            />
+          </div>
           <button className="button-primary">{t("catalog.find")}</button>
         </div>
         <details
@@ -85,26 +90,35 @@ export default async function RecipesPage({
         >
           <summary>{t("catalog.moreFilters")}</summary>
           <div className="catalog-filter-row">
-            <label>
-              {t("catalog.cuisine")}
-              <select name="cuisine" defaultValue={query.cuisine ?? ""}>
-                <option value="">{t("catalog.allCuisines")}</option>
-                {options?.cuisines.map((c) => (
-                  <option key={c.id} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              {t("catalog.difficulty")}
-              <select name="difficulty" defaultValue={query.difficulty ?? ""}>
-                <option value="">{t("catalog.anyDifficulty")}</option>
-                <option value="EASY">{t("difficulty.easy")}</option>
-                <option value="MEDIUM">{t("difficulty.medium")}</option>
-                <option value="HARD">{t("difficulty.hard")}</option>
-              </select>
-            </label>
+            <div className="glass-select-field">
+              <span>{t("catalog.cuisine")}</span>
+              <GlassSelect
+                name="cuisine"
+                ariaLabel={t("catalog.cuisine")}
+                defaultValue={query.cuisine ?? ""}
+                options={[
+                  { value: "", label: t("catalog.allCuisines") },
+                  ...(options?.cuisines.map((c) => ({
+                    value: c.slug,
+                    label: c.name,
+                  })) ?? []),
+                ]}
+              />
+            </div>
+            <div className="glass-select-field">
+              <span>{t("catalog.difficulty")}</span>
+              <GlassSelect
+                name="difficulty"
+                ariaLabel={t("catalog.difficulty")}
+                defaultValue={query.difficulty ?? ""}
+                options={[
+                  { value: "", label: t("catalog.anyDifficulty") },
+                  { value: "EASY", label: t("difficulty.easy") },
+                  { value: "MEDIUM", label: t("difficulty.medium") },
+                  { value: "HARD", label: t("difficulty.hard") },
+                ]}
+              />
+            </div>
             <label>
               {t("catalog.maxTime")}
               <input
@@ -116,17 +130,21 @@ export default async function RecipesPage({
                 placeholder={t("catalog.anyTime")}
               />
             </label>
-            <label>
-              {t("catalog.tag")}
-              <select name="tag" defaultValue={query.tag ?? ""}>
-                <option value="">{t("catalog.allTags")}</option>
-                {options?.tags.map((t) => (
-                  <option key={t.id} value={t.slug}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <div className="glass-select-field">
+              <span>{t("catalog.tag")}</span>
+              <GlassSelect
+                name="tag"
+                ariaLabel={t("catalog.tag")}
+                defaultValue={query.tag ?? ""}
+                options={[
+                  { value: "", label: t("catalog.allTags") },
+                  ...(options?.tags.map((tag) => ({
+                    value: tag.slug,
+                    label: tag.name,
+                  })) ?? []),
+                ]}
+              />
+            </div>
           </div>
         </details>
       </form>
@@ -160,7 +178,7 @@ export default async function RecipesPage({
             {t("error.description")}
           </p>
         ) : result.recipes.length ? (
-          <div className="recipe-grid">
+          <div key={currentUrl} className="recipe-grid recipe-grid--enter">
             {result.recipes.map((recipe) => (
               <RecipeCard
                 key={recipe.id}

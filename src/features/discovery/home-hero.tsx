@@ -53,12 +53,10 @@ export async function HomeHero({
             priority
           />
           <div>
-            <p className="eyebrow">
-              {t("home.fromCookly")} · {featured.author}
-            </p>
+            <p className="eyebrow">{t("home.fromCookly")}</p>
             <h2>{featured.title}</h2>
             <span>
-              {featured.minutes} {t("common.minutes")} · {t("home.viewAll")} →
+              {featured.minutes} {t("common.minutes")} · {t("editor.view")} →
             </span>
           </div>
         </Link>

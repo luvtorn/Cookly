@@ -1,6 +1,52 @@
 import type { Locale } from "./config";
 
 const en = {
+  "common.view": "View",
+  "common.edit": "Edit",
+  "common.updated": "Updated",
+  "common.page": "Page",
+  "common.pages": "Recipe pages",
+  "common.backHome": "Back to Home",
+  "recipe.forServings": "Servings:",
+  "recipe.optional": "optional",
+  "pantry.filters": "Future match filters",
+  "pantry.imageAlt": "Fresh ingredients on a bright kitchen counter",
+  "pantry.disclaimer":
+    "This preview does not generate recipes or show fictional matches. Ingredient matching will compare existing ingredients and clearly list what you have and what is missing.",
+  "profile.you": "You",
+  "profile.uploaded": "Avatar uploaded. Save to use it on Cookly.",
+  "profile.saveError":
+    "Unable to update your profile. Check the username and try again.",
+  "profile.nameHint": "Enter a display name (up to 80 characters).",
+  "profile.usernameHint": "Use 3–30 Latin letters, numbers or underscores.",
+  "editor.titlePlaceholder": "Give your dish a name",
+  "editor.descriptionPlaceholder": "What makes this dish special?",
+  "editor.ingredientsHelp": "Use simple names, such as “chicken breast”.",
+  "editor.notePlaceholder": "Optional: finely chopped",
+  "editor.methodHelp": "One clear instruction at a time.",
+  "editor.coverPreview": "Recipe cover preview",
+  "editor.coverEmpty": "Your dish belongs here",
+  "editor.imageSizeError": "Choose an image up to 3 MiB.",
+  "editor.uploadError":
+    "Upload failed. Use a JPEG, PNG or WebP up to 3 MiB and try again.",
+  "editor.coverUploaded":
+    "Cover uploaded. Save within 30 minutes to attach it.",
+  "editor.publishHelp":
+    "Published under your profile. Cookly verification is a separate review.",
+  "editor.archiveConfirm":
+    "Archive this recipe? It will no longer be visible on Cookly.",
+  "editor.moveUp": "Move {item} up",
+  "editor.moveDown": "Move {item} down",
+  "editor.invalidField": "Check this value and the allowed length or range.",
+  "editor.amountError":
+    "Enter a positive amount with up to two decimal places.",
+  "editor.ingredientRequired":
+    "Choose an existing ingredient or confirm adding a new one.",
+  "editor.newIngredient": "Add “{name}” as a new ingredient",
+  "editor.existingIngredient": "Using an existing ingredient",
+  "editor.ingredientWillBeAdded": "A new ingredient will be added",
+  "editor.recipeUsage": "Recipes:",
+  "error.offMenu": "Off the menu",
   "common.home": "Home",
   "common.recipes": "Recipes",
   "common.ingredients": "Ingredients",
@@ -126,6 +172,8 @@ const en = {
   "auth.usernameFormat": "Use letters, numbers and underscores.",
   "auth.passwordMismatch": "Passwords do not match.",
   "account.publicProfile": "Public profile",
+  "account.myProfile": "My profile",
+  "account.details": "Account details",
   "account.myRecipes": "My recipes",
   "account.editProfile": "Edit profile",
   "account.yourAccount": "Your account",
@@ -162,6 +210,7 @@ const en = {
   "myRecipes.first": "Your first recipe starts here.",
   "myRecipes.firstDescription":
     "Save a draft, add a cover, and publish when it feels ready.",
+  "status.label": "Status",
   "status.all": "All recipes",
   "status.draft": "Draft",
   "status.published": "Published",
@@ -235,6 +284,55 @@ export type MessageKey = keyof typeof en;
 export type Messages = Record<MessageKey, string>;
 
 const ru: Messages = {
+  "common.view": "Смотреть",
+  "common.edit": "Редактировать",
+  "common.updated": "Обновлено",
+  "common.page": "Страница",
+  "common.pages": "Страницы рецептов",
+  "common.backHome": "На главную",
+  "recipe.forServings": "Количество порций:",
+  "recipe.optional": "необязательно",
+  "pantry.filters": "Будущие фильтры подбора",
+  "pantry.imageAlt": "Свежие ингредиенты на кухонной столешнице",
+  "pantry.disclaimer":
+    "Это предварительный просмотр: рецепты не генерируются, вымышленных совпадений нет. Подбор будет сравнивать ингредиенты и показывать, что у вас есть и чего не хватает.",
+  "profile.you": "Вы",
+  "profile.uploaded":
+    "Аватар загружен. Сохраните профиль, чтобы применить его.",
+  "profile.saveError":
+    "Не удалось обновить профиль. Проверьте имя пользователя и попробуйте снова.",
+  "profile.nameHint": "Введите отображаемое имя (до 80 символов).",
+  "profile.usernameHint":
+    "От 3 до 30 символов: латинские буквы, цифры и подчёркивание.",
+  "editor.titlePlaceholder": "Как называется ваше блюдо?",
+  "editor.descriptionPlaceholder": "Что делает это блюдо особенным?",
+  "editor.ingredientsHelp":
+    "Используйте простые названия, например «куриная грудка».",
+  "editor.notePlaceholder": "Например: мелко нарезать",
+  "editor.methodHelp": "Один понятный шаг за другим.",
+  "editor.coverPreview": "Предпросмотр обложки рецепта",
+  "editor.coverEmpty": "Здесь будет ваше блюдо",
+  "editor.imageSizeError": "Выберите изображение размером до 3 МиБ.",
+  "editor.uploadError":
+    "Не удалось загрузить файл. Используйте JPEG, PNG или WebP до 3 МиБ и попробуйте снова.",
+  "editor.coverUploaded":
+    "Обложка загружена. Сохраните рецепт в течение 30 минут, чтобы прикрепить её.",
+  "editor.publishHelp":
+    "Рецепт публикуется от вашего имени. Проверка Cookly проводится отдельно.",
+  "editor.archiveConfirm":
+    "Архивировать рецепт? Он больше не будет виден на Cookly.",
+  "editor.moveUp": "Переместить {item} выше",
+  "editor.moveDown": "Переместить {item} ниже",
+  "editor.invalidField": "Проверьте значение и допустимую длину или диапазон.",
+  "editor.amountError":
+    "Введите положительное количество, до двух знаков после точки.",
+  "editor.ingredientRequired":
+    "Выберите существующий ингредиент или подтвердите добавление нового.",
+  "editor.newIngredient": "Добавить «{name}» как новый ингредиент",
+  "editor.existingIngredient": "Используется существующий ингредиент",
+  "editor.ingredientWillBeAdded": "Будет добавлен новый ингредиент",
+  "editor.recipeUsage": "Рецептов:",
+  "error.offMenu": "Вне меню",
   "common.home": "Главная",
   "common.recipes": "Рецепты",
   "common.ingredients": "Ингредиенты",
@@ -269,7 +367,7 @@ const ru: Messages = {
   "search.empty": "Подходящих рецептов пока нет.",
   "search.suggestions": "Подсказки рецептов",
   "home.eyebrow": "Настоящие рецепты. Настоящие люди.",
-  "home.title": "Готовить лучше — вместе.",
+  "home.title": "Готовим лучше вместе.",
   "home.description":
     "Открывайте проверенные рецепты и свежие идеи для каждого дня.",
   "home.fromCookly": "От Cookly",
@@ -363,6 +461,8 @@ const ru: Messages = {
   "auth.usernameFormat": "Используйте латинские буквы, цифры и подчёркивания.",
   "auth.passwordMismatch": "Пароли не совпадают.",
   "account.publicProfile": "Публичный профиль",
+  "account.myProfile": "Мой профиль",
+  "account.details": "Данные аккаунта",
   "account.myRecipes": "Мои рецепты",
   "account.editProfile": "Редактировать профиль",
   "account.yourAccount": "Ваш аккаунт",
@@ -398,6 +498,7 @@ const ru: Messages = {
   "myRecipes.first": "Ваш первый рецепт начинается здесь.",
   "myRecipes.firstDescription":
     "Сохраните черновик, добавьте обложку и опубликуйте, когда будете готовы.",
+  "status.label": "Статус",
   "status.all": "Все рецепты",
   "status.draft": "Черновик",
   "status.published": "Опубликован",
@@ -467,6 +568,52 @@ const ru: Messages = {
 };
 
 const pl: Messages = {
+  "common.view": "Zobacz",
+  "common.edit": "Edytuj",
+  "common.updated": "Zaktualizowano",
+  "common.page": "Strona",
+  "common.pages": "Strony przepisów",
+  "common.backHome": "Wróć na stronę główną",
+  "recipe.forServings": "Liczba porcji:",
+  "recipe.optional": "opcjonalnie",
+  "pantry.filters": "Przyszłe filtry dopasowania",
+  "pantry.imageAlt": "Świeże składniki na kuchennym blacie",
+  "pantry.disclaimer":
+    "To podgląd: nie generuje przepisów ani fikcyjnych dopasowań. Wyszukiwanie porówna składniki i pokaże, co masz, a czego brakuje.",
+  "profile.you": "Ty",
+  "profile.uploaded": "Awatar przesłany. Zapisz profil, aby go zastosować.",
+  "profile.saveError":
+    "Nie udało się zaktualizować profilu. Sprawdź nazwę użytkownika i spróbuj ponownie.",
+  "profile.nameHint": "Wpisz wyświetlaną nazwę (do 80 znaków).",
+  "profile.usernameHint": "Użyj 3–30 liter łacińskich, cyfr lub podkreśleń.",
+  "editor.titlePlaceholder": "Nadaj nazwę swojemu daniu",
+  "editor.descriptionPlaceholder": "Co wyróżnia to danie?",
+  "editor.ingredientsHelp": "Używaj prostych nazw, np. „pierś z kurczaka”.",
+  "editor.notePlaceholder": "Opcjonalnie: drobno posiekane",
+  "editor.methodHelp": "Jedna jasna instrukcja na każdy krok.",
+  "editor.coverPreview": "Podgląd okładki przepisu",
+  "editor.coverEmpty": "Tu pojawi się Twoje danie",
+  "editor.imageSizeError": "Wybierz obraz o rozmiarze do 3 MiB.",
+  "editor.uploadError":
+    "Przesyłanie nie powiodło się. Użyj pliku JPEG, PNG lub WebP do 3 MiB i spróbuj ponownie.",
+  "editor.coverUploaded":
+    "Okładka przesłana. Zapisz przepis w ciągu 30 minut, aby ją dołączyć.",
+  "editor.publishHelp":
+    "Przepis zostanie opublikowany na Twoim profilu. Weryfikacja Cookly to osobny proces.",
+  "editor.archiveConfirm":
+    "Zarchiwizować przepis? Nie będzie już widoczny na Cookly.",
+  "editor.moveUp": "Przenieś {item} wyżej",
+  "editor.moveDown": "Przenieś {item} niżej",
+  "editor.invalidField": "Sprawdź wartość i dozwoloną długość lub zakres.",
+  "editor.amountError":
+    "Wpisz dodatnią ilość z maksymalnie dwiema cyframi po kropce.",
+  "editor.ingredientRequired":
+    "Wybierz istniejący składnik lub potwierdź dodanie nowego.",
+  "editor.newIngredient": "Dodaj „{name}” jako nowy składnik",
+  "editor.existingIngredient": "Używasz istniejącego składnika",
+  "editor.ingredientWillBeAdded": "Zostanie dodany nowy składnik",
+  "editor.recipeUsage": "Przepisy:",
+  "error.offMenu": "Poza menu",
   "common.home": "Strona główna",
   "common.recipes": "Przepisy",
   "common.ingredients": "Składniki",
@@ -596,6 +743,8 @@ const pl: Messages = {
   "auth.usernameFormat": "Użyj liter łacińskich, cyfr i podkreśleń.",
   "auth.passwordMismatch": "Hasła nie są takie same.",
   "account.publicProfile": "Profil publiczny",
+  "account.myProfile": "Mój profil",
+  "account.details": "Dane konta",
   "account.myRecipes": "Moje przepisy",
   "account.editProfile": "Edytuj profil",
   "account.yourAccount": "Twoje konto",
@@ -632,6 +781,7 @@ const pl: Messages = {
   "myRecipes.first": "Twój pierwszy przepis zaczyna się tutaj.",
   "myRecipes.firstDescription":
     "Zapisz szkic, dodaj okładkę i opublikuj, gdy będzie gotowy.",
+  "status.label": "Status",
   "status.all": "Wszystkie przepisy",
   "status.draft": "Szkic",
   "status.published": "Opublikowany",

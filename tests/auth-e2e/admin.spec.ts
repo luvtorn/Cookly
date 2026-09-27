@@ -62,6 +62,15 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
             () => document.documentElement.scrollWidth <= innerWidth,
           ),
         ).toBe(true);
+        expect(
+          await page.locator(".admin-sidebar").evaluate((shell) => {
+            const box = shell.getBoundingClientRect();
+            return Array.from(shell.querySelectorAll("nav a")).every((link) => {
+              const rect = link.getBoundingClientRect();
+              return rect.left >= box.left && rect.right <= box.right;
+            });
+          }),
+        ).toBe(true);
         await page.screenshot({
           path: testInfo.outputPath(`studio-${theme}-${width}.png`),
           fullPage: true,
@@ -80,16 +89,16 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
     });
     await expect(page.getByRole("status")).toContainText("Upload failed");
     await page.goto("/admin/recipes/cookly-editorial-chicken-teriyaki/edit");
-    await expect(page.getByLabel("Recipe title")).toHaveValue(
+    await expect(page.getByLabel("Title", { exact: true })).toHaveValue(
       "Chicken Teriyaki",
     );
     await page
-      .getByLabel("Recipe title")
+      .getByLabel("Title", { exact: true })
       .fill("Chicken Teriyaki — an editorial test");
     await page.getByRole("button", { name: "Save recipe" }).click();
     await expect(page.getByRole("status")).toContainText("Recipe saved");
     await page.reload();
-    await expect(page.getByLabel("Recipe title")).toHaveValue(
+    await expect(page.getByLabel("Title", { exact: true })).toHaveValue(
       "Chicken Teriyaki — an editorial test",
     );
     for (const width of [390, 768, 1448]) {
@@ -113,7 +122,7 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
       page.getByRole("heading", { name: "Ingredients", exact: true }),
     ).toBeVisible();
     await expect(page.locator("figcaption")).toContainText(
-      "AI-generated illustration",
+      "Cover illustration generated with AI.",
     );
     await expect(page.locator("main")).not.toContainText(email);
     await page.getByRole("link", { name: "All recipes" }).click();
@@ -216,7 +225,8 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
     }
     await page.setViewportSize({ width: 1448, height: 1000 });
     await page.goto("/admin/recipes/cookly-editorial-chicken-teriyaki/edit");
-    await page.getByLabel("Publication status").selectOption("ARCHIVED");
+    await page.getByRole("combobox", { name: "Publication status" }).click();
+    await page.getByRole("option", { name: "Archived" }).click();
     page.once("dialog", (dialog) => dialog.accept());
     await page.getByRole("button", { name: "Save recipe" }).click();
     await expect(page.getByRole("status")).toContainText("Recipe saved");
@@ -244,9 +254,9 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
       adminId,
     ]);
     await page.goto("/admin");
-    await expect(page).toHaveURL(/settings\/account\?access=denied/);
+    await expect(page).toHaveURL(new RegExp(`/en/u/studio_${suffix}$`));
     await page.goto("/admin/verification");
-    await expect(page).toHaveURL(/settings\/account\?access=denied/);
+    await expect(page).toHaveURL(new RegExp(`/en/u/studio_${suffix}$`));
     await page.goto("/recipes");
     await expect(page.locator(".recipe-card")).toHaveCount(9);
     await page.emulateMedia({ reducedMotion: "reduce" });

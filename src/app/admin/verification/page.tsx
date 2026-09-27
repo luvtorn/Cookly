@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
 import { reviewQuerySchema } from "@/features/moderation/schema";
 import { ReviewForm } from "@/features/moderation/review-form";
+import { GlassSelect } from "@/components/shared/glass-select";
 
 export const metadata = {
   title: "Recipe verification",
@@ -57,19 +58,27 @@ export default async function VerificationPage({
           Review published recipes from every author. Verification never
           controls publication.
         </p>
+        <p>
+          Cookly verified means editorial review, not professional certification
+          or proof of cooking.
+        </p>
       </header>
       <form className="verification-filter" action="/admin/verification">
-        <label>
-          Verification status
-          <select name="status" defaultValue={status ?? ""}>
-            <option value="">All statuses</option>
-            {["NONE", "PENDING", "VERIFIED", "REJECTED"].map((s) => (
-              <option key={s} value={s}>
-                {s.toLowerCase()}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="glass-select-field">
+          <span>Verification status</span>
+          <GlassSelect
+            name="status"
+            ariaLabel="Verification status"
+            defaultValue={status ?? ""}
+            options={[
+              { value: "", label: "All statuses" },
+              ...["NONE", "PENDING", "VERIFIED", "REJECTED"].map((item) => ({
+                value: item,
+                label: item.toLowerCase(),
+              })),
+            ]}
+          />
+        </div>
         <button className="button-secondary">Filter</button>
       </form>
       <div className="verification-list">
@@ -90,10 +99,6 @@ export default async function VerificationPage({
                 ? "Cookly"
                 : (r.author.profile?.displayName ?? "Cookly member")}{" "}
               · {r.verificationStatus.toLowerCase()}
-            </p>
-            <p>
-              Cookly verified means editorial review, not professional
-              certification or proof of cooking.
             </p>
             <details className="verification-review">
               <summary>Review recipe</summary>

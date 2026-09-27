@@ -28,6 +28,9 @@ describe("catalog URL boundaries", () => {
   it("preserves filters and rejects foreign return URLs", () => {
     const url = catalogUrl({ q: "rice & beans", category: "bowls", page: 2 });
     expect(catalogReturn(url)).toBe(url);
+    expect(catalogReturn(`/en${url}`)).toBe(url);
+    expect(catalogReturn(`/ru${url}`)).toBe(url);
+    expect(catalogReturn(`/pl${url}`)).toBe(url);
     for (const bad of [
       "//evil.test",
       "https://evil.test",

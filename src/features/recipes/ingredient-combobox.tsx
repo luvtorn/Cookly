@@ -154,8 +154,7 @@ export function IngredientCombobox({
                   >
                     <strong>{item.name}</strong>
                     <small>
-                      {item.recipeCount}{" "}
-                      {item.recipeCount === 1 ? "recipe" : "recipes"}
+                      {t("editor.recipeUsage")} {item.recipeCount}
                     </small>
                   </button>
                 </li>
@@ -168,23 +167,23 @@ export function IngredientCombobox({
               className="ingredient-create"
               onClick={confirmNew}
             >
-              Add “{query.trim()}” as a new ingredient
+              {t("editor.newIngredient").replace("{name}", query.trim())}
             </button>
           ) : null}
         </div>
       ) : null}
       {ingredientId.field.value ? (
         <small className="ingredient-confirmed">
-          Using an existing ingredient
+          {t("editor.existingIngredient")}
         </small>
       ) : null}
       {createNew.field.value ? (
         <small className="ingredient-confirmed">
-          A new ingredient will be added
+          {t("editor.ingredientWillBeAdded")}
         </small>
       ) : null}
       {name.fieldState.error ? (
-        <small className="field-error">{name.fieldState.error.message}</small>
+        <small className="field-error">{t("editor.ingredientRequired")}</small>
       ) : null}
     </div>
   );

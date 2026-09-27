@@ -30,6 +30,16 @@ describe("AccountMenu", () => {
 
     await user.click(summary);
     expect(details).toHaveAttribute("open");
+    expect(screen.getByRole("link", { name: "My profile" })).toHaveAttribute(
+      "href",
+      "/en/u/mikolaj",
+    );
+    expect(
+      screen.queryByRole("link", { name: "Edit profile" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Your account" }),
+    ).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Outside" }));
     expect(details).not.toHaveAttribute("open");
 

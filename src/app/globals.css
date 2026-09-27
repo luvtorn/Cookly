@@ -3,6 +3,7 @@
 @import "./auth.css";
 @import "./liquid-glass.css";
 @import "./recipes.css";
+@import "./select.css";
 
 @theme inline {
   --color-background: var(--background);

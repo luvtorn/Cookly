@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
 import { AdminRecipeList } from "@/features/recipes/admin-recipe-list";
+import { GlassSelect } from "@/components/shared/glass-select";
 const filters = z.object({
   q: z.string().trim().max(100).catch(""),
   status: z
@@ -61,15 +62,20 @@ export default async function AdminRecipes({
               maxLength={100}
             />
           </label>
-          <label>
-            Status
-            <select name="status" defaultValue={status ?? ""}>
-              <option value="">All statuses</option>
-              <option value="DRAFT">Draft</option>
-              <option value="PUBLISHED">Published</option>
-              <option value="ARCHIVED">Archived</option>
-            </select>
-          </label>
+          <div className="glass-select-field">
+            <span>Status</span>
+            <GlassSelect
+              name="status"
+              ariaLabel="Status"
+              defaultValue={status ?? ""}
+              options={[
+                { value: "", label: "All statuses" },
+                { value: "DRAFT", label: "Draft" },
+                { value: "PUBLISHED", label: "Published" },
+                { value: "ARCHIVED", label: "Archived" },
+              ]}
+            />
+          </div>
           <button className="button-secondary">Filter</button>
         </form>
         <AdminRecipeList recipes={recipes.slice(0, 12)} />

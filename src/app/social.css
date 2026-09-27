@@ -224,6 +224,8 @@
 }
 .profile-form .button-primary {
   width: fit-content;
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 .profile-form > p {
   min-height: 1.5rem;
@@ -268,13 +270,111 @@
 }
 .creator-profile-hero {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 2rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   padding: 2.5rem;
   border-radius: var(--radius-panel);
   overflow: hidden;
+}
+.creator-profile-copy {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.creator-profile-copy h1 {
+  max-width: 100%;
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+}
+.profile-edit-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding: 0.65rem 1rem;
+  color: var(--foreground);
+}
+.profile-edit-panel {
+  max-width: 860px;
+  margin: 0 auto 1.5rem;
+  scroll-margin-top: 1.5rem;
+}
+.profile-edit-panel[hidden] {
+  display: none;
+}
+.profile-edit-panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+.profile-edit-panel-heading h2 {
+  font-size: clamp(1.65rem, 3vw, 2.3rem);
+}
+.profile-edit-panel-heading p {
+  margin-top: 0.3rem;
+  color: var(--muted-foreground);
+}
+.profile-edit-panel-heading .icon-button {
+  flex: none;
+}
+.profile-account-details {
+  max-width: 860px;
+  margin: 0 auto 3rem;
+  border-radius: var(--radius-panel);
+  padding: 0.9rem 1.25rem;
+}
+.profile-account-details summary {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.65rem;
+  list-style: none;
+  color: var(--foreground);
+  font-weight: 700;
+  cursor: pointer;
+}
+.profile-account-details summary::-webkit-details-marker {
+  display: none;
+}
+.profile-account-details summary::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--primary);
+  border-bottom: 2px solid var(--primary);
+  transform: rotate(-45deg);
+  transition: transform var(--motion-fast);
+}
+.profile-account-details[open] summary::before {
+  transform: rotate(45deg);
+}
+.profile-account-details > div {
+  display: grid;
+  gap: 1rem;
+  border-top: 1px solid var(--border);
+  padding: 1.2rem 0 0.4rem;
+}
+.profile-account-details dt {
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+}
+.profile-account-details dd {
+  margin-top: 0.2rem;
+  overflow-wrap: anywhere;
+}
+.profile-account-details button {
+  width: fit-content;
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: 0.55rem 0.9rem;
+}
+.profile-account-details button:hover {
+  background: var(--surface-muted);
 }
 .creator-profile-copy > p:not(.eyebrow, .profile-username, .profile-location) {
   max-width: 60ch;
@@ -295,7 +395,8 @@
 }
 .profile-stats {
   display: grid;
-  grid-template-columns: repeat(2, minmax(90px, 1fr));
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.8rem;
 }
 .profile-stats div {
@@ -521,10 +622,6 @@
   .creator-profile-hero {
     grid-template-columns: auto minmax(0, 1fr);
   }
-  .profile-stats {
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
   .pantry-copy {
     padding-left: 0;
   }
@@ -577,11 +674,21 @@
   .creator-profile-hero {
     grid-template-columns: minmax(0, 1fr);
     justify-items: center;
-    padding: 1.5rem;
+    padding: 1.25rem;
+    gap: 1rem;
     text-align: center;
   }
+  .profile-avatar-large {
+    width: 104px;
+    height: 104px;
+    font-size: 1.6rem;
+  }
+  .creator-profile-copy h1 {
+    font-size: clamp(1.8rem, 7vw, 2.3rem);
+    line-height: 1.2;
+  }
   .profile-stats {
-    grid-column: auto;
+    grid-column: 1;
     width: 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     text-align: left;
@@ -626,6 +733,9 @@
   }
   .creator-filters label {
     min-width: 0;
+  }
+  .creator-filters .glass-select-field {
+    flex-basis: auto;
   }
   .creator-recipe-list img {
     width: 100%;
