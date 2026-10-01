@@ -1,5 +1,30 @@
 # Cookly
 
+## Request-based verification — 2026-09-28
+
+- Community publication is immediate and starts at `NONE` (Not reviewed). Owners request review from My recipes or their editor; only published, visible, non-editorial recipes qualify. One pending request per recipe and ten successful submissions per rolling 24 hours are enforced transactionally. Duplicate clicks are idempotent.
+- `/admin/verification` has Pending (oldest request first), Verified and Needs changes tabs, bounded history, title/username search and 12-item pagination. Editorial recipes are excluded. Overview reports actual platform counts, recent requests and decisions.
+- Rejection/revocation does not unpublish. An author-facing message is required; the separate internal note stays private. Owners see feedback only on authenticated management pages. Material edits reset community verification and close pending requests; unchanged saves preserve it. Leaving publication closes a pending request. Resubmission requires a material edit after rejection.
+- Studio publication automatically verifies editorial content and audits approval/material updates; drafts have no badge. Editorial origin is persisted, not inferred from the author's current role. Existing public recipes are not silently relabelled by the migration.
+- Migration `20260928190000_verification_requests` adds nullable `ModerationAction.creatorMessage` and a partial unique pending-request index. It stops and reports recipe IDs if duplicate pending requests exist; no private notes are copied into author feedback. Apply to an isolated database first. Production application remains a separately approved release step.
+- Existing editorial approval is a dry run by default: `npm run approve:editorial -- --email <admin-email> --confirm-target`. Inspect the target list, then repeat with `--apply <confirmation-hash>`. A changed snapshot aborts atomically; a fresh preview after completion contains no targets. Use `--test` instead of `--confirm-target` for isolated tests. This command never modifies content or authorship.
+- Consumer verification labels/messages support EN/RU/PL; Studio remains English. Reports, user administration, email notifications and AI review are deferred.
+- Validation details and the production boundary: [verification queue report](docs/verification-queue-2026-09-28.md).
+
+## Saved recipes and social interactions
+
+- Open **Saved recipes** in the account menu, then choose **Liked recipes** to browse hearts separately from bookmarks. `/en|ru|pl/saved?view=liked` is private, searchable and paginated; changing tabs resets pagination while retaining the search. Recipe return links preserve the selected list.
+- On 2026-09-27, the previously tested `20260927220000_comment_editorial` migration was applied to the connected Neon database with user approval, resolving missing-column comment reads. No production test comments were created.
+
+- `/en|ru|pl/saved` is a private, non-indexable list with title search and 12-item pagination, ordered by the newest save. Only published, visible recipes are listed; hidden/archived recipes retain their saved links for later restoration.
+- Cards and recipe details expose independent save/like controls. Guest actions open localized sign-in with a safe return URL; the user repeats the action after signing in. Own recipes can be liked. Reaction requests set an explicit desired state and use existing compound uniqueness constraints.
+- Community supports plain-text comments (1–1500 trimmed characters), ten-item cursor pagination, inline editing with stale-version protection, and confirmed owner deletion through `isHidden`. Hidden content is excluded from public reads and counts. No replies, attachments or moderation UI are added in this slice.
+- Migration `20260927220000_comment_editorial` adds `Comment.isEditorial`, defaulting to false. New administrator comments capture Cookly authorship on the server; existing comments are not relabelled, and later role changes do not change the stored identity. Apply the migration before deploying this code. Production migration and push remain separate release steps.
+- All mutations check current ACTIVE status, ownership and recipe visibility on the server. Reaction limits are 120/minute per user/action; comment creation is 10/10 minutes and edits/deletes share 30/10 minutes. Serialization failures retry bounded transactions. UI errors retain drafts and revert optimistic reactions.
+- Social tests: `npm run test`, `npm run test:integration` and `npm run test:auth:e2e`. Database suites require a loopback `TEST_DATABASE_URL` whose database is exactly `cookly_test`. The social browser test creates and cleans up its own fixtures; never run it against Neon. `PLAYWRIGHT_REUSE_SERVER=1` optionally reuses an explicitly started local test server.
+
+Successful credentials sign-in shows a localized, dismissible toast that survives client navigation. Notifications pause dismissal while hovered or focused and respect reduced motion. Header account names shrink with ellipsis without clipping the account dropdown.
+
 Cookly is a social recipe platform in development, built with Next.js App Router, strict TypeScript, Tailwind and PostgreSQL/Prisma. The current slice connects discovery, creator profiles, user-owned recipes and a protected editorial studio.
 
 The desktop dock keeps icon positions fixed while expanding. The [2026-09-27 design audit](docs/design-audit-2026-09-27.md) now records the D01–D12 fixes and repeat visual checks: viewport-aware select menus, responsive Studio/editor navigation, centered content, compact mobile profiles, aligned card metadata, completed consumer UI strings, and shared accessible image-upload controls. Author content and Studio remain untranslated by design.
@@ -41,7 +66,7 @@ The desktop dock keeps icon positions fixed while expanding. The [2026-09-27 des
 - Registered users create, edit, publish and archive non-editorial recipes through `/recipes/new` and `/my-recipes`. Ownership, current account status, rate limits and `isEditorial=false` are enforced on the server.
 - `/u/[username]` exposes only intended public profile fields, real social counts and published visible community recipes. The owner can update display name, username, bio, location and a Cloudinary avatar there with a purpose-bound HMAC receipt.
 - Home keeps the six-recipe Cookly collection and adds a separate community section without invented authors or engagement. Cards link the whole surface while preserving a separate author link, pin metadata to the bottom and place the accessible verification icon beside the title.
-- Recipe details show real like and visible-comment counts plus up to five real visible comments. The disabled composer is an honest preview; like/comment/follow mutations remain deferred.
+- Recipe details show real likes and paginated visible comments with an authenticated composer, owner editing and confirmed removal. Follow mutations remain deferred.
 - `/pantry` is a responsive My Ingredients preview following `design-package/pantry.png`. It does not generate recipes or fabricate matches; deterministic ingredient matching remains the next Pantry milestone.
 - No schema migration was required: the existing Recipe, Profile, Like, Comment, Follow and image metadata fields cover this slice.
 - Local verification passes: lint, TypeScript, production build without live services, 86 unit/component tests, 14 isolated PostgreSQL integration tests, 26 offline Chromium scenarios, and the complete creator/authentication and administrator journeys. Home, recipe details and the responsive navigation were visually reviewed at desktop and tablet sizes; the browser suites cover mobile, tablet and desktop layouts.
@@ -49,17 +74,17 @@ The desktop dock keeps icon positions fixed while expanding. The [2026-09-27 des
 
 ## Editorial studio — 2026-09-21
 
-- `/admin`, `/admin/recipes` and `/admin/verification` are ADMIN-only. Overview counts are real; the editor supports ingredients, ordered steps, taxonomy, cover upload, drafts, publication and archiving. Verification reviews all published, visible recipes and records every decision privately. Reports and user management are not implemented.
+- `/admin`, `/admin/recipes` and `/admin/verification` are ADMIN-only. Overview counts are real; the editor supports ingredients, ordered steps, taxonomy, cover upload, drafts, publication and archiving. Verification handles community requests and records decisions with separate private notes and author feedback. Reports and user management are not implemented.
 - Every mutation checks the current database role/status and recipe ownership. Server Actions enforce same-origin requests and authenticated limits. Server Function argument logging is disabled to prevent password disclosure in development.
-- `Recipe.isEditorial` is a persisted server-controlled flag, independent of later role changes. Public editorial attribution is **Cookly**, with no administrator identity. Normal recipes use their author's public display name. Publication does not grant verification.
+- `Recipe.isEditorial` is a persisted server-controlled flag, independent of later role changes. Public editorial attribution is **Cookly**, with no administrator identity. Normal recipes use their author's public display name. Community publication does not grant verification; Studio publications follow the editorial approval policy above.
 - Home is a short editorial introduction with six Cookly recipes. `/recipes` is the URL-driven catalog with database categories plus cuisine, difficulty, total-time and tag filters, and 12-item pagination. `/recipes/[slug]` exposes only published, non-hidden content and restores the originating catalog filters on return.
-- Cards are fully linked and expose author, total time and the Cookly verified badge where applicable. Recipe details include category, cuisine, tags, prep/cook/total time, servings, difficulty, centered cover, section jumps, ingredients, ordered method and read-only community context.
-- Publication and verification remain independent. `VERIFIED` means editorially reviewed by Cookly, not professional certification or proof of cooking. Rejecting or revoking verification does not unpublish a recipe; material edits reset verification.
+- Cards are fully linked, with independent save/like buttons, author, total time and the Cookly verified badge where applicable. Recipe details include category, cuisine, tags, prep/cook/total time, servings, difficulty, centered cover, section jumps, ingredients, ordered method and interactive Community discussion.
+- Publication and verification remain independent. `VERIFIED` means editorially reviewed by Cookly, not professional certification or proof of cooking. Rejecting or revoking verification does not unpublish a recipe; material community edits reset verification.
 - Covers accept JPEG/PNG/WebP up to 3 MiB; the Server Action body limit is 4 MiB. Uploads are limited to 20 per administrator/hour, saves to 60/hour. Uploaded metadata is HMAC-signed, bound to the administrator, and expires after 30 minutes. Arbitrary client URLs/IDs are not accepted. Existing cover metadata is read from the database.
 - `coverImageIsAi` labels generated illustrations on recipe detail pages. Ten matching images were created using built-in imagegen and saved in `public/images/editorial/`; exact prompts are in `docs/editorial-image-prompts.json`. These are editorial illustrations, not photographs of tested cooking results.
 - Cloudinary uploads explicitly target `asset_folder: "cookly"`; public IDs alone do not select a folder in dynamic-folder mode. The application key has folder-scoped Contributor access, not Master Admin. Successful ping alone does not prove upload permission. `scripts/grant-cloudinary-folder.ps1` is an optional one-time operator setup using separate administrative credentials; never add those credentials to application configuration.
 - On 2026-09-21, both the auth limiter and editorial migrations were applied to configured Neon after isolated tests and a clean identity preflight. The requested ACTIVE administrator was provisioned without inserting test users. All ten starter covers were subsequently uploaded to Cloudinary and the ten editorial recipes published in Neon; public metadata is recorded in `prisma/starter-images.json`.
-- On 2026-09-21, the administrator explicitly approved the ten starter recipes. The separate repeat-safe approval command set all ten to `VERIFIED` and wrote ten moderation audit records; no future editorial recipe is verified automatically.
+- On 2026-09-21, the administrator explicitly approved the ten starter recipes. The separate repeat-safe approval command set all ten to `VERIFIED` and wrote ten moderation audit records. The 2026-09-28 Studio policy replaces manual approval for future editorial publications.
 - Current local checks pass: lint, TypeScript, production build without DB/secrets, 81 unit/component tests, 12 isolated PostgreSQL integration tests, 25 offline Chromium scenarios and the full authentication/editorial journeys. Responsive Home, catalog, recipe and verification screens were reviewed in both themes at mobile/tablet/desktop sizes. Remote CI/deployment verification remains separate.
 
 ### Explicit provisioning and seed commands
@@ -208,6 +233,14 @@ npm run test:auth:e2e
 ```
 
 The integration/E2E configurations inject test-only secrets and the isolated URL; E2E generates a fresh random secret per run. Full E2E uses port 3101; offline Home/auth UI tests use port 3100 with empty DB/secret settings. Both require free ports and always start fresh production servers. Tests write disposable users/limit records only to `cookly_test`; discard that test database when finished. Never use real personal data there.
+
+## Administrative recipe catalog and verification
+
+`/admin/recipes` defaults to **All recipes** (published, all origins and visibility). URL filters include publication, verification, origin, visibility and title/username search; pages contain 12 recipes. **My Studio** is restricted to the administrator's own editorial recipes. `/admin/recipes/[id]` is an authenticated, non-indexable read-only preview, including drafts, archives and hidden content.
+
+Administrators may move published, visible community recipes between NONE, PENDING, VERIFIED and REJECTED. Non-approval targets require an author-facing message; private notes remain administrator-only. Pending reviews initiated by administrators record the administrator as requester, do not consume the author's quota, and appear explicitly as admin-initiated in the queue. Version checks and a recipe row lock protect atomic status/request/audit updates; retries never duplicate decisions. Publication and visibility are unchanged. Studio auto-verification remains independent.
+
+Migrations `20261001090000_admin_verification_transitions` and `20261001091000_verification_request_origin` add two audit enum values, nullable previous/next status columns and an explicit `initiatedByAdmin` flag on requests. The flag preserves request origin and quota behavior even if roles change or an administrator reviews their own former community recipe. Existing history is not rewritten; old requests remain author-initiated. Apply these to the production database only in a separately approved release step, before running the updated application against that database. Tests use isolated loopback PostgreSQL only.
 
 ## Checks
 

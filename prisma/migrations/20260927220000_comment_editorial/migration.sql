@@ -1,0 +1,1 @@
+ALTER TABLE "Comment" ADD COLUMN "isEditorial" BOOLEAN NOT NULL DEFAULT false;

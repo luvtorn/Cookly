@@ -1,0 +1,73 @@
+.toast-region {
+  position: fixed;
+  z-index: 45;
+  right: 24px;
+  bottom: 24px;
+  width: min(420px, calc(100% - 32px));
+  pointer-events: none;
+}
+.toast-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px 12px 20px;
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(24px);
+  color: var(--foreground);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 16%);
+  pointer-events: auto;
+  animation: toast-enter 220ms ease-out;
+}
+.toast-message > svg {
+  flex: 0 0 24px;
+  color: var(--primary);
+}
+.toast-message p {
+  min-width: 0;
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.toast-message button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.toast-message button svg {
+  width: 18px;
+  height: 18px;
+}
+.toast-message button:hover {
+  background: var(--secondary);
+}
+.toast-message button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 1099px) {
+  .toast-region {
+    right: 16px;
+    bottom: calc(100px + env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-message {
+    animation: none;
+  }
+}

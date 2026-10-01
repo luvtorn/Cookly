@@ -1,4 +1,5 @@
 import { Clock3 } from "lucide-react";
+import { RecipeReactions } from "@/features/social/recipe-reactions";
 import Image from "next/image";
 
 import Link from "next/link";
@@ -17,6 +18,11 @@ export async function RecipeCard({
   const { locale, t } = await getI18n();
   return (
     <article className="recipe-card glass">
+      <RecipeReactions
+        recipeId={recipe.id}
+        likeCount={recipe.likeCount}
+        compact
+      />
       <div className="recipe-image">
         <Image
           src={recipe.image}

@@ -207,7 +207,8 @@
   min-width: 0;
   max-width: 1400px;
   width: 100%;
-  margin: auto;
+  /* Keep short queues and error states at the top of the grid track. */
+  margin: 0 auto;
 }
 .admin-topbar {
   position: sticky;

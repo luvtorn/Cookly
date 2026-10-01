@@ -132,6 +132,9 @@ export function AccountLinks({
           {t("account.myRecipes")}
         </Link>
       ) : null}
+      <Link href={href("/saved")} onClick={onNavigate}>
+        {t("social.saved")}
+      </Link>
       <SignOutButton />
     </>
   );

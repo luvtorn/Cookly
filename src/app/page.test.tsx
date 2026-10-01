@@ -1,6 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
+// RSC wrapper is verified in database/browser tests; jsdom renders its children.
+vi.mock("@/features/social/social-scope", () => ({
+  SocialScope: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 vi.mock("@/features/discovery/home-hero", () => ({
   HomeHero: () => (
     <section>

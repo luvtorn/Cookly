@@ -28,7 +28,9 @@ test("registration → login → refreshed account → logout, credentials and C
   await page
     .getByRole("button", { name: "Create account", exact: true })
     .click();
-  await expect(page.getByRole("status")).toContainText("Your account is ready");
+  await expect(page.locator(".auth-success")).toContainText(
+    "Your account is ready",
+  );
   await expect(page.locator("dialog[open]")).toHaveCount(1);
   await page.getByLabel("Email address", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill("wrong password");
@@ -74,7 +76,9 @@ test("registration → login → refreshed account → logout, credentials and C
     .fill("Seasonal recipes from an isolated test.");
   await page.getByLabel("Location", { exact: true }).fill("Test Kitchen");
   await page.getByRole("button", { name: "Save profile" }).click();
-  await expect(page.getByRole("status")).toContainText("Profile updated");
+  await expect(page.locator(".profile-form").getByRole("status")).toContainText(
+    "Profile updated",
+  );
   await page.goto(`/u/${username}`);
   await expect(
     page.getByRole("heading", { name: "E2E Community Cook", exact: true }),

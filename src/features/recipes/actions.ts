@@ -6,6 +6,7 @@ import { consumeLimit } from "@/lib/auth/rate-limit";
 import { getCloudinary } from "@/lib/storage/cloudinary";
 import { imageFormat, signImageReceipt } from "@/lib/storage/image-receipt";
 import { saveAdminRecipe } from "./service";
+import { refreshVerification } from "@/features/moderation/refresh";
 import type { UploadApiResponse } from "cloudinary";
 
 export async function saveRecipeAction(input: unknown) {
@@ -14,6 +15,7 @@ export async function saveRecipeAction(input: unknown) {
     if (!(await consumeLimit("recipe-save", user.id, 60, 3600)))
       throw new Error("Limit reached.");
     const recipe = await saveAdminRecipe(user.id, input);
+    refreshVerification(recipe.slug);
     for (const path of [
       "/",
       "/recipes",

@@ -2,16 +2,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
+import {
+  verificationActions,
+  decisionLabel,
+} from "@/features/moderation/constants";
 import { AdminRecipeList } from "@/features/recipes/admin-recipe-list";
 export default async function AdminPage() {
   const user = await requireAdmin();
   const db = getDb();
-  const [counts, recent] = await Promise.all([
-    db.recipe.groupBy({
-      by: ["status"],
-      where: { authorId: user.id },
-      _count: { _all: true },
-    }),
+  const visible = { status: "PUBLISHED" as const, isHidden: false };
+  const [counts, recent, requests, decisions] = await Promise.all([
+    Promise.all([
+      db.recipe.count({ where: { ...visible, isEditorial: true } }),
+      db.recipe.count({ where: { ...visible, isEditorial: false } }),
+      db.recipeVerificationRequest.count({
+        where: {
+          status: "PENDING",
+          recipe: {
+            ...visible,
+            isEditorial: false,
+            verificationStatus: "PENDING",
+          },
+        },
+      }),
+      db.recipe.count({
+        where: { ...visible, verificationStatus: "VERIFIED" },
+      }),
+    ]),
     db.recipe.findMany({
       where: { authorId: user.id },
       orderBy: { updatedAt: "desc" },
@@ -22,6 +39,36 @@ export default async function AdminPage() {
         status: true,
         coverImageUrl: true,
         updatedAt: true,
+      },
+    }),
+    db.recipeVerificationRequest.findMany({
+      where: {
+        status: "PENDING",
+        recipe: {
+          ...visible,
+          isEditorial: false,
+          verificationStatus: "PENDING",
+        },
+      },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: 5,
+      select: {
+        id: true,
+        createdAt: true,
+        recipe: { select: { title: true } },
+      },
+    }),
+    db.moderationAction.findMany({
+      where: { action: { in: [...verificationActions] } },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: 5,
+      select: {
+        id: true,
+        action: true,
+        previousVerificationStatus: true,
+        nextVerificationStatus: true,
+        createdAt: true,
+        recipe: { select: { title: true, isEditorial: true } },
       },
     }),
   ]);
@@ -59,17 +106,68 @@ export default async function AdminPage() {
           </span>
         </div>
       </div>
-      <section className="admin-stats" aria-label="Your recipe statistics">
-        {["PUBLISHED", "DRAFT", "ARCHIVED"].map((status) => (
-          <article className="glass" key={status}>
-            <span>{status.toLowerCase()} recipes</span>
-            <strong>
-              {counts.find((c) => c.status === status)?._count._all ?? 0}
-            </strong>
-            <p>Your editorial collection</p>
+      <section
+        className="admin-stats admin-stats--community"
+        aria-label="Platform recipe statistics"
+      >
+        {[
+          "Published by Cookly",
+          "Community recipes",
+          "Pending requests",
+          "Cookly verified",
+        ].map((label, index) => (
+          <article className="glass" key={label}>
+            <span>{label}</span>
+            <strong>{counts[index]}</strong>
+            <p>
+              {index === 2
+                ? "Awaiting editorial review"
+                : "Published and visible"}
+            </p>
           </article>
         ))}
       </section>
+      <div className="admin-review-overview">
+        <section className="admin-panel glass">
+          <h2>Latest requests</h2>
+          <p>Author requests and administrator-initiated reviews.</p>
+          {requests.length ? (
+            <ul>
+              {requests.map((request) => (
+                <li key={request.id}>
+                  <strong>{request.recipe.title}</strong>
+                  <time>{request.createdAt.toISOString().slice(0, 10)}</time>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No requests waiting.</p>
+          )}
+          <Link className="text-link" href="/admin/verification">
+            Open review queue →
+          </Link>
+        </section>
+        <section className="admin-panel glass">
+          <h2>Recent decisions</h2>
+          {decisions.length ? (
+            <ul>
+              {decisions.map((decision) => (
+                <li key={decision.id}>
+                  <strong>{decision.recipe?.title ?? "Removed recipe"}</strong>
+                  <span>
+                    {decision.recipe?.isEditorial
+                      ? "Studio approval"
+                      : decisionLabel(decision)}
+                  </span>
+                  <time>{decision.createdAt.toISOString().slice(0, 10)}</time>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No decisions yet.</p>
+          )}
+        </section>
+      </div>
       <section className="admin-panel glass">
         <div className="section-heading">
           <div>

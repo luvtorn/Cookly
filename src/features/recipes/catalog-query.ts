@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { savedQuery, savedUrl } from "@/features/social/schema";
 
 const slug = z
   .string()
@@ -24,6 +25,9 @@ export function catalogUrl(query: CatalogQuery) {
   return `/recipes${params.size ? `?${params}` : ""}`;
 }
 export function catalogReturn(value: unknown) {
+  if (typeof value === "string" && /^\/(?:en\/|ru\/|pl\/)?saved(?:\?|$)/.test(value)) {
+    return savedUrl(savedQuery.parse(Object.fromEntries(new URLSearchParams(value.split("?")[1]))));
+  }
   if (
     typeof value !== "string" ||
     !/^\/(?:en\/|ru\/|pl\/)?recipes(?:\?|$)/.test(value)

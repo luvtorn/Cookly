@@ -121,13 +121,23 @@ async function saveOwnedRecipe(
           JSON.stringify(data.steps.map((s) => s.instruction)) ||
         JSON.stringify(existing.tags.map((t) => t.tagId).sort()) !==
           JSON.stringify([...new Set(data.tagIds)].sort());
-      const verificationStatus = changed ? "NONE" : existing.verificationStatus;
-      if (existing && changed) {
+      const leavesQueue = data.status !== "PUBLISHED";
+      const verificationStatus = isEditorial
+        ? data.status === "PUBLISHED" && !existing?.isHidden
+          ? "VERIFIED"
+          : "NONE"
+        : changed || (leavesQueue && existing?.verificationStatus === "PENDING")
+          ? "NONE"
+          : existing.verificationStatus;
+      if (existing && (changed || leavesQueue)) {
         await tx.recipeVerificationRequest.updateMany({
           where: { recipeId: existing.id, status: "PENDING" },
           data: {
             status: "NONE",
-            reviewerNote: "Closed after recipe content changed.",
+            reviewerNote: leavesQueue
+              ? "Closed after recipe left publication."
+              : "Closed after recipe content changed.",
+            reviewedAt: new Date(),
           },
         });
       }
@@ -148,15 +158,16 @@ async function saveOwnedRecipe(
         },
         tags: { create: [...new Set(data.tagIds)].map((tagId) => ({ tagId })) },
       };
-      return existing
-        ? tx.recipe.update({
+      const saved = existing
+        ? await tx.recipe.update({
             where: { id: existing.id, authorId: userId },
             data: { ...record, verificationStatus, ...relations },
             select: { id: true, slug: true },
           })
-        : tx.recipe.create({
+        : await tx.recipe.create({
             data: {
               ...record,
+              verificationStatus,
               ...relations,
               authorId: userId,
               isEditorial,
@@ -164,6 +175,25 @@ async function saveOwnedRecipe(
             },
             select: { id: true, slug: true },
           });
+      if (
+        isEditorial &&
+        verificationStatus === "VERIFIED" &&
+        (changed ||
+          existing?.verificationStatus !== "VERIFIED" ||
+          existing?.status !== "PUBLISHED")
+      ) {
+        await tx.moderationAction.create({
+          data: {
+            actorId: owner.id,
+            recipeId: saved.id,
+            action: "VERIFY_RECIPE",
+            note: existing
+              ? "Editorial content saved and approved through Studio."
+              : "Editorial publication automatically approved through Studio.",
+          },
+        });
+      }
+      return saved;
     },
     { timeout: 20000 },
   );

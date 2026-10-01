@@ -1,6 +1,10 @@
 import type { Locale } from "./config";
+import { socialMessages } from "./social-messages";
+import { verificationMessages } from "./verification-messages";
 
 const en = {
+  ...socialMessages.en,
+  ...verificationMessages.en,
   "common.view": "View",
   "common.edit": "Edit",
   "common.updated": "Updated",
@@ -59,6 +63,7 @@ const en = {
   "common.signIn": "Sign in",
   "common.signOut": "Sign out",
   "common.close": "Close",
+  "auth.signedIn": "You're signed in. Welcome to Cookly!",
   "common.previous": "Previous",
   "common.next": "Next",
   "common.filter": "Filter",
@@ -284,6 +289,8 @@ export type MessageKey = keyof typeof en;
 export type Messages = Record<MessageKey, string>;
 
 const ru: Messages = {
+  ...socialMessages.ru,
+  ...verificationMessages.ru,
   "common.view": "Смотреть",
   "common.edit": "Редактировать",
   "common.updated": "Обновлено",
@@ -345,6 +352,7 @@ const ru: Messages = {
   "common.signIn": "Войти",
   "common.signOut": "Выйти",
   "common.close": "Закрыть",
+  "auth.signedIn": "Вы вошли в аккаунт. Добро пожаловать в Cookly!",
   "common.previous": "Назад",
   "common.next": "Далее",
   "common.filter": "Фильтр",
@@ -568,6 +576,8 @@ const ru: Messages = {
 };
 
 const pl: Messages = {
+  ...socialMessages.pl,
+  ...verificationMessages.pl,
   "common.view": "Zobacz",
   "common.edit": "Edytuj",
   "common.updated": "Zaktualizowano",
@@ -626,6 +636,7 @@ const pl: Messages = {
   "common.signIn": "Zaloguj się",
   "common.signOut": "Wyloguj się",
   "common.close": "Zamknij",
+  "auth.signedIn": "Zalogowano pomyślnie. Witaj w Cookly!",
   "common.previous": "Poprzednia",
   "common.next": "Następna",
   "common.filter": "Filtruj",

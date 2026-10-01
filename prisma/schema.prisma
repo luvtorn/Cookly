@@ -68,6 +68,8 @@ enum ReportStatus {
 }
 
 enum ModerationActionType {
+  REOPEN_VERIFICATION
+  CLEAR_VERIFICATION
   VERIFY_RECIPE
   REJECT_VERIFICATION
   HIDE_RECIPE
@@ -339,6 +341,7 @@ model Comment {
   recipeId  String
   body      String   @db.VarChar(1500)
   isHidden  Boolean  @default(false)
+  isEditorial Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -381,6 +384,7 @@ model RecipeVerificationRequest {
   id            String             @id @default(cuid())
   recipeId      String
   requestedById String
+  initiatedByAdmin Boolean @default(false)
   reviewedById  String?
   status        VerificationStatus @default(PENDING)
   creatorNote   String?            @db.VarChar(500)
@@ -431,6 +435,9 @@ model ModerationAction {
   actorId   String
   action    ModerationActionType
   note      String?              @db.VarChar(1000)
+  creatorMessage String?         @db.VarChar(1000)
+  previousVerificationStatus VerificationStatus?
+  nextVerificationStatus VerificationStatus?
   recipeId  String?
   commentId String?
   reportId  String?

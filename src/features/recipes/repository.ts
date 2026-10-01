@@ -148,27 +148,6 @@ export const getPublicRecipe = cache(async (slug: string) => {
         orderBy: { position: "asc" },
         select: { id: true, position: true, instruction: true },
       },
-      comments: {
-        where: { isHidden: false },
-        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-        take: 5,
-        select: {
-          id: true,
-          body: true,
-          createdAt: true,
-          user: {
-            select: {
-              profile: {
-                select: {
-                  displayName: true,
-                  username: true,
-                  avatarUrl: true,
-                },
-              },
-            },
-          },
-        },
-      },
     },
   });
   if (!row) return null;
@@ -190,14 +169,6 @@ export const getPublicRecipe = cache(async (slug: string) => {
       isOptional: i.isOptional,
     })),
     steps: row.steps,
-    comments: row.comments.toReversed().map((comment) => ({
-      id: comment.id,
-      body: comment.body,
-      createdAt: comment.createdAt,
-      author: comment.user.profile?.displayName ?? "Cookly member",
-      username: comment.user.profile?.username ?? null,
-      avatar: comment.user.profile?.avatarUrl ?? null,
-    })),
   };
 });
 export async function recipeOptions() {

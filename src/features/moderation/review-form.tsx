@@ -2,19 +2,22 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { reviewRecipeAction } from "./actions";
+import { GlassSelect } from "@/components/shared/glass-select";
+import { verificationLabels, type ReviewStatus } from "./constants";
 
 export function ReviewForm({
   recipeId,
   updatedAt,
-  isVerified,
+  currentStatus,
 }: {
   recipeId: string;
   updatedAt: string;
-  isVerified: boolean;
+  currentStatus: ReviewStatus;
 }) {
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const [targetStatus, setTargetStatus] = useState<string>(currentStatus);
   return (
     <form
       className="verification-form"
@@ -22,16 +25,15 @@ export function ReviewForm({
       onSubmit={(event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
-        const submitter = (event.nativeEvent as SubmitEvent).submitter;
-        const decision =
-          submitter instanceof HTMLButtonElement ? submitter.value : "";
         const note = String(form.get("note") ?? "");
-        if (decision !== "VERIFY" && !note.trim()) {
-          setMessage("Please add a private reason.");
+        const creatorMessage = String(form.get("creatorMessage") ?? "");
+        if (targetStatus !== "VERIFIED" && !creatorMessage.trim()) {
+          setMessage("Please explain to the author what needs to change.");
           return;
         }
         if (
-          decision === "REVOKE" &&
+          currentStatus === "VERIFIED" &&
+          targetStatus !== "VERIFIED" &&
           !window.confirm(
             "Remove the Cookly verified badge? The recipe will remain published.",
           )
@@ -42,8 +44,9 @@ export function ReviewForm({
             const result = await reviewRecipeAction({
               recipeId,
               updatedAt,
-              decision,
+              targetStatus,
               note,
+              creatorMessage,
             });
             setMessage(result.message);
             if (result.success) router.refresh();
@@ -53,37 +56,45 @@ export function ReviewForm({
         });
       }}
     >
+      <p>Current status: {verificationLabels[currentStatus]}</p>
+      <div className="glass-select-field">
+        <span>New verification status</span>
+        <GlassSelect
+          ariaLabel="New verification status"
+          value={targetStatus}
+          onChange={setTargetStatus}
+          disabled={pending}
+          options={Object.entries(verificationLabels).map(([value, label]) => ({
+            value,
+            label,
+          }))}
+        />
+      </div>
+      <label>
+        Message to author
+        <textarea
+          name="creatorMessage"
+          maxLength={1000}
+          rows={3}
+          disabled={pending}
+        />
+      </label>
+      <p>
+        Visible only to the author and administrators. Required when requesting
+        changes, reopening or clearing verification.
+      </p>
       <label>
         Private review note
         <textarea name="note" maxLength={1000} rows={3} disabled={pending} />
       </label>
+      <p>Private notes are never shown to the author.</p>
       <div className="verification-actions">
-        {isVerified ? (
-          <button
-            className="button-secondary"
-            value="REVOKE"
-            disabled={pending}
-          >
-            Revoke verification
-          </button>
-        ) : (
-          <>
-            <button
-              className="button-primary"
-              value="VERIFY"
-              disabled={pending}
-            >
-              Confirm verification
-            </button>
-            <button
-              className="button-secondary"
-              value="REJECT"
-              disabled={pending}
-            >
-              Reject verification
-            </button>
-          </>
-        )}
+        <button
+          className="button-primary"
+          disabled={pending || targetStatus === currentStatus}
+        >
+          Save verification status
+        </button>
       </div>
       <p role="status" aria-live="polite">
         {pending ? "Saving review…" : message}

@@ -4,6 +4,34 @@
   z-index: 30;
 }
 
+.site-header .header-actions {
+  min-width: 0;
+}
+.site-header .header-account-access {
+  min-width: 32px;
+  flex: 0 1 140px;
+}
+.site-header .account-menu summary {
+  min-width: 0;
+}
+.site-header .account-name {
+  min-width: 0;
+  flex: 1;
+}
+.site-header .account-initials {
+  flex: 0 0 32px;
+}
+.site-header .header-actions > :not(.header-account-access) {
+  flex-shrink: 0;
+}
+
+@media (min-width: 1100px) {
+  .site-header {
+    gap: 24px;
+    padding-inline: 28px;
+  }
+}
+
 html {
   scroll-padding-top: 1.5rem;
 }

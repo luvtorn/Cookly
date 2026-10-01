@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getDb } from "@/lib/db/client";
 import { publicCard, publicCardSelect } from "@/features/recipes/repository";
 import { RecipeCard } from "@/features/discovery/recipe-card";
+import { SocialScope } from "@/features/social/social-scope";
 import { getI18n } from "@/lib/i18n/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { ProfileForm } from "@/features/users/profile-form";
@@ -180,11 +181,13 @@ export default async function CreatorProfile({ params }: Props) {
           </div>
         </div>
         {recipes.length ? (
-          <div className="recipe-grid">
-            {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={publicCard(recipe)} />
-            ))}
-          </div>
+          <SocialScope recipes={recipes.map(publicCard)}>
+            <div className="recipe-grid">
+              {recipes.map((recipe) => (
+                <RecipeCard key={recipe.id} recipe={publicCard(recipe)} />
+              ))}
+            </div>
+          </SocialScope>
         ) : (
           <div className="community-empty glass">
             <div>

@@ -43,6 +43,23 @@ export default async function MyRecipes({
       status: true,
       coverImageUrl: true,
       updatedAt: true,
+      isHidden: true,
+      verificationStatus: true,
+      moderationActions: {
+        where: {
+          action: {
+            in: [
+              "VERIFY_RECIPE",
+              "REJECT_VERIFICATION",
+              "REOPEN_VERIFICATION",
+              "CLEAR_VERIFICATION",
+            ],
+          },
+        },
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+        take: 1,
+        select: { creatorMessage: true },
+      },
     },
     orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
     skip: (page - 1) * 12,

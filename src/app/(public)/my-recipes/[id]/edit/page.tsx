@@ -6,6 +6,7 @@ import { recipeOptions } from "@/features/recipes/repository";
 import { RecipeEditor } from "@/features/recipes/recipe-editor";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/config";
+import { RequestReview } from "@/features/moderation/request-form";
 
 export const metadata: Metadata = {
   title: "Edit recipe",
@@ -33,6 +34,21 @@ export default async function EditCommunityRecipe({
         },
         steps: { orderBy: { position: "asc" } },
         tags: true,
+        moderationActions: {
+          where: {
+            action: {
+              in: [
+                "VERIFY_RECIPE",
+                "REJECT_VERIFICATION",
+                "REOPEN_VERIFICATION",
+                "CLEAR_VERIFICATION",
+              ],
+            },
+          },
+          orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+          take: 1,
+          select: { creatorMessage: true },
+        },
       },
     }),
     recipeOptions(),
@@ -40,6 +56,15 @@ export default async function EditCommunityRecipe({
   if (!recipe) notFound();
   return (
     <main className="creator-page home-container" id="main-content">
+      <RequestReview
+        recipe={{
+          id: recipe.id,
+          status: recipe.status,
+          isHidden: recipe.isHidden,
+          verificationStatus: recipe.verificationStatus,
+          creatorMessage: recipe.moderationActions[0]?.creatorMessage ?? null,
+        }}
+      />
       <RecipeEditor
         mode="creator"
         options={options}

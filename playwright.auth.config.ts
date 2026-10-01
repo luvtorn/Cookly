@@ -26,7 +26,7 @@ export default defineConfig({
     command:
       "node node_modules/next/dist/bin/next start --hostname localhost --port 3101",
     url: "http://localhost:3101",
-    reuseExistingServer: false,
+    reuseExistingServer: process.env.PLAYWRIGHT_REUSE_SERVER === "1",
     env: {
       DATABASE_URL: database,
       AUTH_SECRET: randomBytes(32).toString("hex"),

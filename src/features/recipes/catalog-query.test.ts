@@ -46,14 +46,15 @@ describe("catalog URL boundaries", () => {
       "/recipes?category=desserts",
     );
   });
-  it("requires private reasons for rejection and revocation", () => {
+  it("requires author feedback for rejection and revocation", () => {
     const base = {
       recipeId: "recipe",
       updatedAt: new Date().toISOString(),
       note: "",
     };
     expect(
-      verificationSchema.safeParse({ ...base, decision: "VERIFY" }).success,
+      verificationSchema.safeParse({ ...base, targetStatus: "VERIFIED" })
+        .success,
     ).toBe(true);
     for (const decision of ["REJECT", "REVOKE"])
       expect(verificationSchema.safeParse({ ...base, decision }).success).toBe(
@@ -62,7 +63,21 @@ describe("catalog URL boundaries", () => {
     expect(
       verificationSchema.safeParse({
         ...base,
-        decision: "VERIFY",
+        targetStatus: "REJECTED",
+        note: "Private only",
+      }).success,
+    ).toBe(false);
+    expect(
+      verificationSchema.safeParse({
+        ...base,
+        targetStatus: "REJECTED",
+        creatorMessage: "Clarify the steps",
+      }).success,
+    ).toBe(true);
+    expect(
+      verificationSchema.safeParse({
+        ...base,
+        targetStatus: "VERIFIED",
         actorId: "forged",
       }).success,
     ).toBe(false);

@@ -10,7 +10,11 @@ import {
 import { createAdmin } from "../../scripts/create-admin.mjs";
 import { seedEditorial } from "../../scripts/seed-editorial.mjs";
 import { verifyEditorial } from "../../scripts/verify-editorial.mjs";
-import { reviewRecipe, StaleReviewError } from "@/features/moderation/service";
+import {
+  reviewRecipe,
+  requestVerification,
+  StaleReviewError,
+} from "@/features/moderation/service";
 import recipes from "../../prisma/starter-recipes.json";
 import pg from "pg";
 import { updateOwnProfile } from "@/features/users/service";
@@ -132,7 +136,7 @@ describe("editorial database flow", () => {
     expect(detail?.author).toBe("Community Cook");
     expect(detail?.likeCount).toBe(1);
     expect(detail?.commentCount).toBe(1);
-    expect(detail?.comments).toHaveLength(1);
+    expect(detail).not.toHaveProperty("comments");
     expect(JSON.stringify(detail)).not.toContain("Private hidden comment");
     expect(
       (await listPublicRecipes({ q: run, page: 1 }, "community")).recipes.some(
@@ -280,8 +284,16 @@ describe("editorial database flow", () => {
     ).toBe(11);
   });
   it("reviews atomically, rejects stale versions and preserves verification on unchanged saves", async () => {
-    const saved = await saveAdminRecipe(adminId, {
+    const reviewInput = () => ({
       ...input(),
+      imageReceipt: signImageReceipt(
+        otherId,
+        "test/community-review",
+        "https://res.cloudinary.com/test/image/upload/review.webp",
+      ),
+    });
+    const saved = await saveUserRecipe(otherId, {
+      ...reviewInput(),
       status: "PUBLISHED",
     });
     const snapshot = () =>
@@ -289,8 +301,10 @@ describe("editorial database flow", () => {
     const command = async (decision: string, note = "") => ({
       recipeId: saved.id,
       updatedAt: (await snapshot()).updatedAt.toISOString(),
-      decision,
+      targetStatus: decision === "VERIFY" ? "VERIFIED" : "REJECTED",
       note,
+      creatorMessage:
+        decision === "VERIFY" ? "" : "Please clarify the cooking steps.",
     });
     await expect(
       reviewRecipe(otherId, await command("VERIFY")),
@@ -309,9 +323,7 @@ describe("editorial database flow", () => {
       where: { id: adminId },
       data: { status: "ACTIVE" },
     });
-    await db.recipeVerificationRequest.create({
-      data: { recipeId: saved.id, requestedById: adminId },
-    });
+    await requestVerification(otherId, { recipeId: saved.id });
     const before = await command("VERIFY");
     await reviewRecipe(adminId, before);
     await expect(reviewRecipe(adminId, before)).rejects.toBeInstanceOf(
@@ -327,8 +339,8 @@ describe("editorial database flow", () => {
         },
       }),
     ).toBe(1);
-    await saveAdminRecipe(adminId, {
-      ...input(),
+    await saveUserRecipe(otherId, {
+      ...reviewInput(),
       id: saved.id,
       status: "PUBLISHED",
       imageReceipt: undefined,
@@ -341,15 +353,27 @@ describe("editorial database flow", () => {
       privateNote,
     );
     expect((await snapshot()).verificationStatus).toBe("REJECTED");
+    await expect(
+      requestVerification(otherId, { recipeId: saved.id }),
+    ).rejects.toThrow();
+    await saveUserRecipe(otherId, {
+      ...reviewInput(),
+      id: saved.id,
+      status: "PUBLISHED",
+      title: "Clarified community recipe",
+      imageReceipt: undefined,
+    });
+    await requestVerification(otherId, { recipeId: saved.id });
     await reviewRecipe(adminId, await command("VERIFY"));
-    await saveAdminRecipe(adminId, {
-      ...input(),
+    await saveUserRecipe(otherId, {
+      ...reviewInput(),
       id: saved.id,
       status: "PUBLISHED",
       title: "Materially changed",
       imageReceipt: undefined,
     });
     expect((await snapshot()).verificationStatus).toBe("NONE");
+    await requestVerification(otherId, { recipeId: saved.id });
     const concurrent = await command("VERIFY");
     const attempts = await Promise.allSettled([
       reviewRecipe(adminId, concurrent),

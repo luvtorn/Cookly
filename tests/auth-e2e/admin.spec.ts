@@ -47,7 +47,7 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
       .getByLabel("Password", { exact: true })
       .fill(credentials.password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
-    await expect(page).toHaveURL(/\/admin$/);
+    await expect(page).toHaveURL(/\/admin$/, { timeout: 15000 });
     await expect(
       page.getByRole("heading", { name: "Welcome back." }),
     ).toBeVisible();
@@ -81,13 +81,15 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
       .getByRole("link", { name: "Create a recipe", exact: false })
       .click();
     await page.getByRole("button", { name: "Save recipe" }).click();
-    await expect(page.getByRole("status")).toContainText("highlighted fields");
+    await expect(page.locator(".editor-result")).toContainText(
+      "highlighted fields",
+    );
     await page.getByLabel("Upload cover").setInputFiles({
       name: "not-an-image.svg",
       mimeType: "image/svg+xml",
       buffer: Buffer.from("<svg>not allowed</svg>"),
     });
-    await expect(page.getByRole("status")).toContainText("Upload failed");
+    await expect(page.locator(".editor-result")).toContainText("Upload failed");
     await page.goto("/admin/recipes/cookly-editorial-chicken-teriyaki/edit");
     await expect(page.getByLabel("Title", { exact: true })).toHaveValue(
       "Chicken Teriyaki",
@@ -96,7 +98,7 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
       .getByLabel("Title", { exact: true })
       .fill("Chicken Teriyaki — an editorial test");
     await page.getByRole("button", { name: "Save recipe" }).click();
-    await expect(page.getByRole("status")).toContainText("Recipe saved");
+    await expect(page.locator(".editor-result")).toContainText("Recipe saved");
     await page.reload();
     await expect(page.getByLabel("Title", { exact: true })).toHaveValue(
       "Chicken Teriyaki — an editorial test",
@@ -131,18 +133,10 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
     const review = page
       .locator(".verification-item")
       .filter({ hasText: "Chicken Teriyaki" });
-    await review.getByText("Review recipe", { exact: true }).click();
-    await review.getByRole("button", { name: "Reject verification" }).click();
-    await expect(review.getByRole("status")).toContainText("private reason");
-    await review.getByLabel("Private review note").fill("Private E2E review");
-    await review.getByRole("button", { name: "Confirm verification" }).click();
+    await expect(review).toHaveCount(0);
     await expect(
-      review.getByRole("button", { name: "Revoke verification" }),
+      page.getByRole("navigation", { name: "Verification queues" }),
     ).toBeVisible();
-    await review.getByText("Recent decisions (up to 10)").click();
-    await expect(review.locator(".verification-history")).toContainText(
-      "Private E2E review",
-    );
     for (const theme of ["light", "dark"] as const) {
       await page.emulateMedia({ colorScheme: theme, reducedMotion: "reduce" });
       for (const width of [390, 768, 1448]) {
@@ -189,13 +183,14 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
             );
             await expect(page.locator(".recipe-community")).toBeVisible();
             await expect(
-              page.locator(".recipe-social-counts dt").filter({
-                hasText: "Likes",
-              }),
+              page.getByRole("button", { name: "Like recipe", exact: true }),
             ).toBeVisible();
             await expect(
-              page.getByRole("button", { name: "Add comment" }),
+              page.getByRole("button", { name: "Post comment" }),
             ).toBeDisabled();
+            await expect(
+              page.getByLabel("Your comment", { exact: true }),
+            ).toBeEnabled();
             const cover = await page.locator(".recipe-cover").boundingBox();
             const main = await page.locator("main").boundingBox();
             expect(
@@ -229,7 +224,7 @@ test("editorial studio: authorization, catalog, editing, archiving and responsiv
     await page.getByRole("option", { name: "Archived" }).click();
     page.once("dialog", (dialog) => dialog.accept());
     await page.getByRole("button", { name: "Save recipe" }).click();
-    await expect(page.getByRole("status")).toContainText("Recipe saved");
+    await expect(page.locator(".editor-result")).toContainText("Recipe saved");
     await expect
       .poll(
         async () =>

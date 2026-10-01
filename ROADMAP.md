@@ -1,5 +1,26 @@
 # Cookly — MVP Roadmap
 
+## Verification queue — 2026-09-28
+
+- [x] Separate community requests from editorial Studio approval; real Overview counts and recent activity.
+- [x] Pending / Verified / Needs changes tabs, title/username search and pagination.
+- [x] Owner requests, duplicate protection, daily quota, private author feedback and resubmission after edits.
+- [x] Atomic decisions, stale-edit checks, automatic editorial approval and audit.
+- [x] Additive migration with duplicate preflight; snapshot-confirmed editorial backfill command.
+- [x] Apply the verification migration to configured Neon after explicit approval (2026-09-29); verify the column, index and migration record.
+- [ ] Separately approve editorial backfill after inspecting targets, then commit, push and verify deployment.
+
+## Social slice — 2026-09-27
+
+- [x] Private Liked recipes tab alongside Saved, with localized search, pagination and preserved return URLs.
+- [x] Apply the tested comment editorial-column migration to connected Neon (2026-09-27, explicitly approved).
+
+- [x] Private localized Saved list, title search and pagination; save/like controls on public cards and recipe details.
+- [x] Real comments with cursor pagination, owner editing, stale-edit rejection and confirmed soft removal.
+- [x] Persist Cookly authorship for new admin comments independently of future roles; keep public DTOs free of private identities.
+- [ ] Release: commit/push and verify Vercel after explicit approval (the additive Neon migration is applied).
+- [ ] Later: comment replies, reports/moderation UI, follow actions and full Pantry matching.
+
 ## Delivery philosophy
 
 The roadmap is intentionally vertical-slice first. Every phase should leave the app in a runnable, demoable state.
@@ -557,6 +578,16 @@ Rules:
 - [x] Preserve readable server content and reduced-motion/touch alternatives; add responsive search regressions.
 
 # Suggested implementation order for Codex prompts
+
+## Administrative catalog and verification reassessment
+
+- [x] All-recipes catalog with URL filters, pagination and an owner-scoped My Studio tab.
+- [x] Closed read-only administrative preview for every publication and visibility state.
+- [x] Shared explicit verification-status form, author feedback and badge-removal confirmation.
+- [x] Admin-initiated pending reviews, atomic transition audit and stale-version protection.
+- [x] Include reassessment/reset messages in private creator feedback and administrative history.
+- [x] Apply both audit/request-origin migrations to production Neon after explicit release approval (October 1).
+- [ ] Commit, push and deploy this slice only after explicit approval.
 
 Give Codex one bounded milestone at a time:
 

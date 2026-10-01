@@ -2,6 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { getI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/config";
+import {
+  RequestReview,
+  type OwnerVerification,
+} from "@/features/moderation/request-form";
 
 export async function MyRecipeList({
   recipes,
@@ -13,6 +17,9 @@ export async function MyRecipeList({
     status: string;
     coverImageUrl: string;
     updatedAt: Date;
+    isHidden: boolean;
+    verificationStatus: OwnerVerification["verificationStatus"];
+    moderationActions: { creatorMessage: string | null }[];
   }[];
 }) {
   const { locale, t } = await getI18n();
@@ -43,6 +50,16 @@ export async function MyRecipeList({
                 timeZone: "UTC",
               }).format(recipe.updatedAt)}
             </p>
+            <RequestReview
+              recipe={{
+                id: recipe.id,
+                status: recipe.status,
+                isHidden: recipe.isHidden,
+                verificationStatus: recipe.verificationStatus,
+                creatorMessage:
+                  recipe.moderationActions[0]?.creatorMessage ?? null,
+              }}
+            />
           </div>
           <span
             className={`recipe-status status-${recipe.status.toLowerCase()}`}

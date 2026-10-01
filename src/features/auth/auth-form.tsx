@@ -20,6 +20,7 @@ import {
   type SignUpInput,
 } from "./schema";
 import { useI18n } from "@/lib/i18n/context";
+import { useToast } from "@/components/shared/toast-provider";
 
 const subscribeHydration = () => () => {};
 const hydratedSnapshot = () => true;
@@ -38,6 +39,7 @@ export function AuthForm({
 }) {
   const isSignUp = mode === "sign-up";
   const router = useRouter();
+  const notify = useToast();
   const { t, href, messages } = useI18n();
   const validationMessages = useMemo(
     () => ({
@@ -125,6 +127,7 @@ export function AuthForm({
         setError(t("auth.invalidCredentials"));
         return;
       }
+      notify("auth.signedIn");
       router.replace(callbackUrl);
       router.refresh();
     } catch {

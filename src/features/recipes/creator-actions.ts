@@ -8,6 +8,7 @@ import { consumeLimit } from "@/lib/auth/rate-limit";
 import { getCloudinary } from "@/lib/storage/cloudinary";
 import { imageFormat, signImageReceipt } from "@/lib/storage/image-receipt";
 import { saveUserRecipe } from "./service";
+import { refreshVerification } from "@/features/moderation/refresh";
 
 export async function saveUserRecipeAction(input: unknown) {
   try {
@@ -15,6 +16,7 @@ export async function saveUserRecipeAction(input: unknown) {
     if (!(await consumeLimit("user-recipe-save", user.id, 30, 3600)))
       throw new Error("Limit reached.");
     const recipe = await saveUserRecipe(user.id, input);
+    refreshVerification(recipe.slug);
     const paths = [
       "/",
       "/recipes",

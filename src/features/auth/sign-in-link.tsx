@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { UserRound } from "lucide-react";
+import { UserRound, Bookmark, Heart } from "lucide-react";
 import { safeCallback } from "./schema";
 import { rememberModalOrigin } from "./modal-origin";
 import { useI18n } from "@/lib/i18n/context";
@@ -11,10 +11,14 @@ export function SignInLink({
   className = "sign-in-button",
   label,
   ariaLabel,
+  icon = "user",
+  compact = false,
 }: {
   className?: string;
   label?: string;
   ariaLabel?: string;
+  icon?: "user" | "bookmark" | "heart";
+  compact?: boolean;
 } = {}) {
   const router = useRouter();
   const { t, href } = useI18n();
@@ -46,9 +50,15 @@ export function SignInLink({
       }}
     >
       <span className="dock-icon">
-        <UserRound size={18} aria-hidden="true" />
+        {icon === "bookmark" ? (
+          <Bookmark size={18} aria-hidden="true" />
+        ) : icon === "heart" ? (
+          <Heart size={18} aria-hidden="true" />
+        ) : (
+          <UserRound size={18} aria-hidden="true" />
+        )}
       </span>
-      <span>{visibleLabel}</span>
+      <span className={compact ? "sr-only" : undefined}>{visibleLabel}</span>
     </Link>
   );
 }

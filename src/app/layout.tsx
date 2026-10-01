@@ -10,6 +10,9 @@ import "./globals.css";
 import "./catalog.css";
 import "./social.css";
 import "./navigation.css";
+import "./toasts.css";
+import "./social-actions.css";
+import "./verification.css";
 
 const sans = localFont({
   src: "./fonts/dm-sans.ttf",
