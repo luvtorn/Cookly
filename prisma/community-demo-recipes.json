@@ -1,0 +1,527 @@
+[
+  {
+    "title": "Banana Oat Porridge",
+    "author": "everyday",
+    "category": "Breakfast",
+    "servings": 2,
+    "prep": 5,
+    "cook": 10,
+    "difficulty": "EASY",
+    "requestReview": true,
+    "description": "Creamy rolled oats simmered in milk, topped with banana and cinnamon. A simple warm breakfast with a naturally sweet finish.",
+    "ingredients": [
+      ["rolled oats", "100", "g"],
+      ["milk", "400", "ml"],
+      ["banana", "2", "pcs"],
+      ["cinnamon", "0.5", "tsp"],
+      ["salt", "0.25", "tsp"]
+    ],
+    "steps": [
+      "Combine the oats, milk and salt in a saucepan. Bring to a gentle simmer over medium heat.",
+      "Reduce the heat and cook for 8–10 minutes, stirring often, until the oats are tender and creamy. Add a splash of water if needed.",
+      "Divide between two bowls. Slice the bananas, arrange them on top and sprinkle with cinnamon."
+    ]
+  },
+  {
+    "title": "Avocado Egg Toast",
+    "author": "everyday",
+    "category": "Breakfast",
+    "servings": 2,
+    "prep": 10,
+    "cook": 5,
+    "difficulty": "EASY",
+    "description": "Crisp sourdough topped with lemony mashed avocado and poached eggs. Make the eggs firm or soft to suit your preference.",
+    "ingredients": [
+      ["sourdough bread", "2", "slices"],
+      ["avocado", "1", "pcs"],
+      ["egg", "2", "pcs"],
+      ["lemon", "0.5", "pcs"],
+      ["salt", "0.25", "tsp"],
+      ["black pepper", "0.25", "tsp"]
+    ],
+    "steps": [
+      "Toast the sourdough until golden. Mash the avocado with the lemon juice, salt and pepper.",
+      "Bring a saucepan of water to a gentle simmer. Crack each egg into a small cup and slide into the water. Poach for 3–5 minutes, or longer for a firm yolk.",
+      "Spread the avocado over the toast. Lift out the eggs with a slotted spoon, drain well and place on top. Serve immediately."
+    ]
+  },
+  {
+    "title": "Greek Chickpea Salad",
+    "author": "everyday",
+    "category": "Salad",
+    "servings": 3,
+    "prep": 15,
+    "cook": 0,
+    "difficulty": "EASY",
+    "requestReview": true,
+    "description": "Chickpeas, crunchy cucumber, tomatoes and feta tossed in a lemon and olive oil dressing. An easy salad that keeps well for lunch.",
+    "ingredients": [
+      ["chickpeas", "400", "g"],
+      ["cucumber", "1", "pcs"],
+      ["tomato", "3", "pcs"],
+      ["red onion", "0.5", "pcs"],
+      ["feta", "100", "g"],
+      ["kalamata olives", "60", "g"],
+      ["olive oil", "2", "tbsp"],
+      ["lemon", "1", "pcs"],
+      ["dried oregano", "1", "tsp"]
+    ],
+    "steps": [
+      "Drain and rinse the chickpeas. Dice the cucumber and tomatoes, thinly slice the onion and crumble the feta.",
+      "Whisk the olive oil with the lemon juice and oregano in a large bowl.",
+      "Add the chickpeas, vegetables, olives and feta. Toss gently and let stand for 10 minutes before serving. Refrigerate leftovers promptly."
+    ]
+  },
+  {
+    "title": "Creamy Broccoli Soup",
+    "author": "everyday",
+    "category": "Soup",
+    "servings": 4,
+    "prep": 10,
+    "cook": 20,
+    "difficulty": "EASY",
+    "description": "A smooth green soup made with broccoli, potato and a little cream. Blend until silky and adjust the thickness with stock.",
+    "ingredients": [
+      ["broccoli", "500", "g"],
+      ["potato", "200", "g"],
+      ["onion", "1", "pcs"],
+      ["garlic", "2", "cloves"],
+      ["vegetable stock", "900", "ml"],
+      ["cream", "100", "ml"],
+      ["olive oil", "1", "tbsp"],
+      ["salt", "0.5", "tsp"]
+    ],
+    "steps": [
+      "Chop the onion and garlic. Peel and dice the potato; cut the broccoli into small florets and dice the tender stalk.",
+      "Heat the oil in a saucepan. Soften the onion for 5 minutes, add the garlic and cook for 30 seconds.",
+      "Add the potato and stock. Simmer for 10 minutes, then add the broccoli and cook for 6–8 minutes until tender.",
+      "Blend carefully until smooth, keeping the blender lid vented if blending hot soup. Stir in the cream and salt, warm through and serve."
+    ]
+  },
+  {
+    "title": "Turkey Vegetable Stir-Fry",
+    "author": "everyday",
+    "category": "Main Course",
+    "servings": 3,
+    "prep": 15,
+    "cook": 15,
+    "difficulty": "EASY",
+    "description": "Turkey strips and colourful vegetables in a quick soy, ginger and garlic sauce. Serve as it is or with rice prepared separately.",
+    "ingredients": [
+      ["turkey breast", "400", "g"],
+      ["broccoli", "200", "g"],
+      ["red bell pepper", "1", "pcs"],
+      ["carrot", "1", "pcs"],
+      ["garlic", "2", "cloves"],
+      ["ginger", "15", "g"],
+      ["soy sauce", "3", "tbsp"],
+      ["cornstarch", "1", "tsp"],
+      ["vegetable oil", "2", "tbsp"]
+    ],
+    "steps": [
+      "Slice the turkey into thin strips. Cut the broccoli small, slice the pepper and carrot, and mince the garlic and ginger.",
+      "Mix the soy sauce, cornstarch and 80 ml water. Heat half the oil in a large pan and cook the turkey for 5–7 minutes until cooked through; transfer to a plate.",
+      "Add the remaining oil and vegetables. Stir-fry for 4–5 minutes, adding a splash of water to help the broccoli soften.",
+      "Add the garlic and ginger for 30 seconds. Return the turkey, pour in the sauce and simmer for 2 minutes until thickened. Check the turkey is fully cooked before serving."
+    ]
+  },
+  {
+    "title": "Garlic Butter White Beans",
+    "author": "everyday",
+    "category": "Main Course",
+    "servings": 2,
+    "prep": 5,
+    "cook": 12,
+    "difficulty": "EASY",
+    "description": "Tender white beans warmed in a glossy garlic butter sauce with lemon and parsley. A comforting one-pan meal or side dish.",
+    "ingredients": [
+      ["cannellini beans", "480", "g"],
+      ["butter", "30", "g"],
+      ["garlic", "3", "cloves"],
+      ["vegetable stock", "150", "ml"],
+      ["lemon", "0.5", "pcs"],
+      ["parsley", "10", "g"],
+      ["black pepper", "0.25", "tsp"]
+    ],
+    "steps": [
+      "Drain and rinse the beans. Thinly slice the garlic and chop the parsley.",
+      "Melt the butter over medium-low heat. Cook the garlic for 1 minute without browning.",
+      "Add the beans and stock. Simmer gently for 8–10 minutes, stirring occasionally, until the sauce lightly coats the beans.",
+      "Stir in the lemon juice, parsley and pepper. Taste and serve warm."
+    ]
+  },
+  {
+    "title": "Tuna Sweetcorn Wraps",
+    "author": "everyday",
+    "category": "Lunch",
+    "servings": 2,
+    "prep": 10,
+    "cook": 0,
+    "difficulty": "EASY",
+    "description": "Soft wraps filled with tuna, sweetcorn, crisp lettuce and a yogurt dressing. A convenient lunch assembled in minutes.",
+    "ingredients": [
+      ["flour tortilla", "2", "pcs"],
+      ["canned tuna", "150", "g"],
+      ["sweetcorn", "100", "g"],
+      ["Greek yogurt", "60", "g"],
+      ["lettuce", "4", "leaves"],
+      ["lemon", "0.5", "pcs"],
+      ["black pepper", "0.25", "tsp"]
+    ],
+    "steps": [
+      "Drain the tuna and sweetcorn thoroughly. Wash and dry the lettuce.",
+      "Mix the tuna, sweetcorn, yogurt, lemon juice and pepper in a bowl.",
+      "Lay lettuce down the centre of each tortilla, add the filling, fold in the sides and roll tightly. Cut in half and serve, or refrigerate until needed."
+    ]
+  },
+  {
+    "title": "Spinach Ricotta Pasta",
+    "author": "everyday",
+    "category": "Pasta",
+    "servings": 3,
+    "prep": 10,
+    "cook": 15,
+    "difficulty": "EASY",
+    "description": "Penne coated in a creamy ricotta sauce with wilted spinach and Parmesan. Pasta cooking water brings the sauce together without extra cream.",
+    "ingredients": [
+      ["penne pasta", "250", "g"],
+      ["spinach", "200", "g"],
+      ["ricotta", "200", "g"],
+      ["parmesan", "40", "g"],
+      ["garlic", "2", "cloves"],
+      ["olive oil", "1", "tbsp"],
+      ["lemon", "0.5", "pcs"],
+      ["salt", "0.5", "tsp"]
+    ],
+    "steps": [
+      "Cook the pasta in salted boiling water according to the packet. Reserve 200 ml cooking water before draining.",
+      "Heat the oil in a large pan, add the minced garlic and cook for 30 seconds. Add the spinach and stir until wilted.",
+      "Lower the heat. Stir in the ricotta, grated Parmesan, lemon juice and 100 ml reserved water.",
+      "Add the pasta and toss gently. Add more cooking water a little at a time until the sauce coats the penne. Serve straight away."
+    ]
+  },
+  {
+    "title": "Roasted Vegetable Couscous",
+    "author": "everyday",
+    "category": "Main Course",
+    "servings": 3,
+    "prep": 15,
+    "cook": 25,
+    "difficulty": "EASY",
+    "description": "Fluffy couscous with roasted courgette, pepper, carrot and onion. Lemon and olive oil keep the finished dish bright and simple.",
+    "ingredients": [
+      ["couscous", "200", "g"],
+      ["courgette", "1", "pcs"],
+      ["red bell pepper", "1", "pcs"],
+      ["carrot", "2", "pcs"],
+      ["red onion", "1", "pcs"],
+      ["olive oil", "2", "tbsp"],
+      ["vegetable stock", "250", "ml"],
+      ["lemon", "1", "pcs"],
+      ["salt", "0.5", "tsp"]
+    ],
+    "steps": [
+      "Heat the oven to 200°C. Cut the vegetables into evenly sized bite-sized pieces.",
+      "Toss the vegetables with the oil and salt on a roasting tray. Roast for 25 minutes, turning halfway, until tender and lightly browned.",
+      "Put the couscous in a heatproof bowl. Pour over the boiling stock, cover and leave for 5 minutes; fluff with a fork.",
+      "Fold in the roasted vegetables and lemon juice. Serve warm or cool and refrigerate promptly."
+    ]
+  },
+  {
+    "title": "Yogurt Berry Parfait",
+    "author": "everyday",
+    "category": "Breakfast",
+    "servings": 2,
+    "prep": 10,
+    "cook": 0,
+    "difficulty": "EASY",
+    "description": "Layers of Greek yogurt, fresh berries and oat granola served in glasses. Add the granola shortly before eating to keep it crisp.",
+    "ingredients": [
+      ["Greek yogurt", "350", "g"],
+      ["strawberry", "150", "g"],
+      ["blueberry", "100", "g"],
+      ["oat granola", "80", "g"],
+      ["honey", "1", "tbsp"]
+    ],
+    "steps": [
+      "Wash the berries and dry gently. Hull and slice the strawberries.",
+      "Stir the honey into the yogurt. Spoon a little yogurt into each of two glasses, followed by berries and granola.",
+      "Repeat the layers and finish with a few berries. Serve immediately, or keep yogurt and fruit chilled and add the granola just before serving."
+    ]
+  },
+  {
+    "title": "Potato Leek Soup",
+    "author": "weekend",
+    "category": "Soup",
+    "servings": 4,
+    "prep": 15,
+    "cook": 25,
+    "difficulty": "EASY",
+    "requestReview": true,
+    "description": "A mellow soup of potatoes and leeks, finished with a splash of cream. Wash the leeks carefully to remove grit between the layers.",
+    "ingredients": [
+      ["potato", "600", "g"],
+      ["leek", "2", "pcs"],
+      ["butter", "25", "g"],
+      ["vegetable stock", "1000", "ml"],
+      ["cream", "100", "ml"],
+      ["salt", "0.5", "tsp"],
+      ["black pepper", "0.25", "tsp"]
+    ],
+    "steps": [
+      "Trim and slice the leeks, then rinse thoroughly in a bowl of water and drain. Peel and dice the potatoes.",
+      "Melt the butter in a saucepan. Soften the leeks over medium-low heat for 8 minutes, stirring occasionally.",
+      "Add the potatoes and stock. Bring to a simmer and cook for 15–20 minutes until the potatoes are tender.",
+      "Blend carefully until smooth, or leave a few pieces for texture. Stir in the cream, salt and pepper and warm through before serving."
+    ]
+  },
+  {
+    "title": "Beef Mushroom Stew",
+    "author": "weekend",
+    "category": "Main Course",
+    "servings": 4,
+    "prep": 20,
+    "cook": 120,
+    "difficulty": "MEDIUM",
+    "description": "Slow-simmered beef with mushrooms and carrots in a rich stock-based gravy. Give the beef time to become tender before serving.",
+    "ingredients": [
+      ["beef chuck", "700", "g"],
+      ["mushroom", "300", "g"],
+      ["carrot", "2", "pcs"],
+      ["onion", "1", "pcs"],
+      ["garlic", "3", "cloves"],
+      ["beef stock", "800", "ml"],
+      ["tomato paste", "2", "tbsp"],
+      ["plain flour", "2", "tbsp"],
+      ["vegetable oil", "2", "tbsp"],
+      ["dried thyme", "1", "tsp"],
+      ["salt", "0.5", "tsp"]
+    ],
+    "steps": [
+      "Cut the beef into 3 cm cubes. Slice the onion, carrots and mushrooms, and mince the garlic.",
+      "Heat the oil in a heavy casserole. Brown the beef in batches and set aside. Soften the onion and carrots for 5 minutes.",
+      "Add the mushrooms and cook for 5 minutes. Stir in the garlic, tomato paste and flour and cook for 1 minute.",
+      "Return the beef and add the stock, thyme and salt. Bring to a gentle simmer, cover and cook for 90–110 minutes until the beef is tender, stirring occasionally.",
+      "Uncover for the final 10 minutes to reduce the gravy. Add water if it becomes too thick and serve hot."
+    ]
+  },
+  {
+    "title": "Lemon Herb Roast Chicken",
+    "author": "weekend",
+    "category": "Main Course",
+    "servings": 4,
+    "prep": 15,
+    "cook": 90,
+    "difficulty": "MEDIUM",
+    "description": "A whole chicken roasted with lemon, rosemary and thyme. Rest before carving and use a thermometer to check the thickest parts are cooked.",
+    "ingredients": [
+      ["whole chicken", "1500", "g"],
+      ["lemon", "1", "pcs"],
+      ["garlic", "4", "cloves"],
+      ["olive oil", "2", "tbsp"],
+      ["rosemary", "2", "sprigs"],
+      ["thyme", "4", "sprigs"],
+      ["salt", "1", "tsp"],
+      ["black pepper", "0.5", "tsp"]
+    ],
+    "steps": [
+      "Heat the oven to 190°C. Pat the chicken dry with kitchen paper; do not rinse it. Put it in a roasting dish.",
+      "Rub with oil, salt and pepper. Cut the lemon in half and place it in the cavity with the garlic and herbs.",
+      "Roast for approximately 80–90 minutes. Check with a food thermometer that the thickest parts of the breast and thigh reach 74°C, avoiding bone; extend cooking if needed.",
+      "Rest for 15 minutes before carving. Spoon over the roasting juices and serve."
+    ]
+  },
+  {
+    "title": "Stuffed Bell Peppers",
+    "author": "weekend",
+    "category": "Main Course",
+    "servings": 4,
+    "prep": 20,
+    "cook": 45,
+    "difficulty": "MEDIUM",
+    "requestReview": true,
+    "description": "Bell pepper halves filled with beef, rice and tomato, baked with cheddar. Cook the rice separately before mixing it into the filling.",
+    "ingredients": [
+      ["bell pepper", "4", "pcs"],
+      ["minced beef", "400", "g"],
+      ["rice", "150", "g"],
+      ["onion", "1", "pcs"],
+      ["garlic", "2", "cloves"],
+      ["chopped tomatoes", "400", "g"],
+      ["cheddar", "100", "g"],
+      ["olive oil", "1", "tbsp"],
+      ["dried oregano", "1", "tsp"],
+      ["salt", "0.5", "tsp"]
+    ],
+    "steps": [
+      "Heat the oven to 190°C. Cook the rice according to the packet. Halve the peppers lengthways and remove the seeds.",
+      "Heat the oil in a pan and soften the chopped onion for 5 minutes. Add the garlic and beef and cook for 8–10 minutes, breaking up the beef, until cooked through.",
+      "Add the tomatoes, oregano and salt. Simmer for 8 minutes and stir in the cooked rice.",
+      "Arrange the peppers in a baking dish, fill with the mixture and top with grated cheddar. Add 100 ml water to the bottom of the dish.",
+      "Cover with foil and bake for 20 minutes. Remove the foil and bake for 10–15 minutes more until the peppers are tender and the cheese is golden."
+    ]
+  },
+  {
+    "title": "Vegetable Lasagne",
+    "author": "weekend",
+    "category": "Pasta",
+    "servings": 6,
+    "prep": 30,
+    "cook": 50,
+    "difficulty": "MEDIUM",
+    "description": "Layers of tomato vegetables, pasta and a simple white sauce, topped with golden cheese. Let the lasagne rest to make slicing easier.",
+    "ingredients": [
+      ["lasagne sheets", "250", "g"],
+      ["courgette", "2", "pcs"],
+      ["mushroom", "250", "g"],
+      ["spinach", "150", "g"],
+      ["onion", "1", "pcs"],
+      ["garlic", "3", "cloves"],
+      ["chopped tomatoes", "800", "g"],
+      ["olive oil", "2", "tbsp"],
+      ["butter", "50", "g"],
+      ["plain flour", "50", "g"],
+      ["milk", "600", "ml"],
+      ["mozzarella", "150", "g"],
+      ["salt", "1", "tsp"]
+    ],
+    "steps": [
+      "Heat the oven to 190°C. Dice the onion and courgettes and slice the mushrooms. Heat the oil and soften the onion for 5 minutes.",
+      "Add the courgettes and mushrooms and cook for 8 minutes. Add minced garlic, tomatoes and half the salt. Simmer for 15 minutes, then stir in the spinach until wilted.",
+      "For the white sauce, melt the butter in a separate saucepan. Stir in the flour for 1 minute. Gradually whisk in the milk and simmer, stirring, until thickened; add the remaining salt.",
+      "Layer the vegetable sauce, lasagne sheets and white sauce in a baking dish. Repeat, finishing with white sauce and shredded mozzarella. Follow the pasta packet instructions if pre-cooking is required.",
+      "Bake for 35–40 minutes until bubbling and the pasta is tender. Rest for 10 minutes before cutting."
+    ]
+  },
+  {
+    "title": "Apple Cinnamon French Toast",
+    "author": "weekend",
+    "category": "Breakfast",
+    "servings": 2,
+    "prep": 10,
+    "cook": 15,
+    "difficulty": "EASY",
+    "description": "Golden egg-dipped bread served with soft cinnamon apples and maple syrup. Slightly stale bread holds its shape well in the egg mixture.",
+    "ingredients": [
+      ["bread", "4", "slices"],
+      ["egg", "2", "pcs"],
+      ["milk", "100", "ml"],
+      ["apple", "2", "pcs"],
+      ["butter", "30", "g"],
+      ["cinnamon", "1", "tsp"],
+      ["maple syrup", "2", "tbsp"]
+    ],
+    "steps": [
+      "Core and slice the apples. Melt half the butter in a pan and cook the apples with half the cinnamon for 6–8 minutes until softened.",
+      "Whisk the eggs, milk and remaining cinnamon in a shallow dish. Dip the bread briefly on both sides without soaking it until it falls apart.",
+      "Melt the remaining butter in a frying pan. Cook the bread for 3–4 minutes per side until golden and the egg mixture is cooked through.",
+      "Serve topped with the warm apples and maple syrup."
+    ]
+  },
+  {
+    "title": "Baked Cod with Tomatoes",
+    "author": "weekend",
+    "category": "Main Course",
+    "servings": 3,
+    "prep": 10,
+    "cook": 25,
+    "difficulty": "EASY",
+    "description": "Cod fillets baked over cherry tomatoes with garlic and olive oil. The tomatoes release their juices to make a light sauce.",
+    "ingredients": [
+      ["cod fillet", "450", "g"],
+      ["cherry tomato", "400", "g"],
+      ["garlic", "3", "cloves"],
+      ["olive oil", "2", "tbsp"],
+      ["lemon", "0.5", "pcs"],
+      ["parsley", "10", "g"],
+      ["salt", "0.5", "tsp"],
+      ["black pepper", "0.25", "tsp"]
+    ],
+    "steps": [
+      "Heat the oven to 200°C. Halve the tomatoes and put them in a baking dish with thinly sliced garlic, half the oil and half the salt.",
+      "Roast the tomatoes for 10 minutes. Pat the cod dry and arrange on top. Drizzle with the remaining oil, lemon juice, salt and pepper.",
+      "Bake for 12–15 minutes, depending on thickness, until the fish is opaque and flakes easily; check the centre reaches 63°C.",
+      "Sprinkle with chopped parsley and spoon the tomato juices over the fish to serve."
+    ]
+  },
+  {
+    "title": "Sweet Potato Black Bean Chilli",
+    "author": "weekend",
+    "category": "Main Course",
+    "servings": 4,
+    "prep": 15,
+    "cook": 35,
+    "difficulty": "EASY",
+    "description": "A thick vegetarian chilli with sweet potato, black beans and peppers. Adjust the chilli powder to your preferred level of heat.",
+    "ingredients": [
+      ["sweet potato", "500", "g"],
+      ["black beans", "480", "g"],
+      ["red bell pepper", "1", "pcs"],
+      ["onion", "1", "pcs"],
+      ["garlic", "3", "cloves"],
+      ["chopped tomatoes", "800", "g"],
+      ["vegetable stock", "250", "ml"],
+      ["olive oil", "1", "tbsp"],
+      ["ground cumin", "2", "tsp"],
+      ["chilli powder", "1", "tsp"],
+      ["salt", "0.5", "tsp"]
+    ],
+    "steps": [
+      "Peel the sweet potatoes and cut into 2 cm cubes. Chop the onion and pepper, mince the garlic and drain the beans.",
+      "Heat the oil in a saucepan. Soften the onion and pepper for 6 minutes. Add the garlic, cumin and chilli powder and stir for 30 seconds.",
+      "Add the sweet potato, tomatoes, stock and salt. Simmer, partly covered, for 20–25 minutes until the sweet potato is tender.",
+      "Stir in the beans and simmer for 5–8 minutes more. Add water if needed and adjust the seasoning before serving."
+    ]
+  },
+  {
+    "title": "Strawberry Cheesecake Cups",
+    "author": "weekend",
+    "category": "Dessert",
+    "servings": 4,
+    "prep": 20,
+    "cook": 0,
+    "difficulty": "EASY",
+    "description": "No-bake cheesecake cream layered with biscuit crumbs and strawberries. Chill for at least two hours before serving; chilling time is additional to preparation time.",
+    "ingredients": [
+      ["digestive biscuits", "120", "g"],
+      ["butter", "35", "g"],
+      ["cream cheese", "250", "g"],
+      ["Greek yogurt", "150", "g"],
+      ["icing sugar", "40", "g"],
+      ["vanilla extract", "1", "tsp"],
+      ["strawberry", "250", "g"]
+    ],
+    "steps": [
+      "Crush the biscuits into crumbs and mix with the melted butter. Divide among four small glasses and press lightly.",
+      "Beat the cream cheese, yogurt, icing sugar and vanilla until smooth. Spoon over the biscuit bases.",
+      "Wash, hull and slice the strawberries and arrange on top.",
+      "Cover and refrigerate for at least 2 hours before serving. Keep chilled until ready to eat."
+    ]
+  },
+  {
+    "title": "Pear Walnut Crumble",
+    "author": "weekend",
+    "category": "Dessert",
+    "servings": 4,
+    "prep": 15,
+    "cook": 35,
+    "difficulty": "EASY",
+    "description": "Tender baked pears under a crisp oat and walnut topping. Serve warm after a short rest so the fruit juices settle.",
+    "ingredients": [
+      ["pear", "4", "pcs"],
+      ["plain flour", "100", "g"],
+      ["rolled oats", "60", "g"],
+      ["walnut", "50", "g"],
+      ["butter", "80", "g"],
+      ["brown sugar", "60", "g"],
+      ["cinnamon", "0.5", "tsp"],
+      ["lemon", "0.5", "pcs"]
+    ],
+    "steps": [
+      "Heat the oven to 180°C. Core the pears and cut into bite-sized pieces. Toss with lemon juice and cinnamon in a baking dish.",
+      "Rub the cold butter into the flour until crumbly. Stir in the oats, chopped walnuts and sugar.",
+      "Scatter the topping evenly over the pears without pressing down. Bake for 30–35 minutes until golden and the fruit is tender.",
+      "Rest for 10 minutes before serving warm."
+    ]
+  }
+]

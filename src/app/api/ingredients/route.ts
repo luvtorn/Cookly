@@ -12,9 +12,12 @@ export async function GET(request: Request) {
   );
   if (!parsed.success) return Response.json({ items: [] });
   try {
-    return Response.json({
-      items: await searchIngredientSuggestions(parsed.data),
-    });
+    return Response.json(
+      {
+        items: await searchIngredientSuggestions(parsed.data),
+      },
+      { headers: { "Cache-Control": "private, no-store" } },
+    );
   } catch {
     return Response.json({ items: [] }, { status: 503 });
   }

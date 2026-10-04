@@ -7,7 +7,6 @@ import { getDb } from "@/lib/db/client";
 import { MyRecipeList } from "@/features/recipes/my-recipe-list";
 import { getI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/config";
-import { GlassSelect } from "@/components/shared/glass-select";
 
 export const metadata: Metadata = {
   title: "My recipes",
@@ -85,27 +84,31 @@ export default async function MyRecipes({
           {t("nav.createRecipe")} →
         </Link>
       </header>
-      <section className="creator-panel glass">
-        <form
-          className="creator-filters"
-          action={localizePath(locale, "/my-recipes")}
+      <section className="creator-library">
+        <nav
+          className="creator-status-nav glass"
+          aria-label={t("status.label")}
         >
-          <div className="glass-select-field">
-            <span>{t("status.label")}</span>
-            <GlassSelect
-              name="status"
-              ariaLabel={t("status.label")}
-              defaultValue={status ?? ""}
-              options={[
-                { value: "", label: t("status.all") },
-                { value: "DRAFT", label: t("status.draft") },
-                { value: "PUBLISHED", label: t("status.published") },
-                { value: "ARCHIVED", label: t("status.archived") },
-              ]}
-            />
-          </div>
-          <button className="button-secondary">{t("common.filter")}</button>
-        </form>
+          {(
+            [
+              ["", "status.all"],
+              ["DRAFT", "status.draft"],
+              ["PUBLISHED", "status.published"],
+              ["ARCHIVED", "status.archived"],
+            ] as const
+          ).map(([value, label]) => (
+            <Link
+              key={value}
+              href={localizePath(
+                locale,
+                `/my-recipes${value ? `?status=${value}` : ""}`,
+              )}
+              aria-current={(status ?? "") === value ? "page" : undefined}
+            >
+              {t(label)}
+            </Link>
+          ))}
+        </nav>
         <MyRecipeList recipes={recipes.slice(0, 12)} />
         {(page > 1 || recipes.length > 12) && (
           <nav className="pagination" aria-label={t("common.pages")}>

@@ -48,7 +48,9 @@ export default async function RecipePage({
                 "liked"
                 ? "social.liked"
                 : "social.saved"
-              : "catalog.allRecipes",
+              : returnPath.startsWith("/pantry")
+                ? "pantryLive.title"
+                : "catalog.allRecipes",
           )}
         </Link>
         <RecipeMotion key={recipe.slug} />

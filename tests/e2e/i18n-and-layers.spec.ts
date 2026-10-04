@@ -205,6 +205,14 @@ test("collapsed desktop dock exposes complete circular icon wells", async ({
   await page.evaluate(() => window.scrollTo(0, 180));
   const wells = page.locator(".desktop-dock nav .dock-icon");
   await expect(wells.first()).toBeVisible();
+  // Visibility occurs during entrance motion; measure the final geometry.
+  await expect
+    .poll(() =>
+      wells
+        .first()
+        .evaluate((element) => element.getBoundingClientRect().width),
+    )
+    .toBeGreaterThanOrEqual(43.9);
   for (const well of await wells.all()) {
     const shape = await well.evaluate((element) => {
       const rect = element.getBoundingClientRect();

@@ -1,10 +1,12 @@
 import type { Locale } from "./config";
 import { socialMessages } from "./social-messages";
 import { verificationMessages } from "./verification-messages";
+import { pantryMessages } from "./pantry-messages";
 
 const en = {
   ...socialMessages.en,
   ...verificationMessages.en,
+  ...pantryMessages.en,
   "common.view": "View",
   "common.edit": "Edit",
   "common.updated": "Updated",
@@ -291,6 +293,7 @@ export type Messages = Record<MessageKey, string>;
 const ru: Messages = {
   ...socialMessages.ru,
   ...verificationMessages.ru,
+  ...pantryMessages.ru,
   "common.view": "Смотреть",
   "common.edit": "Редактировать",
   "common.updated": "Обновлено",
@@ -578,6 +581,7 @@ const ru: Messages = {
 const pl: Messages = {
   ...socialMessages.pl,
   ...verificationMessages.pl,
+  ...pantryMessages.pl,
   "common.view": "Zobacz",
   "common.edit": "Edytuj",
   "common.updated": "Zaktualizowano",

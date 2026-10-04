@@ -13,6 +13,7 @@ import "./navigation.css";
 import "./toasts.css";
 import "./social-actions.css";
 import "./verification.css";
+import "./pantry.css";
 
 const sans = localFont({
   src: "./fonts/dm-sans.ttf",

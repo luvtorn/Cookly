@@ -1,0 +1,127 @@
+{
+  "mode": "built-in image_gen",
+  "useCase": "photorealistic-natural",
+  "formatOptimization": "JPEG, quality 88, mozjpeg; no visual editing",
+  "prompts": [
+    {
+      "index": 0,
+      "title": "Banana Oat Porridge",
+      "asset": "public/images/community-demo/00.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: creamy rolled oats simmered in milk topped with banana slices and ground cinnamon."
+    },
+    {
+      "index": 1,
+      "title": "Avocado Egg Toast",
+      "asset": "public/images/community-demo/01.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: two slices sourdough toast topped with mashed avocado and soft poached eggs, black pepper."
+    },
+    {
+      "index": 2,
+      "title": "Greek Chickpea Salad",
+      "asset": "public/images/community-demo/02.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: chickpeas cucumber tomatoes red onion kalamata olives feta cubes dressed with olive oil and lemon."
+    },
+    {
+      "index": 3,
+      "title": "Creamy Broccoli Soup",
+      "asset": "public/images/community-demo/03.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: velvety green broccoli soup with a small swirl of cream, no croutons."
+    },
+    {
+      "index": 4,
+      "title": "Turkey Vegetable Stir-Fry",
+      "asset": "public/images/community-demo/04.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: turkey strips with broccoli red bell pepper carrot in a glossy soy garlic sauce."
+    },
+    {
+      "index": 5,
+      "title": "Garlic Butter White Beans",
+      "asset": "public/images/community-demo/05.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: white cannellini beans in buttery garlic sauce with parsley, no bread."
+    },
+    {
+      "index": 6,
+      "title": "Tuna Sweetcorn Wraps",
+      "asset": "public/images/community-demo/06.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: cut flour tortilla wraps filled with tuna sweetcorn yogurt dressing and lettuce."
+    },
+    {
+      "index": 7,
+      "title": "Spinach Ricotta Pasta",
+      "asset": "public/images/community-demo/07.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: penne pasta with wilted spinach creamy ricotta and grated parmesan."
+    },
+    {
+      "index": 8,
+      "title": "Roasted Vegetable Couscous",
+      "asset": "public/images/community-demo/08.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: fluffy couscous topped with roasted courgette red bell pepper red onion and carrot."
+    },
+    {
+      "index": 9,
+      "title": "Yogurt Berry Parfait",
+      "asset": "public/images/community-demo/09.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: clear glass layered with plain Greek yogurt strawberries blueberries and rolled oat granola."
+    },
+    {
+      "index": 10,
+      "title": "Potato Leek Soup",
+      "asset": "public/images/community-demo/10.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: creamy pale potato leek soup with thin green leek slices, no bread."
+    },
+    {
+      "index": 11,
+      "title": "Beef Mushroom Stew",
+      "asset": "public/images/community-demo/11.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: tender beef chunks and brown mushrooms carrots in a rich dark stew."
+    },
+    {
+      "index": 12,
+      "title": "Lemon Herb Roast Chicken",
+      "asset": "public/images/community-demo/12.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: golden roast chicken with lemon slices rosemary and thyme in ceramic roasting dish."
+    },
+    {
+      "index": 13,
+      "title": "Stuffed Bell Peppers",
+      "asset": "public/images/community-demo/13.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: halved red and yellow peppers filled with cooked rice minced beef tomato and melted cheddar."
+    },
+    {
+      "index": 14,
+      "title": "Vegetable Lasagne",
+      "asset": "public/images/community-demo/14.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: square portion of layered lasagne with tomato courgette mushrooms spinach creamy bechamel and browned cheese."
+    },
+    {
+      "index": 15,
+      "title": "Apple Cinnamon French Toast",
+      "asset": "public/images/community-demo/15.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: golden French toast topped with sauteed apple slices cinnamon and maple syrup."
+    },
+    {
+      "index": 16,
+      "title": "Baked Cod with Tomatoes",
+      "asset": "public/images/community-demo/16.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: white baked cod fillet with roasted cherry tomatoes garlic olive oil and parsley."
+    },
+    {
+      "index": 17,
+      "title": "Sweet Potato Black Bean Chilli",
+      "asset": "public/images/community-demo/17.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: thick tomato chilli with cubed sweet potato black beans red pepper, no rice."
+    },
+    {
+      "index": 18,
+      "title": "Strawberry Cheesecake Cups",
+      "asset": "public/images/community-demo/18.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: individual clear dessert cups with biscuit crumbs cheesecake cream and fresh strawberries."
+    },
+    {
+      "index": 19,
+      "title": "Pear Walnut Crumble",
+      "asset": "public/images/community-demo/19.jpg",
+      "prompt": "Create one square photorealistic editorial food cover for Cookly. Warm pale stone backdrop, cream ceramic servingware, soft natural window light, calm photographic styling, centered three-quarter overhead composition showing the whole serving. No people, text, logos, watermark, collage, unrelated garnish, or quality claims. Subject: baked pear crumble with golden oat topping chopped walnuts and visible cooked pear pieces."
+    }
+  ]
+}

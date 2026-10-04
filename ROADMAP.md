@@ -577,6 +577,15 @@ Rules:
 - [x] Refine shared card hover/focus, stagger catalog results by URL, and progressively reveal recipe sections.
 - [x] Preserve readable server content and reduced-motion/touch alternatives; add responsive search regressions.
 
+## My Ingredients implementation
+
+- [x] Persist canonical pantry ingredients with owner authorization, a concurrent-safe 200-item limit and explicit clear confirmation.
+- [x] Reuse ingredient suggestions with keyboard support and public-only recipe usage counts; no pantry-created ingredients.
+- [x] Rank published visible recipes in PostgreSQL using distinct mandatory IDs; show matched, missing and optional ingredients.
+- [x] Add URL filters, 12-result pages, preserved recipe return paths and EN/RU/PL interfaces.
+- [x] Complete isolated PostgreSQL and responsive Chromium checks; see `docs/pantry-verification-2026-10-01.md`.
+- [ ] Commit, push and deploy Pantry only after separate authorization.
+
 # Suggested implementation order for Codex prompts
 
 ## Administrative catalog and verification reassessment
@@ -603,3 +612,12 @@ Give Codex one bounded milestone at a time:
 10. polish and production hardening.
 
 Never ask Codex to “build Cookly” in one prompt. Require each milestone to pass lint/typecheck/tests/build before moving on.
+
+### Community demo content — 2026-10-02
+
+- [x] Two labelled ACTIVE USER demo profiles, ten published recipes each.
+- [x] Twenty distinct AI covers with public disclosure; no fabricated engagement.
+- [x] Four voluntary author review requests remain PENDING; sixteen recipes remain NONE.
+- [x] Resumable content/cover manifests and ignored local credentials.
+- [ ] Finish mobile visual QA and signed-in administrative browser walkthrough (see `docs/community-demo-2026-10-02.md`).
+- [ ] Commit, push and deploy the pending application changes only as a separately authorized step.

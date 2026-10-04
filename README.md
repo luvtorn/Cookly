@@ -39,7 +39,7 @@ The desktop dock keeps icon positions fixed while expanding. The [2026-09-27 des
 ## Localized public experience — 2026-09-22
 
 - All consumer routes use an explicit locale prefix: `/en`, `/ru` or `/pl`. Legacy unprefixed public URLs redirect to the locale stored in `cookly_locale`, then `Accept-Language`, with English as the fallback; query parameters are preserved.
-- The user-facing shell, discovery, recipes, profiles, Pantry preview, authentication, account settings and creator tools are translated without an i18n runtime dependency. Auth/API endpoints and the English-only `/admin` Studio remain unprefixed.
+- The user-facing shell, discovery, recipes, profiles, Pantry, authentication, account settings and creator tools are translated without an i18n runtime dependency. Auth/API endpoints and the English-only `/admin` Studio remain unprefixed.
 - The language switcher keeps the current route, query and fragment. Public metadata exposes localized canonical and alternate URLs, while authored recipe content and taxonomy remain in their source language.
 - Desktop dock controls now use complete 44 px circular icon wells, and active search regions render suggestions above cards while navigation and authentication overlays retain higher layers.
 - Final local gates pass: lint, strict TypeScript, formatting, 96 unit/component tests, production build and 30 Chromium scenarios. Database-backed integration/auth journeys remain isolated-test-database only.
@@ -67,7 +67,8 @@ The desktop dock keeps icon positions fixed while expanding. The [2026-09-27 des
 - `/u/[username]` exposes only intended public profile fields, real social counts and published visible community recipes. The owner can update display name, username, bio, location and a Cloudinary avatar there with a purpose-bound HMAC receipt.
 - Home keeps the six-recipe Cookly collection and adds a separate community section without invented authors or engagement. Cards link the whole surface while preserving a separate author link, pin metadata to the bottom and place the accessible verification icon beside the title.
 - Recipe details show real likes and paginated visible comments with an authenticated composer, owner editing and confirmed removal. Follow mutations remain deferred.
-- `/pantry` is a responsive My Ingredients preview following `design-package/pantry.png`. It does not generate recipes or fabricate matches; deterministic ingredient matching remains the next Pantry milestone.
+- `/en|ru|pl/pantry` is My Ingredients, following `design-package/pantry.png`. Active accounts save up to 200 existing canonical ingredients; guests see a sign-in explanation and return through the auth modal. Adding, removing and clearing products persist immediately; clearing requires confirmation. No new ingredients are created here.
+- Pantry ranks published, visible recipes by the fraction of unique mandatory ingredient IDs present, then missing count, publication date and ID. Optional ingredients do not affect the score; quantities and serving sufficiency are not checked. Filters (total time, difficulty, cuisine and maximum missing ingredients, default 3) and pagination (12 results) live in the URL. Recipe return links retain those filters. Personal lists are not shared-cached or indexed; matching and pagination run in PostgreSQL. No new migration or dependency is required.
 - No schema migration was required: the existing Recipe, Profile, Like, Comment, Follow and image metadata fields cover this slice.
 - Local verification passes: lint, TypeScript, production build without live services, 86 unit/component tests, 14 isolated PostgreSQL integration tests, 26 offline Chromium scenarios, and the complete creator/authentication and administrator journeys. Home, recipe details and the responsive navigation were visually reviewed at desktop and tablet sizes; the browser suites cover mobile, tablet and desktop layouts.
 - The isolated test database uses disposable identities only. No production Neon data, Cloudinary asset, deployment, commit or push was changed by this slice.
@@ -109,8 +110,8 @@ Pass `--test` instead of `--confirm-target` for provisioning/seed against `TEST_
 - Editorial typography, liquid-glass surfaces and responsive navigation follow `design-package/home.png`. The hero features a real published editorial recipe when the catalog has content.
 - Theme preference respects the system initially and persists an explicit light/dark choice. Mobile navigation supports keyboard/Escape; native preview dialogs trap focus and return it to their trigger.
 - Home and catalog stay Server Components. `/recipes?q=salmon&category=main-courses&difficulty=EASY&maxTime=45` composes database filters; invalid/repeated values safely fall back to defaults. Legacy Home search/category URLs redirect to their catalog equivalent.
-- No fictional community authors or engagement counts are rendered. Sign in opens real authentication; My Ingredients clearly labels its matcher as a preview.
-- Loading, empty, safe retry-error and branded 404 states are included. `/recipes` replaces the ambiguous Discover destination; `/pantry` previews the next deterministic matcher milestone.
+- No fictional community authors or engagement counts are rendered. Sign in opens real authentication; My Ingredients matches real published recipes against the signed-in user's saved ingredients.
+- Loading, empty, safe retry-error and branded 404 states are included. `/recipes` replaces the ambiguous Discover destination; `/pantry` provides deterministic ingredient matching for signed-in accounts.
 - DM Sans and Lora are self-hosted with their SIL licenses in `src/app/fonts/`. Legacy demo assets remain local, while new editorial covers use Cloudinary after explicit upload. There is no runtime AI dependency; offline tests use local image fixtures.
 
 ## Historical content state — 2026-09-18
@@ -268,6 +269,12 @@ Additional commands: `test:watch`, `test:coverage`, and `format`. Fonts and imag
 Search suggestions use a stationary glass shell and a separate transparent scroll area. Their height respects the visual viewport and mobile navigation; keyboard selection scrolls only the list. Escape and focus departure dismiss pending responses as well as visible suggestions.
 
 Recipe cards share a pointer-only lift/image zoom and keyboard focus treatment. Catalog results stagger once per applied URL query; recipe sections progressively reveal once in view using the existing Framer Motion dependency. Server content remains visible without JavaScript. Reduced motion disables movement and delays. `tests/e2e/search-motion.spec.ts` covers responsive search geometry, localization and reduced motion, retaining video/screenshots under ignored test artifacts.
+
+## Community demo content
+
+The personal recipe library uses URL-backed publication-status navigation and individual glass recipe cards, keeping publication separate from voluntary Cookly review. See [the October 4 release checks](docs/release-2026-10-04.md) for the Pantry/library delivery slice.
+
+Two explicitly labelled demo creators have ten published user recipes each, with individual AI-generated covers. Four optional author-initiated review requests are pending; sixteen recipes remain unverified. See [the demo content manifest and verification notes](docs/community-demo-2026-10-02.md) for all public links, safe resumption instructions, image prompt provenance and QA limitations. Credentials are stored only in the ignored local `.env.demo-accounts.local` file, never in the manifest. This data-only operation does not deploy the pending Pantry implementation.
 
 ## CI and delivery status
 

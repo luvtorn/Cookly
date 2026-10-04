@@ -128,10 +128,14 @@ test("registration → login → refreshed account → logout, credentials and C
   await expect(page.getByRole("heading", { name: "My recipes" })).toBeVisible();
   await expect(page.getByText("Your first recipe starts here.")).toBeVisible();
   await page.setViewportSize({ width: 390, height: 900 });
-  const statusField = await page
-    .locator(".creator-filters .glass-select-field")
-    .boundingBox();
-  expect(statusField?.height).toBeLessThan(110);
+  const statusNav = page.getByRole("navigation", {
+    name: "Status",
+    exact: true,
+  });
+  await expect(statusNav.getByRole("link")).toHaveCount(4);
+  await expect(
+    statusNav.getByRole("link", { name: "All recipes", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
   for (const width of [390, 768, 1448]) {
     await page.setViewportSize({ width, height: 1000 });
     expect(

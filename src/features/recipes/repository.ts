@@ -239,7 +239,13 @@ export async function searchIngredientSuggestions(rawQuery: string) {
       id: true,
       name: true,
       normalizedName: true,
-      _count: { select: { recipeIngredients: true } },
+      _count: {
+        select: {
+          recipeIngredients: {
+            where: { recipe: { status: "PUBLISHED", isHidden: false } },
+          },
+        },
+      },
     },
     orderBy: { name: "asc" },
     take: 20,
